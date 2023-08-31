@@ -1,0 +1,7 @@
+// This SASS file will be processed by webpack and output to dist/css/style.hash.css
+
+// bootstrap style sheet - replace as desired
+@import "~bootstrap/scss/bootstrap";
+
+// custom style sheet to override above
+@import "../css/style.css";
