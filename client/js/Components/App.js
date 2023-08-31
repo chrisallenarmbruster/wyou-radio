@@ -7,7 +7,7 @@ export class App extends Component {
   render() {
     const code = new URLSearchParams(window.location.search).get("code")
     return (
-      <Container className="container">
+      <Container>
         {code ? <Dashboard code={code} /> : <SpotifyLogin />}
       </Container>
     )

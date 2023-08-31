@@ -5,7 +5,6 @@ import App from "./js/Components/App"
 // import store from "./js/store"
 import { HashRouter } from "react-router-dom"
 import "./scss/style.scss"
-// import "bootstrap/scss/bootstrap.scss"
 
 const root = createRoot(document.querySelector("#root"))
 

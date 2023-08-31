@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "build:dev": "npm run build -- --watch --mode=development",
-    "start:dev": "nodemon --delay 3000ms server/index.js --ignore dist/ --ignore client/ & npm run build:dev"
+    "start:dev": "nodemon --delay 3000ms server/index.js --ignore dist/ --ignore client/ & npm run build:dev",
+    "start-server:dev": "nodemon --delay 500ms server/index.js --ignore dist/ --ignore client/"
   },
   "keywords": [],
   "author": "",

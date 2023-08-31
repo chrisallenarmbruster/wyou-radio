@@ -42,10 +42,7 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.get("/", (req, res) =>
-  // res.sendFile(path.join(__dirname, "../static/index.html"))
-  res.send("hello world")
-)
+app.get("/", (req, res) => res.sendFile("index.html"))
 
 app.use("/api", require("./routes"))
 

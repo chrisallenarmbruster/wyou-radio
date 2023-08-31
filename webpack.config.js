@@ -48,7 +48,7 @@ const PATHS = {
 }
 
 module.exports = {
-  mode: "development", // 'production' or 'development'
+  mode: "production", // 'production' or 'development'
   entry: {
     main: path.resolve(__dirname, "client/index.js"),
   },
@@ -59,7 +59,7 @@ module.exports = {
     publicPath: "./",
   },
   // use "inline-source-map" or "source-map" for troubleshooting
-  // devtool: "inline-source-map",
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -115,9 +115,9 @@ module.exports = {
       template: path.resolve(__dirname, "client/index.html"),
     }),
     new MiniCssExtractPlugin({ filename: "css/style.[contenthash].css" }),
-    new PurgeCSSPlugin({
-      paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true }),
-    }),
+    // new PurgeCSSPlugin({
+    //   paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true }),
+    // }),
     new CopyWebpackPlugin({
       patterns: [
         {

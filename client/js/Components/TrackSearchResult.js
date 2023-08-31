@@ -7,18 +7,18 @@ export default function TrackSearchResult({ track, chooseTrack }) {
 
   return (
     <div
-      className="d-flex m-2 align-items-center"
+      className="d-flex align-items-center text-light p-2"
       style={{ cursor: "pointer" }}
       onClick={handlePlay}
     >
       <img
         src={track.albumUrl}
-        style={{ height: "64px", width: "64px", margin: "20px" }}
-        className="mx-3"
+        style={{ height: "64px", width: "64px" }}
+        className=""
       />
-      <div className="mx-3">
-        <div className="text-danger">{track.title}</div>
-        <div className="text-muted">{track.artist}</div>
+      <div className="ms-3">
+        <div className="text-light">{track.title}</div>
+        <div className="text-light">{track.artist}</div>
       </div>
     </div>
   )
