@@ -5,6 +5,7 @@ import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
+import TestAudioClip from "./TestAudioClip"
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "31c41df5075e46c48c3547d709102476",
@@ -26,6 +27,8 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
+    getUserPlaylists()
+    getPlaylistTracks()
   }, [accessToken])
 
   useEffect(() => {
@@ -58,6 +61,29 @@ export default function Dashboard({ code }) {
     return () => (cancel = true)
   }, [search, accessToken])
 
+  async function getUserPlaylists() {
+    if (!accessToken) return
+    try {
+      const { body } = await spotifyApi.getUserPlaylists()
+      const playlists = body.items
+      console.log("Playlists: ", playlists)
+    } catch (error) {
+      console.error("Error fetching user playlists: ", error)
+    }
+  }
+
+  async function getPlaylistTracks() {
+    if (!accessToken) return
+    try {
+      const playlistId = "6WESoRu7keGwiyag0owvuV"
+      const { body } = await spotifyApi.getPlaylistTracks(playlistId)
+      const tracks = body.items
+      console.log(`Tracks for Playlist ID: ${playlistId}`, tracks)
+    } catch (error) {
+      console.error("Error fetching user playlists: ", error)
+    }
+  }
+
   return (
     <>
       <Container
@@ -84,6 +110,9 @@ export default function Dashboard({ code }) {
               {lyrics}
             </div>
           )}
+        </div>
+        <div>
+          <TestAudioClip />
         </div>
         <div>
           <Player accessToken={accessToken} trackUri={playingTrack?.uri} />

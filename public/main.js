@@ -4694,6 +4694,114 @@ function getDoneFetcher(data) {
 
 /***/ }),
 
+/***/ "./node_modules/@restart/ui/esm/Button.js":
+/*!************************************************!*\
+  !*** ./node_modules/@restart/ui/esm/Button.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   isTrivialHref: () => (/* binding */ isTrivialHref),
+/* harmony export */   useButtonProps: () => (/* binding */ useButtonProps)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+const _excluded = ["as", "disabled"];
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
+function isTrivialHref(href) {
+  return !href || href.trim() === '#';
+}
+function useButtonProps({
+  tagName,
+  disabled,
+  href,
+  target,
+  rel,
+  role,
+  onClick,
+  tabIndex = 0,
+  type
+}) {
+  if (!tagName) {
+    if (href != null || target != null || rel != null) {
+      tagName = 'a';
+    } else {
+      tagName = 'button';
+    }
+  }
+  const meta = {
+    tagName
+  };
+  if (tagName === 'button') {
+    return [{
+      type: type || 'button',
+      disabled
+    }, meta];
+  }
+  const handleClick = event => {
+    if (disabled || tagName === 'a' && isTrivialHref(href)) {
+      event.preventDefault();
+    }
+    if (disabled) {
+      event.stopPropagation();
+      return;
+    }
+    onClick == null ? void 0 : onClick(event);
+  };
+  const handleKeyDown = event => {
+    if (event.key === ' ') {
+      event.preventDefault();
+      handleClick(event);
+    }
+  };
+  if (tagName === 'a') {
+    // Ensure there's a href so Enter can trigger anchor button.
+    href || (href = '#');
+    if (disabled) {
+      href = undefined;
+    }
+  }
+  return [{
+    role: role != null ? role : 'button',
+    // explicitly undefined so that it overrides the props disabled in a spread
+    // e.g. <Tag {...props} {...hookProps} />
+    disabled: undefined,
+    tabIndex: disabled ? undefined : tabIndex,
+    href,
+    target: tagName === 'a' ? target : undefined,
+    'aria-disabled': !disabled ? undefined : disabled,
+    rel: tagName === 'a' ? rel : undefined,
+    onClick: handleClick,
+    onKeyDown: handleKeyDown
+  }, meta];
+}
+const Button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((_ref, ref) => {
+  let {
+      as: asProp,
+      disabled
+    } = _ref,
+    props = _objectWithoutPropertiesLoose(_ref, _excluded);
+  const [buttonProps, {
+    tagName: Component
+  }] = useButtonProps(Object.assign({
+    tagName: asProp,
+    disabled
+  }, props));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Component, Object.assign({}, props, buttonProps, {
+    ref: ref
+  }));
+});
+Button.displayName = 'Button';
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
+
+/***/ }),
+
 /***/ "./client/Components/App.js":
 /*!**********************************!*\
   !*** ./client/Components/App.js ***!
@@ -4743,10 +4851,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _useAuth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useAuth */ "./client/Components/useAuth.js");
 /* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Player */ "./client/Components/Player.js");
 /* harmony import */ var _TrackSearchResult__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TrackSearchResult */ "./client/Components/TrackSearchResult.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
 /* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! spotify-web-api-node */ "./node_modules/spotify-web-api-node/src/client.js");
 /* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _TestAudioClip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TestAudioClip */ "./client/Components/TestAudioClip.js");
+
 
 
 
@@ -4773,6 +4883,8 @@ function Dashboard({
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
+    getUserPlaylists();
+    getPlaylistTracks();
   }, [accessToken]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!search) return setSearchResults([]);
@@ -4795,12 +4907,37 @@ function Dashboard({
     });
     return () => cancel = true;
   }, [search, accessToken]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  async function getUserPlaylists() {
+    if (!accessToken) return;
+    try {
+      const {
+        body
+      } = await spotifyApi.getUserPlaylists();
+      const playlists = body.items;
+      console.log("Playlists: ", playlists);
+    } catch (error) {
+      console.error("Error fetching user playlists: ", error);
+    }
+  }
+  async function getPlaylistTracks() {
+    if (!accessToken) return;
+    try {
+      const playlistId = "6WESoRu7keGwiyag0owvuV";
+      const {
+        body
+      } = await spotifyApi.getPlaylistTracks(playlistId);
+      const tracks = body.items;
+      console.log(`Tracks for Playlist ID: ${playlistId}`, tracks);
+    } catch (error) {
+      console.error("Error fetching user playlists: ", error);
+    }
+  }
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     className: "bg-dark d-flex flex-column py-3",
     style: {
       height: "100vh"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Control, {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Control, {
     type: "search",
     placeholder: "Search Songs/Artists",
     value: search,
@@ -4820,7 +4957,7 @@ function Dashboard({
     style: {
       whiteSpace: "pre"
     }
-  }, lyrics)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Player__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, lyrics)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_TestAudioClip__WEBPACK_IMPORTED_MODULE_5__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Player__WEBPACK_IMPORTED_MODULE_2__["default"], {
     accessToken: accessToken,
     trackUri: playingTrack?.uri
   }))));
@@ -4856,10 +4993,50 @@ function Player({
     token: accessToken,
     showSaveIcon: true,
     callback: state => {
+      console.log(state);
       if (!state.isPlaying) setPlay(false);
-    },
-    play: play,
-    uris: trackUri ? [trackUri] : []
+    }
+    // play={play}
+    ,
+    play: true
+    // one at a time, based on clicking a search result
+    // uris={trackUri ? [trackUri] : []}
+
+    // hardcoding a list of tracks
+    // uris={[
+    //   "spotify:track:2SiXAy7TuUkycRVbbWDEpo",
+    //   "spotify:track:6QnVsqsS9W3E7HIc28vxpL",
+    //   "spotify:track:4JiEyzf0Md7KEFFGWDDdCr",
+    //   "spotify:track:1gcESexgftSuLuML57Y69q",
+    //   "spotify:track:1QEEqeFIZktqIpPI4jSVSF",
+    //   "spotify:track:1mSClObliRtgPVT399COQH",
+    //   "spotify:track:40riOy7x9W7GXjyGp4pjAv",
+    //   "spotify:track:3qiyyUfYe7CRYLucrPmulD",
+    //   "spotify:track:3ifaGhNHnCPQ9zdnOfolcZ",
+    //   "spotify:track:6H3kDe7CGoWYBabAeVWGiD",
+    //   "spotify:track:4alHo6RGd0D3OUbTPExTHN",
+    //   "spotify:track:6WzIJG0KNBo4JSjYjVJLwv",
+    //   "spotify:track:4KfSdst7rW39C0sfhArdrz",
+    //   "spotify:track:5SAUIWdZ04OxYfJFDchC7S",
+    //   "spotify:track:5QTxFnGygVM4jFQiBovmRo",
+    //   "spotify:track:4DMKwE2E2iYDKY01C335Uw",
+    //   "spotify:track:72ahyckBJfTigJCFCviVN7",
+    //   "spotify:track:1CQqupcyMg7176PPmIVmSj",
+    //   "spotify:track:3XcjIvaZVUFAIdIYZqY9bd",
+    //   "spotify:track:3lN8PP6R2IxbLP05QpYXng",
+    // ]}
+    ,
+
+    uris: ["spotify:playlist:6WESoRu7keGwiyag0owvuV"],
+    styles: {
+      activeColor: "#fff",
+      bgColor: "#333",
+      color: "#fff",
+      loaderColor: "#fff",
+      sliderColor: "#1cb954",
+      trackArtistColor: "#ccc",
+      trackNameColor: "#fff"
+    }
   });
 }
 
@@ -4893,6 +5070,68 @@ function SpotifyLogin() {
     href: AUTH_URL
   }, "Login With Spotify"));
 }
+
+/***/ }),
+
+/***/ "./client/Components/TestAudioClip.js":
+/*!********************************************!*\
+  !*** ./client/Components/TestAudioClip.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_bootstrap_Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap/Container */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap_Form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap/Form */ "./node_modules/react-bootstrap/esm/Form.js");
+
+
+
+
+function TestAudioClip() {
+  const audioUrl = "audio/opening-title.mp3"; // Replace with your audio URL
+  const [isPlaying, setIsPlaying] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [volume, setVolume] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0.5); // Initialize the volume to 0.5 (50% volume)
+  const audioRef = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+  const toggleAudio = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+  const handleVolumeChange = event => {
+    const newVolume = event.target.value;
+    audioRef.current.volume = newVolume;
+    setVolume(newVolume);
+  };
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Container__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    className: "my-5 text-light"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("audio", {
+    ref: audioRef,
+    src: audioUrl
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Play a separate audio track simultaneously (non-Spotify):"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "d-flex align-items-center px-5"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    className: "me-5",
+    onClick: toggleAudio
+  }, isPlaying ? "Pause" : "Play"), "Volume:", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Form__WEBPACK_IMPORTED_MODULE_3__["default"].Range, {
+    type: "range",
+    min: "0",
+    max: "1",
+    step: "0.01",
+    value: volume,
+    onChange: handleVolumeChange,
+    className: "ms-2"
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("hr", null));
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TestAudioClip);
 
 /***/ }),
 
@@ -10120,6 +10359,61 @@ module.exports = {
     merge: merge
 };
 
+
+/***/ }),
+
+/***/ "./node_modules/react-bootstrap/esm/Button.js":
+/*!****************************************************!*\
+  !*** ./node_modules/react-bootstrap/esm/Button.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _restart_ui_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @restart/ui/Button */ "./node_modules/@restart/ui/esm/Button.js");
+/* harmony import */ var _ThemeProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ThemeProvider */ "./node_modules/react-bootstrap/esm/ThemeProvider.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+
+
+
+
+const Button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(({
+  as,
+  bsPrefix,
+  variant = 'primary',
+  size,
+  active = false,
+  disabled = false,
+  className,
+  ...props
+}, ref) => {
+  const prefix = (0,_ThemeProvider__WEBPACK_IMPORTED_MODULE_3__.useBootstrapPrefix)(bsPrefix, 'btn');
+  const [buttonProps, {
+    tagName
+  }] = (0,_restart_ui_Button__WEBPACK_IMPORTED_MODULE_4__.useButtonProps)({
+    tagName: as,
+    disabled,
+    ...props
+  });
+  const Component = tagName;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(Component, {
+    ...buttonProps,
+    ...props,
+    ref: ref,
+    disabled: disabled,
+    className: classnames__WEBPACK_IMPORTED_MODULE_0___default()(className, prefix, active && 'active', variant && `${prefix}-${variant}`, size && `${prefix}-${size}`, props.href && disabled && 'disabled')
+  });
+});
+Button.displayName = 'Button';
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
 
 /***/ }),
 
