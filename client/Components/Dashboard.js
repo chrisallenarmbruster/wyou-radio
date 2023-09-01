@@ -6,12 +6,23 @@ import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
 import TestAudioClip from "./TestAudioClip"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  addTrack,
+  addTracks,
+  removeTrack,
+  clearPlaylist,
+  fetchPlaylistTracks,
+} from "../store/playlistSlice"
+import store from "../store"
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "31c41df5075e46c48c3547d709102476",
 })
 
 export default function Dashboard({ code }) {
+  const dispatch = useDispatch()
+  const playlist = useSelector((state) => state.playlist)
   const accessToken = useAuth(code)
   const [search, setSearch] = useState("")
   const [searchResults, setSearchResults] = useState([])
@@ -19,7 +30,8 @@ export default function Dashboard({ code }) {
   const [lyrics, setLyrics] = useState("")
 
   function chooseTrack(track) {
-    setPlayingTrack(track)
+    dispatch(addTrack(track))
+    setPlayingTrack([track])
     setSearch("")
     setLyrics("")
   }
@@ -27,8 +39,8 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
-    getUserPlaylists()
-    getPlaylistTracks()
+    const playlistId = "6WESoRu7keGwiyag0owvuV"
+    dispatch(fetchPlaylistTracks(playlistId, accessToken))
   }, [accessToken])
 
   useEffect(() => {
@@ -49,10 +61,13 @@ export default function Dashboard({ code }) {
           )
 
           return {
-            artist: track.artists[0].name,
             title: track.name,
+            artist: track.artists[0].name,
+            album: track.album.name,
+            duration: track.duration_ms,
             uri: track.uri,
             albumUrl: smallestAlbumImage.url,
+            id: track.id,
           }
         })
       )
@@ -60,29 +75,6 @@ export default function Dashboard({ code }) {
 
     return () => (cancel = true)
   }, [search, accessToken])
-
-  async function getUserPlaylists() {
-    if (!accessToken) return
-    try {
-      const { body } = await spotifyApi.getUserPlaylists()
-      const playlists = body.items
-      console.log("Playlists: ", playlists)
-    } catch (error) {
-      console.error("Error fetching user playlists: ", error)
-    }
-  }
-
-  async function getPlaylistTracks() {
-    if (!accessToken) return
-    try {
-      const playlistId = "6WESoRu7keGwiyag0owvuV"
-      const { body } = await spotifyApi.getPlaylistTracks(playlistId)
-      const tracks = body.items
-      console.log(`Tracks for Playlist ID: ${playlistId}`, tracks)
-    } catch (error) {
-      console.error("Error fetching user playlists: ", error)
-    }
-  }
 
   return (
     <>
@@ -115,7 +107,14 @@ export default function Dashboard({ code }) {
           <TestAudioClip />
         </div>
         <div>
-          <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+          {/* <Player accessToken={accessToken} trackUri={playingTrack?.uri} /> */}
+          <Player
+            spotifyApi={spotifyApi}
+            accessToken={accessToken}
+            trackUris={
+              playlist ? playlist.tracks.map((track) => track.uri) : null
+            }
+          />
         </div>
       </Container>
     </>

@@ -2,10 +2,21 @@ import React from "react"
 import { useState, useEffect } from "react"
 import SpotifyPlayer from "react-spotify-web-playback"
 
-export default function Player({ accessToken, trackUri }) {
+export default function Player({ accessToken, trackUris, spotifyApi }) {
   const [play, setPlay] = useState(false)
 
-  useEffect(() => setPlay(true), [trackUri])
+  useEffect(() => {
+    setPlay(true), [trackUris]
+    // spotifyApi.setVolume(50).then(
+    //   function () {
+    //     console.log("Setting volume to 50.")
+    //   },
+    //   function (err) {
+    //     //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+    //     console.log("Something went wrong!", err)
+    //   }
+    // )
+  })
 
   if (!accessToken) return null
 
@@ -15,38 +26,13 @@ export default function Player({ accessToken, trackUri }) {
       showSaveIcon
       callback={(state) => {
         console.log(state)
-        if (!state.isPlaying) setPlay(false)
+        if (!state.isPlaying) setPlay(true)
       }}
-      // play={play}
-      play={true}
-      // one at a time, based on clicking a search result
-      // uris={trackUri ? [trackUri] : []}
-
-      // hardcoding a list of tracks
-      // uris={[
-      //   "spotify:track:2SiXAy7TuUkycRVbbWDEpo",
-      //   "spotify:track:6QnVsqsS9W3E7HIc28vxpL",
-      //   "spotify:track:4JiEyzf0Md7KEFFGWDDdCr",
-      //   "spotify:track:1gcESexgftSuLuML57Y69q",
-      //   "spotify:track:1QEEqeFIZktqIpPI4jSVSF",
-      //   "spotify:track:1mSClObliRtgPVT399COQH",
-      //   "spotify:track:40riOy7x9W7GXjyGp4pjAv",
-      //   "spotify:track:3qiyyUfYe7CRYLucrPmulD",
-      //   "spotify:track:3ifaGhNHnCPQ9zdnOfolcZ",
-      //   "spotify:track:6H3kDe7CGoWYBabAeVWGiD",
-      //   "spotify:track:4alHo6RGd0D3OUbTPExTHN",
-      //   "spotify:track:6WzIJG0KNBo4JSjYjVJLwv",
-      //   "spotify:track:4KfSdst7rW39C0sfhArdrz",
-      //   "spotify:track:5SAUIWdZ04OxYfJFDchC7S",
-      //   "spotify:track:5QTxFnGygVM4jFQiBovmRo",
-      //   "spotify:track:4DMKwE2E2iYDKY01C335Uw",
-      //   "spotify:track:72ahyckBJfTigJCFCviVN7",
-      //   "spotify:track:1CQqupcyMg7176PPmIVmSj",
-      //   "spotify:track:3XcjIvaZVUFAIdIYZqY9bd",
-      //   "spotify:track:3lN8PP6R2IxbLP05QpYXng",
-      // ]}
-
-      uris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}
+      play={play}
+      // play={true}
+      uris={trackUris ? trackUris : []}
+      // or can use uri of playlist
+      // uris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}
       styles={{
         activeColor: "#fff",
         bgColor: "#333",
