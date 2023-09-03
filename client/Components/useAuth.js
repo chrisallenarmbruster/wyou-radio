@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react"
+import { useDispatch } from "react-redux"
+import { setUser } from "../store/userSlice"
 import axios from "axios"
 
 export default function useAuth(code) {
   const [accessToken, setAccessToken] = useState()
   const [refreshToken, setRefreshToken] = useState()
   const [expiresIn, setExpiresIn] = useState()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     axios
@@ -12,6 +15,7 @@ export default function useAuth(code) {
         code,
       })
       .then((res) => {
+        dispatch(setUser(res.data))
         setAccessToken(res.data.accessToken)
         setRefreshToken(res.data.refreshToken)
         setExpiresIn(res.data.expiresIn)
@@ -30,6 +34,7 @@ export default function useAuth(code) {
           refreshToken,
         })
         .then((res) => {
+          dispatch(setUser(res.data))
           setAccessToken(res.data.accessToken)
           setExpiresIn(res.data.expiresIn)
         })

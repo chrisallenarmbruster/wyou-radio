@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { createLogger } from "redux-logger"
 import playlistReducer from "./playlistSlice"
+import userReducer from "./userSlice"
 import thunkMiddleware from "redux-thunk"
 
 const loggerMiddleware = createLogger({
@@ -10,6 +11,7 @@ const loggerMiddleware = createLogger({
 const store = configureStore({
   reducer: {
     playlist: playlistReducer,
+    user: userReducer,
   },
   middleware: [loggerMiddleware, thunkMiddleware],
 })
