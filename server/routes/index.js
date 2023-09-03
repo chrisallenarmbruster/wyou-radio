@@ -8,5 +8,3 @@ router.use("/content", require("./content"));
 module.exports = router;
 
 const PORT = 3000;
-
-app.use(contentRoutes);

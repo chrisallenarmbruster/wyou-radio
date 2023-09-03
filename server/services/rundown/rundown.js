@@ -107,7 +107,7 @@ async function getContent(showWithSongs, index) {
   }
 }
 
-console.log(createShow(show, playlist));
+// console.log(createShow(show, playlist));
 
 module.exports = {
   currentContent,
