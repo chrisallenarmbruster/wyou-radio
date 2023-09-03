@@ -8601,6 +8601,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   addTracks: () => (/* binding */ addTracks),
 /* harmony export */   clearPlaylist: () => (/* binding */ clearPlaylist),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   exportPlaylist: () => (/* binding */ exportPlaylist),
 /* harmony export */   fetchPlaylistTracks: () => (/* binding */ fetchPlaylistTracks),
 /* harmony export */   removeTrack: () => (/* binding */ removeTrack),
 /* harmony export */   setPlaylistError: () => (/* binding */ setPlaylistError),
@@ -8621,18 +8622,23 @@ const playlistSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSli
   reducers: {
     addTrack: (state, action) => {
       state.tracks.push(action.payload);
+      exportPlaylist(state.tracks);
     },
     addTracks: (state, action) => {
       state.tracks = [...state.tracks, ...action.payload];
+      exportPlaylist(state.tracks);
     },
     removeTrack: (state, action) => {
       state.tracks = state.tracks.filter(track => track.id !== action.payload.id);
+      exportPlaylist(state.tracks);
     },
     clearPlaylist: state => {
       state.tracks = [];
     },
     setPlaylistLoading: (state, action) => {
       state.loading = action.payload;
+      exportPlaylist(state.tracks);
+      console.log(exportPlaylist(state.tracks));
     },
     setPlaylistError: (state, action) => {
       state.error = action.payload;
@@ -8667,10 +8673,22 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
     dispatch(addTracks(tracks));
     dispatch(setPlaylistError(null));
     dispatch(setPlaylistLoading(false));
+    exportPlaylist(tracks);
   } catch (error) {
     console.log(error);
     dispatch(setPlaylistError(error.message));
     dispatch(setPlaylistLoading(false));
+  }
+};
+const exportPlaylist = async playlist => {
+  try {
+    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("/content/add-playlist", {
+      playlist
+    });
+    console.log(response.data);
+    debugger;
+  } catch (error) {
+    console.log(error);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (playlistSlice.reducer);

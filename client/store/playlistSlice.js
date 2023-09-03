@@ -1,38 +1,43 @@
-import { createSlice } from "@reduxjs/toolkit"
-import axios from "axios"
+import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
   tracks: [],
   loading: false,
   error: null,
-}
+};
 
 const playlistSlice = createSlice({
   name: "playlist",
   initialState,
   reducers: {
     addTrack: (state, action) => {
-      state.tracks.push(action.payload)
+      state.tracks.push(action.payload);
+      exportPlaylist(state.tracks);
     },
     addTracks: (state, action) => {
-      state.tracks = [...state.tracks, ...action.payload]
+      state.tracks = [...state.tracks, ...action.payload];
+      exportPlaylist(state.tracks);
     },
     removeTrack: (state, action) => {
       state.tracks = state.tracks.filter(
         (track) => track.id !== action.payload.id
-      )
+      );
+      exportPlaylist(state.tracks);
     },
     clearPlaylist: (state) => {
-      state.tracks = []
+      state.tracks = [];
     },
     setPlaylistLoading: (state, action) => {
-      state.loading = action.payload
+      state.loading = action.payload;
+      exportPlaylist(state.tracks);
+      console.log(exportPlaylist(state.tracks));
     },
     setPlaylistError: (state, action) => {
-      state.error = action.payload
+      state.error = action.payload;
     },
   },
-})
+});
 
 export const {
   addTrack,
@@ -41,12 +46,12 @@ export const {
   clearPlaylist,
   setPlaylistLoading,
   setPlaylistError,
-} = playlistSlice.actions
+} = playlistSlice.actions;
 
 export const fetchPlaylistTracks =
   (playlistId, accessToken) => async (dispatch) => {
     try {
-      dispatch(setPlaylistLoading(true))
+      dispatch(setPlaylistLoading(true));
 
       const response = await axios.get(
         `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
@@ -55,8 +60,8 @@ export const fetchPlaylistTracks =
             Authorization: `Bearer ${accessToken}`,
           },
         }
-      )
-      console.log("response: ", response)
+      );
+      console.log("response: ", response);
       const tracks = response.data.items.map((item) => ({
         title: item.track.name,
         artist: item.track.artists[0].name,
@@ -64,16 +69,27 @@ export const fetchPlaylistTracks =
         duration: item.track.duration_ms,
         uri: item.track.uri,
         id: item.track.id,
-      }))
+      }));
 
-      dispatch(addTracks(tracks))
-      dispatch(setPlaylistError(null))
-      dispatch(setPlaylistLoading(false))
+      dispatch(addTracks(tracks));
+      dispatch(setPlaylistError(null));
+      dispatch(setPlaylistLoading(false));
+      exportPlaylist(tracks);
     } catch (error) {
-      console.log(error)
-      dispatch(setPlaylistError(error.message))
-      dispatch(setPlaylistLoading(false))
+      console.log(error);
+      dispatch(setPlaylistError(error.message));
+      dispatch(setPlaylistLoading(false));
     }
-  }
+  };
 
-export default playlistSlice.reducer
+export const exportPlaylist = async (playlist) => {
+  try {
+    const response = await axios.post("/content/add-playlist", { playlist });
+    console.log(response.data);
+    debugger;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default playlistSlice.reducer;

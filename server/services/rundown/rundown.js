@@ -3,23 +3,7 @@ const currentWeather = require("../currentWeather")
 // const createTalk = require("../createTalk");
 // const createNews = require("../createNews");
 
-let show = {
-  radioStation: "1-2-3 FM",
-  showName: "Rock Retrospectives with DJ Spike",
-  date: "2023-09-01",
-  timeSlot: "7:00 AM - 8:00 AM",
-  rundown: [
-    { type: "intro" },
-    { type: "weather" },
-    { type: "song", songName: null, bandName: null, duration: null },
-    { type: "song", songName: null, bandName: null, duration: null },
-    { type: "news" },
-    { type: "talk_show" },
-    { type: "song", songName: null, bandName: null, duration: null },
-    { type: "song", songName: null, bandName: null, duration: null },
-    { type: "outro" },
-  ],
-}
+
 
 let playlist = [
   {
@@ -69,8 +53,26 @@ let currentContent = (function () {
   }
 })()
 
-function addPlaylistToRundown(show, playlist) {
+function addPlaylistToRundown(playlist) {
   let songIndex = 0
+
+  let show = {
+    radioStation: "1-2-3 FM",
+    showName: "Rock Retrospectives with DJ Spike",
+    date: "2023-09-01",
+    timeSlot: "7:00 AM - 8:00 AM",
+    rundown: [
+      { type: "intro" },
+      { type: "weather" },
+      { type: "song", songName: null, bandName: null, duration: null },
+      { type: "song", songName: null, bandName: null, duration: null },
+      { type: "news" },
+      { type: "talk_show" },
+      { type: "song", songName: null, bandName: null, duration: null },
+      { type: "song", songName: null, bandName: null, duration: null },
+      { type: "outro" },
+    ],
+  };
 
   show.rundown.forEach((element) => {
     if (element.type === "song" && songIndex < playlist.length) {

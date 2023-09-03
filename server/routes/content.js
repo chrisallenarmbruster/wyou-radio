@@ -24,7 +24,7 @@ router.post("/add-playlist", (req, res) => {
     return res.status(400).send("Playlist is required");
   }
 
-  let updatedShow = addPlaylistToRundown(playlist.tracks);
+  let updatedShow = addPlaylistToRundown(playlist);
 
   res.json(updatedShow);
 });
