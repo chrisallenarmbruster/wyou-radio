@@ -3,9 +3,9 @@ const fs = require("fs-extra");
 const play = require("play-sound")((opts = {}));
 const fileName = "audio.mp3";
 
-const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+const ELEVENLABS_API_KEY = "1551af0ac5ade77c4647de014e9636b2"; //process.env.ELEVENLABS_API_KEY;
 const getVoiceDetails = (voiceID) => {
-  return voice.getVoice(apiKey, voiceID);
+  return voice.getVoice(ELEVENLABS_API_KEY, voiceID);
 };
 
 const convertTextToSpeech = (voiceID, textInput, outputFileName) => {

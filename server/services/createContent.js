@@ -13,6 +13,8 @@ const {
 const { predictMessages } = require("./openAIService");
 const voiceID = "krnShwoOTYlrQktZt9g7";
 
+//TODO: Need to set this up to create Weather, News, etc. Also need to construct chat history.
+
 async function createContent(
   radioStation,
   showName,
@@ -32,19 +34,25 @@ async function createContent(
     console.log(details);
   });
 
-  convertTextToSpeech(voiceID, result.content, "output.mp3").then(
-    (response) => {
-      console.log(response);
-    }
-  );
+  const timestamp = Date.now();
 
-  streamTextToSpeech(voiceID, result.content)
-    .then(() => {
-      console.log("Streaming completed.");
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  convertTextToSpeech(
+    voiceID,
+    result.content,
+    `${songName}_${bandName}_${timestamp}`
+  ).then((response) => {
+    console.log(response);
+  });
+
+  // streamTextToSpeech(voiceID, result.content)
+  //   .then(() => {
+  //     console.log("Streaming completed.");
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error:", error);
+  //   });
+
+  return result.content;
 }
 
 module.exports = { createContent };
