@@ -39,9 +39,14 @@ export default function Dashboard({ code }) {
   useEffect(() => {
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
+  }, [accessToken])
+
+  useEffect(() => {
+    if (!accessToken) return
+    spotifyApi.setAccessToken(accessToken)
     const playlistId = "6WESoRu7keGwiyag0owvuV"
     dispatch(fetchPlaylistTracks(playlistId, accessToken))
-  }, [accessToken])
+  }, [!!accessToken])
 
   useEffect(() => {
     if (!search) return setSearchResults([])
@@ -80,7 +85,7 @@ export default function Dashboard({ code }) {
     <>
       <Container
         className="bg-dark d-flex flex-column py-3"
-        style={{ height: "100vh" }}
+        style={{ height: "90vh" }}
       >
         <Form.Control
           type="search"

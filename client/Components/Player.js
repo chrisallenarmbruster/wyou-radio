@@ -33,6 +33,7 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
       uris={trackUris ? trackUris : []}
       // or can use uri of playlist
       // uris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}
+      initialVolume={0.5}
       styles={{
         activeColor: "#fff",
         bgColor: "#333",
