@@ -1,9 +1,14 @@
 import React from "react"
 import { useState, useEffect } from "react"
-import SpotifyPlayer from "react-spotify-web-playback"
+import SpotifyPlayer, { spotifyApi } from "react-spotify-web-playback"
 
 export default function Player({ accessToken, trackUris, spotifyApi }) {
   const [play, setPlay] = useState(false)
+  const [audio] = useState(
+    new Audio(
+      "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+    )
+  )
 
   useEffect(() => {
     setPlay(true), [trackUris]
@@ -19,21 +24,46 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
   })
 
   if (!accessToken) return null
-
+  let djCue, volumeCue
   return (
     <SpotifyPlayer
       token={accessToken}
       showSaveIcon
       callback={(state) => {
         console.log(state)
-        if (!state.isPlaying) setPlay(true)
+
+        if (!state.isPlaying) {
+          console.log("State is not playing, clearing scheduled DJ audio")
+          clearTimeout(djCue)
+          clearTimeout(volumeCue)
+          setPlay(true)
+        }
+        if (state.isPlaying && !state.error) {
+          console.log(
+            `State is playing and no error, scheduling DJ audio in ${
+              state.track.durationMs - state.progressMs - 6500
+            } milliseconds`
+          )
+          clearTimeout(djCue)
+          djCue = setTimeout(() => {
+            console.log("VOLUME DOWN")
+            console.log("DJ CUE")
+            spotifyApi.setVolume(50)
+            audio.play()
+            clearTimeout(volumeCue)
+            volumeCue = setTimeout(() => {
+              console.log("VOLUME UP")
+              spotifyApi.setVolume(100)
+            }, 13000)
+          }, state.track.durationMs - state.progressMs - 6500)
+        }
       }}
       play={play}
       // play={true}
       uris={trackUris ? trackUris : []}
       // or can use uri of playlist
       // uris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}
-      initialVolume={0.5}
+      initialVolume={1}
       styles={{
         activeColor: "#fff",
         bgColor: "#333",

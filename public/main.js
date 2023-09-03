@@ -8291,6 +8291,7 @@ function Player({
   spotifyApi
 }) {
   const [play, setPlay] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [audio] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(new Audio("audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"));
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setPlay(true), [trackUris];
     // spotifyApi.setVolume(50).then(
@@ -8305,12 +8306,33 @@ function Player({
   });
 
   if (!accessToken) return null;
+  let djCue, volumeCue;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_1__["default"], {
     token: accessToken,
     showSaveIcon: true,
     callback: state => {
       console.log(state);
-      if (!state.isPlaying) setPlay(true);
+      if (!state.isPlaying) {
+        console.log("State is not playing, clearing scheduled DJ audio");
+        clearTimeout(djCue);
+        clearTimeout(volumeCue);
+        setPlay(true);
+      }
+      if (state.isPlaying && !state.error) {
+        console.log(`State is playing and no error, scheduling DJ audio in ${state.track.durationMs - state.progressMs - 6500} milliseconds`);
+        clearTimeout(djCue);
+        djCue = setTimeout(() => {
+          console.log("VOLUME DOWN");
+          console.log("DJ CUE");
+          spotifyApi.setVolume(50);
+          audio.play();
+          clearTimeout(volumeCue);
+          volumeCue = setTimeout(() => {
+            console.log("VOLUME UP");
+            spotifyApi.setVolume(100);
+          }, 13000);
+        }, state.track.durationMs - state.progressMs - 6500);
+      }
     },
     play: play
     // play={true}
@@ -8319,7 +8341,7 @@ function Player({
     // or can use uri of playlist
     // uris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}
     ,
-    initialVolume: 0.5,
+    initialVolume: 1,
     styles: {
       activeColor: "#fff",
       bgColor: "#333",
