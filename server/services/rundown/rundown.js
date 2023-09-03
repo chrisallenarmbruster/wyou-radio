@@ -1,9 +1,7 @@
-const { createContent } = require("../createContent")
-const currentWeather = require("../currentWeather")
+const { createContent } = require("../createContent");
+const currentWeather = require("../currentWeather");
 // const createTalk = require("../createTalk");
 // const createNews = require("../createNews");
-
-
 
 let playlist = [
   {
@@ -32,29 +30,29 @@ let playlist = [
     duration: 537,
   },
   { title: "Don't Cry", artist: "Guns N Roses", album: "test", duration: 284 },
-]
+];
 
 let currentContent = (function () {
-  let currentIndex = 0 // start with the first item in the rundown
+  let currentIndex = 0; // start with the first item in the rundown
 
   return {
     next: async function (showWithSongs) {
       if (currentIndex < showWithSongs.rundown.length) {
-        let content = await getContent(showWithSongs, currentIndex)
-        currentIndex++ // Move to the next index
-        return content
+        let content = await getContent(showWithSongs, currentIndex);
+        currentIndex++; // Move to the next index
+        return content;
       } else {
-        console.log("End of rundown reached.")
+        console.log("End of rundown reached.");
       }
     },
     reset: function () {
-      currentIndex = 0 // reset index to start
+      currentIndex = 0; // reset index to start
     },
-  }
-})()
+  };
+})();
 
 function addPlaylistToRundown(playlist) {
-  let songIndex = 0
+  let songIndex = 0;
 
   let show = {
     radioStation: "1-2-3 FM",
@@ -76,22 +74,23 @@ function addPlaylistToRundown(playlist) {
 
   show.rundown.forEach((element) => {
     if (element.type === "song" && songIndex < playlist.length) {
-      element.songName = playlist[songIndex].title
-      element.bandName = playlist[songIndex].artist
-      element.albumName = playlist[songIndex].album
-      element.duration = playlist[songIndex].duration
-      songIndex++ // Move to the next song in the playlist
+      element.songName = playlist[songIndex].title;
+      element.bandName = playlist[songIndex].artist;
+      element.albumName = playlist[songIndex].album;
+      element.duration = playlist[songIndex].duration;
+      songIndex++; // Move to the next song in the playlist
     }
-  })
-  return show
+  });
+  // console.log("show: ", show);
+  return show;
 }
 
 async function getContent(showWithSongs, index) {
-  const element = showWithSongs.rundown[index]
-  if (!element) return
+  const element = showWithSongs.rundown[index];
+  if (!element) return;
 
   if (element.type === "weather") {
-    return await currentWeather()
+    return await currentWeather();
   } else if (element.type === "song") {
     return await createContent(
       showWithSongs.radioStation,
@@ -99,13 +98,13 @@ async function getContent(showWithSongs, index) {
       element.songName,
       element.bandName,
       showWithSongs.date
-    )
+    );
   } else if (element.type === "talk_show") {
     // this.content = createTalk();
   } else if (element.type === "news") {
     // this.content = createNews();
   } else {
-    console.warn(`Invalid content type: ${element.type}`)
+    console.warn(`Invalid content type: ${element.type}`);
   }
 }
 
@@ -114,4 +113,4 @@ async function getContent(showWithSongs, index) {
 module.exports = {
   currentContent,
   addPlaylistToRundown,
-}
+};

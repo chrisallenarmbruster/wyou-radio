@@ -8622,23 +8622,25 @@ const playlistSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSli
   reducers: {
     addTrack: (state, action) => {
       state.tracks.push(action.payload);
-      exportPlaylist(state.tracks);
+      // exportPlaylist(state.tracks);
     },
+
     addTracks: (state, action) => {
       state.tracks = [...state.tracks, ...action.payload];
-      exportPlaylist(state.tracks);
+      // exportPlaylist(state.tracks);
     },
+
     removeTrack: (state, action) => {
       state.tracks = state.tracks.filter(track => track.id !== action.payload.id);
-      exportPlaylist(state.tracks);
+      // exportPlaylist(state.tracks);
     },
+
     clearPlaylist: state => {
       state.tracks = [];
     },
     setPlaylistLoading: (state, action) => {
       state.loading = action.payload;
       exportPlaylist(state.tracks);
-      console.log(exportPlaylist(state.tracks));
     },
     setPlaylistError: (state, action) => {
       state.error = action.payload;
@@ -8673,7 +8675,6 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
     dispatch(addTracks(tracks));
     dispatch(setPlaylistError(null));
     dispatch(setPlaylistLoading(false));
-    exportPlaylist(tracks);
   } catch (error) {
     console.log(error);
     dispatch(setPlaylistError(error.message));
@@ -8682,8 +8683,8 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
 };
 const exportPlaylist = async playlist => {
   try {
-    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("/content/add-playlist", {
-      playlist
+    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("api/content/add-playlist", {
+      playlist: playlist
     });
     console.log(response.data);
     debugger;

@@ -13,17 +13,17 @@ const playlistSlice = createSlice({
   reducers: {
     addTrack: (state, action) => {
       state.tracks.push(action.payload);
-      exportPlaylist(state.tracks);
+      // exportPlaylist(state.tracks);
     },
     addTracks: (state, action) => {
       state.tracks = [...state.tracks, ...action.payload];
-      exportPlaylist(state.tracks);
+      // exportPlaylist(state.tracks);
     },
     removeTrack: (state, action) => {
       state.tracks = state.tracks.filter(
         (track) => track.id !== action.payload.id
       );
-      exportPlaylist(state.tracks);
+      // exportPlaylist(state.tracks);
     },
     clearPlaylist: (state) => {
       state.tracks = [];
@@ -31,7 +31,6 @@ const playlistSlice = createSlice({
     setPlaylistLoading: (state, action) => {
       state.loading = action.payload;
       exportPlaylist(state.tracks);
-      console.log(exportPlaylist(state.tracks));
     },
     setPlaylistError: (state, action) => {
       state.error = action.payload;
@@ -74,7 +73,6 @@ export const fetchPlaylistTracks =
       dispatch(addTracks(tracks));
       dispatch(setPlaylistError(null));
       dispatch(setPlaylistLoading(false));
-      exportPlaylist(tracks);
     } catch (error) {
       console.log(error);
       dispatch(setPlaylistError(error.message));
@@ -84,7 +82,9 @@ export const fetchPlaylistTracks =
 
 export const exportPlaylist = async (playlist) => {
   try {
-    const response = await axios.post("/content/add-playlist", { playlist });
+    const response = await axios.post("api/content/add-playlist", {
+      playlist: playlist,
+    });
     console.log(response.data);
     debugger;
   } catch (error) {
