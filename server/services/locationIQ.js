@@ -1,7 +1,7 @@
 const axios = require("axios");
 require("dotenv").config();
 
-const LOCATION_IQ_API_KEY = "pk.5b886a93cefe2fef951d9518e0b6a874"; //process.env.LOCATION_IQ_API_KEY; // Replace with your LocationIQ API key
+const LOCATION_IQ_API_KEY = process.env.LOCATION_IQ_API_KEY; // Replace with your LocationIQ API key
 const BASE_URL = "https://us1.locationiq.com/v1/search.php";
 
 async function getLatLonFromZip(zipCode) {

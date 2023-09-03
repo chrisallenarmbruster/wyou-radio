@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const OPEN_WEATHER_API_KEY = "f1fb4d33a97801827ee7e4daac5e59f1"; //process.env.OPEN_WEATHER_API_KEY;
+const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
 
 const BASE_URL = "https://api.openweathermap.org/data/3.0/onecall/timemachine";
 
