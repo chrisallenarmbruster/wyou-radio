@@ -1,4 +1,3 @@
-const { get } = require("http");
 const { createContent } = require("../createContent");
 const currentWeather = require("../currentWeather");
 // const createTalk = require("../createTalk");
@@ -23,16 +22,32 @@ let show = {
 };
 
 let playlist = [
-  { songName: "Sweet Child O Mine", bandName: "Guns N Roses", duration: 356 },
   {
-    songName: "Welcome to the Jungle",
-    bandName: "Guns N Roses",
+    title: "Sweet Child O Mine",
+    artist: "Guns N Roses",
+    album: "test",
+    duration: 356,
+  },
+  {
+    title: "Welcome to the Jungle",
+    artist: "Guns N Roses",
+    album: "test",
     duration: 275,
   },
-  { songName: "Paradise City", bandName: "Guns N Roses", duration: 408 },
-  { songName: "Patience", bandName: "Guns N Roses", duration: 409 },
-  { songName: "November Rain", bandName: "Guns N Roses", duration: 537 },
-  { songName: "Don't Cry", bandName: "Guns N Roses", duration: 284 },
+  {
+    title: "Paradise City",
+    artist: "Guns N Roses",
+    album: "test",
+    duration: 408,
+  },
+  { title: "Patience", artist: "Guns N Roses", album: "test", duration: 409 },
+  {
+    title: "November Rain",
+    artist: "Guns N Roses",
+    album: "test",
+    duration: 537,
+  },
+  { title: "Don't Cry", artist: "Guns N Roses", album: "test", duration: 284 },
 ];
 
 let currentContent = (function () {
@@ -59,8 +74,9 @@ function addPlaylistToRundown(show, playlist) {
 
   show.rundown.forEach((element) => {
     if (element.type === "song" && songIndex < playlist.length) {
-      element.songName = playlist[songIndex].songName;
-      element.bandName = playlist[songIndex].bandName;
+      element.songName = playlist[songIndex].title;
+      element.bandName = playlist[songIndex].artist;
+      element.albumName = playlist[songIndex].album;
       element.duration = playlist[songIndex].duration;
       songIndex++; // Move to the next song in the playlist
     }

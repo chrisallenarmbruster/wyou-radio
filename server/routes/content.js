@@ -2,6 +2,7 @@
 const router = require("express").Router();
 const {
   currentContent,
+  addPlaylistToRundown,
   showWithSongs,
 } = require("../services/rundown/rundown");
 
@@ -17,13 +18,13 @@ router.get("/reset", (req, res) => {
 });
 
 router.post("/add-playlist", (req, res) => {
-  const playlist = req.body;
+  const { playlist } = req.body;
 
   if (!playlist) {
     return res.status(400).send("Playlist is required");
   }
 
-  let updatedShow = addPlaylistToRundown(showWithSongs, playlist);
+  let updatedShow = addPlaylistToRundown(playlist.tracks);
 
   res.json(updatedShow);
 });
