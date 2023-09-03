@@ -1,7 +1,11 @@
-
 const { ChatOpenAI } = require("langchain/chat_models/openai");
 
-const OPENAI_API_KEY = "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"; //process.env.OPENAI_API_KEY || "default_key"; //
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+// export function generateAIContent(type) {
+//    if(type === 'intro') return "AI Generated Intro";
+//    ... other types
+// }
 
 const llm = new ChatOpenAI({
   openAIApiKey: OPENAI_API_KEY,

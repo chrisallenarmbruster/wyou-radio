@@ -2,22 +2,28 @@ const {
   getVoiceDetails,
   convertTextToSpeech,
   streamTextToSpeech,
-} = require("../server/services/audioService");
- 
+} = require("./audioService");
+
 const {
   HumanMessage,
   ChatMessage,
   SystemMessage,
 } = require("langchain/schema");
 
-const { predictMessages } = require("../server/services/openAIService");
-const voiceID = "21m00Tcm4TlvDq8ikWAM";
+const { predictMessages } = require("./openAIService");
+const voiceID = "krnShwoOTYlrQktZt9g7";
 
-
-async function main() {
+async function createContent(
+  radioStation,
+  showName,
+  songName,
+  bandName,
+  date,
+  timeSlot
+) {
   const result = await predictMessages([
     new HumanMessage(
-      "Create a paragraph with no titles or headings that refelects verbatum what a disk jockey would say to tee up the Sweet child o mine by guns and roses song on a classic rock radio station."
+      `You are a gruff, irreverent, and humorous disk jockey. Create a paragraph with no titles or headings that refelects verbatum what a disk jockey would say to tee up the ${songName} by ${bandName} on the ${radioStation}. The showName is ${showName}. The date is ${date}. The timeSlot is ${timeSlot}.`
     ),
   ]);
   console.log(result.content);
@@ -41,4 +47,4 @@ async function main() {
     });
 }
 
-main();
+module.exports = { createContent };
