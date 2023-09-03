@@ -4,12 +4,6 @@ const currentWeather = require("../currentWeather");
 // const createTalk = require("../createTalk");
 // const createNews = require("../createNews");
 
-// Playlist?
-// {
-//   songName,
-//   bandName,
-//   duration
-//}
 let show = {
   radioStation: "1-2-3 FM",
   showName: "Rock Retrospectives with DJ Spike",
@@ -18,6 +12,10 @@ let show = {
   rundown: [
     { type: "intro" },
     { type: "weather" },
+    { type: "song", songName: null, bandName: null, duration: null },
+    { type: "song", songName: null, bandName: null, duration: null },
+    { type: "news" },
+    { type: "talk_show" },
     { type: "song", songName: null, bandName: null, duration: null },
     { type: "song", songName: null, bandName: null, duration: null },
     { type: "outro" },
@@ -31,48 +29,71 @@ let playlist = [
     bandName: "Guns N Roses",
     duration: 275,
   },
+  { songName: "Paradise City", bandName: "Guns N Roses", duration: 408 },
+  { songName: "Patience", bandName: "Guns N Roses", duration: 409 },
+  { songName: "November Rain", bandName: "Guns N Roses", duration: 537 },
+  { songName: "Don't Cry", bandName: "Guns N Roses", duration: 284 },
 ];
 
-function createShow(show, playlist) {
-  function addPlaylistToRundown(show) {
-    show.rundown.forEach((element) => {
-      if (element.type === "song") {
-        element.songName = playlist[0].songName;
-        element.bandName = playlist[0].bandName;
-        element.duration = playlist[0].duration;
-      }
-    });
-    return show;
-  }
+let currentContent = (function () {
+  let currentIndex = 0; // start with the first item in the rundown
 
-  function getContent(showWithSongs) {
-    showWithSongs.rundown.forEach(async (element) => {
-      if (element.type === "weather") {
-        return await currentWeather();
-      } else if (element.type === "song") {
-        return await createContent(
-          showWithSongs.radioStation,
-          showWithSongs.showName,
-          element.songName,
-          element.bandName,
-          showWithSongs.date
-        );
-      } else if (element.type === "talk_show") {
-        // this.content = createTalk();
-      } else if (element.type === "news") {
-        // this.content = createNews();
+  return {
+    next: async function (showWithSongs) {
+      if (currentIndex < showWithSongs.rundown.length) {
+        let content = await getContent(showWithSongs, currentIndex);
+        currentIndex++; // Move to the next index
+        return content;
       } else {
-        console.warn(`Invalid content type: ${element.type}`);
+        console.log("End of rundown reached.");
       }
-    });
-    return showWithSongs;
-  }
+    },
+    reset: function () {
+      currentIndex = 0; // reset index to start
+    },
+  };
+})();
 
-  let showWithSongs = addPlaylistToRundown(show);
-  let showWithContent = getContent(showWithSongs);
-  return showWithContent;
+function addPlaylistToRundown(show, playlist) {
+  let songIndex = 0;
+
+  show.rundown.forEach((element) => {
+    if (element.type === "song" && songIndex < playlist.length) {
+      element.songName = playlist[songIndex].songName;
+      element.bandName = playlist[songIndex].bandName;
+      element.duration = playlist[songIndex].duration;
+      songIndex++; // Move to the next song in the playlist
+    }
+  });
+  return show;
+}
+
+async function getContent(showWithSongs, index) {
+  const element = showWithSongs.rundown[index];
+  if (!element) return;
+
+  if (element.type === "weather") {
+    return await currentWeather();
+  } else if (element.type === "song") {
+    return await createContent(
+      showWithSongs.radioStation,
+      showWithSongs.showName,
+      element.songName,
+      element.bandName,
+      showWithSongs.date
+    );
+  } else if (element.type === "talk_show") {
+    // this.content = createTalk();
+  } else if (element.type === "news") {
+    // this.content = createNews();
+  } else {
+    console.warn(`Invalid content type: ${element.type}`);
+  }
 }
 
 console.log(createShow(show, playlist));
 
-module.exports = { createShow };
+module.exports = {
+  currentContent,
+  addPlaylistToRundown,
+};
