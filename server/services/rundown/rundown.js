@@ -153,6 +153,20 @@ function createDefaultShow() {
   };
 }
 
+async function convertMP3FileToDataURI(filePath) {
+  try {
+    const mp3Data = await fs.promises.readFile(filePath);
+    // Encode the read data into Base64
+    const base64Data = mp3Data.toString("base64");
+    // Construct the Data URI
+    const dataURI = `data:audio/mpeg;base64, ${base64Data}`;
+    // Now you can use the dataURI as needed
+    console.log("Data URI:", dataURI);
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+}
+
 async function getContent(showWithSongs) {
   const element = showWithSongs.rundown[currentIndex];
   if (!element) return;
@@ -166,13 +180,18 @@ async function getContent(showWithSongs) {
     if (element.type === "weather") {
       return await currentWeather();
     } else if (element.type === undefined || element.type === "song") {
-      return await createContent(
+      await createContent(
         showWithSongs.radioStation,
         showWithSongs.showName,
         element.songName,
         element.bandName,
         showWithSongs.date
       );
+      const filePath = path.join(
+        __dirname,
+        `${element.songName}_${element.bandName}`
+      );
+      return await convertMP3FileToDataURI(filePath);
     } else if (element.type === "talk_show") {
       // this.content = createTalk();
       return null;

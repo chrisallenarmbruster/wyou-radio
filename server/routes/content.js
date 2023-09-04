@@ -32,6 +32,7 @@ router.post("/add-playlist", (req, res) => {
 router.get("/audio/:filename", (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, filename);
+  console.log(filePath);
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).send("File not found!");
