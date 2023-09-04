@@ -92,4 +92,14 @@ export const exportPlaylist = async (playlist) => {
   }
 };
 
+export const nextDJTrack = async (index) => {
+  try {
+    const response = await axios.get(`api/content/next-content?index=${index}`);
+    console.log(response.data);
+    debugger;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default playlistSlice.reducer;
