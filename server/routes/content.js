@@ -1,7 +1,7 @@
 // Setup an endpoint that the frontend can call
 const router = require("express").Router();
-const path = require("path");
-const fs = require("fs");
+
+
 
 const {
   next,
@@ -9,9 +9,10 @@ const {
   addPlaylistToRundown,
 } = require("../services/rundown/rundown");
 
-router.get("/next-content", (req, res) => {
-  const showWithSongs = addPlaylistToRundown(samplePlaylist);
-  let content = next(showWithSongs);
+router.get("/next-content", async (req, res) => {
+  const { playlist } = req.body;
+  const showWithSongs = addPlaylistToRundown(playlist);
+  let content = await next(showWithSongs);
   res.json(content);
 });
 
@@ -27,30 +28,6 @@ router.post("/add-playlist", (req, res) => {
   }
   let updatedShow = addPlaylistToRundown(playlist);
   res.json(updatedShow);
-});
-
-router.get("/audio/:filename", (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, filename);
-  console.log(filePath);
-
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).send("File not found!");
-  }
-
-  const stat = fs.statSync(filePath);
-
-  if (path.extname(filename) !== ".mp3") {
-    return res.status(400).send("Not a valid audio file.");
-  }
-
-  res.writeHead(200, {
-    "Content-Type": "audio/mpeg",
-    "Content-Length": stat.size,
-  });
-
-  const readStream = fs.createReadStream(filePath);
-  readStream.pipe(res);
 });
 
 module.exports = router;

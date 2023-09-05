@@ -1,5 +1,7 @@
 const { createContent } = require("../createContent");
 const currentWeather = require("../currentWeather");
+const path = require("path");
+const fs = require("fs");
 
 let currentIndex = 0;
 
@@ -34,9 +36,9 @@ let playlist = [
 
 let previousRundown = null;
 
-function next(showWithSongs) {
+async function next(showWithSongs) {
   if (currentIndex < showWithSongs.rundown.length) {
-    const content = getContent(showWithSongs);
+    const content = await getContent(showWithSongs);
     currentIndex++;
     return content;
   } else {
@@ -82,29 +84,6 @@ function createDefaultShow() {
     date: "2023-09-01",
     timeSlot: "7:00 AM - 8:00 AM",
     rundown: [
-      { type: "intro" },
-      {
-        type: "song",
-        songName: null,
-        bandName: null,
-        albumName: null,
-        duration: null,
-      },
-      {
-        type: "song",
-        songName: null,
-        bandName: null,
-        albumName: null,
-        duration: null,
-      },
-      {
-        type: "song",
-        songName: null,
-        bandName: null,
-        albumName: null,
-        duration: null,
-      },
-      { type: "news" },
       {
         type: "song",
         songName: null,
@@ -148,7 +127,6 @@ function createDefaultShow() {
         albumName: null,
         duration: null,
       },
-      { type: "outro" },
     ],
   };
 }
@@ -156,12 +134,10 @@ function createDefaultShow() {
 async function convertMP3FileToDataURI(filePath) {
   try {
     const mp3Data = await fs.promises.readFile(filePath);
-    // Encode the read data into Base64
     const base64Data = mp3Data.toString("base64");
-    // Construct the Data URI
     const dataURI = `data:audio/mpeg;base64, ${base64Data}`;
-    // Now you can use the dataURI as needed
-    console.log("Data URI:", dataURI);
+    // console.log("Data URI:", dataURI);
+    return dataURI;
   } catch (error) {
     console.error("Error:", error.message);
   }
@@ -173,25 +149,26 @@ async function getContent(showWithSongs) {
 
   if (
     !previousRundown ||
-    (previousRundown &&
-      JSON.stringify(previousRundown.rundown[currentIndex]) !==
-        JSON.stringify(element))
+    previousRundown
+    //TODO: Need to compare and run if the content hasn't been created yet.
+    // &&
+    // JSON.stringify(previousRundown.rundown[currentIndex]) !==
+    //   JSON.stringify(element))
   ) {
     if (element.type === "weather") {
       return await currentWeather();
     } else if (element.type === undefined || element.type === "song") {
-      await createContent(
+      let fileName = await createContent(
         showWithSongs.radioStation,
         showWithSongs.showName,
         element.songName,
         element.bandName,
         showWithSongs.date
       );
-      const filePath = path.join(
-        __dirname,
-        `${element.songName}_${element.bandName}`
-      );
-      return await convertMP3FileToDataURI(filePath);
+      //TODO: Turn this back on!
+      // let audioURI = await convertMP3FileToDataURI(fileName);
+      // return audioURI;
+      return null
     } else if (element.type === "talk_show") {
       // this.content = createTalk();
       return null;
@@ -200,6 +177,7 @@ async function getContent(showWithSongs) {
       return null;
     } else {
       console.warn(`Invalid content type: ${element.type}`);
+      return null;
     }
   }
 }

@@ -8603,6 +8603,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   exportPlaylist: () => (/* binding */ exportPlaylist),
 /* harmony export */   fetchPlaylistTracks: () => (/* binding */ fetchPlaylistTracks),
+/* harmony export */   nextDJTrack: () => (/* binding */ nextDJTrack),
 /* harmony export */   removeTrack: () => (/* binding */ removeTrack),
 /* harmony export */   setPlaylistError: () => (/* binding */ setPlaylistError),
 /* harmony export */   setPlaylistLoading: () => (/* binding */ setPlaylistLoading)
@@ -8686,6 +8687,15 @@ const exportPlaylist = async playlist => {
     const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("api/content/add-playlist", {
       playlist: playlist
     });
+    console.log(response.data);
+    debugger;
+  } catch (error) {
+    console.log(error);
+  }
+};
+const nextDJTrack = async index => {
+  try {
+    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].get(`api/content/next-content?index=${index}`);
     console.log(response.data);
     debugger;
   } catch (error) {
