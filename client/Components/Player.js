@@ -115,12 +115,12 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
 
   audio.addEventListener("play", () => {
     console.log("Audio started playing")
-    if (player) player.setVolume(0.5)
+    if (player) player.setVolume(0.25)
   })
 
   audio.addEventListener("ended", () => {
     console.log("Audio ended")
-    if (player) player.setVolume(1)
+    if (player) player.setVolume(0.5)
     prepareNextDjAudio()
   })
 
@@ -133,7 +133,7 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
       callback={spotifyEventHandler}
       play={play}
       uris={trackUris ? trackUris : []}
-      initialVolume={1}
+      initialVolume={0.5}
       styles={{
         activeColor: "#fff",
         bgColor: "#333",
