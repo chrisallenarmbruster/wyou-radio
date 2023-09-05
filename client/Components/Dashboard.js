@@ -17,10 +17,6 @@ import {
 } from "../store/playlistSlice"
 import store from "../store"
 
-const spotifyApi = new SpotifyWebApi({
-  clientId: "31c41df5075e46c48c3547d709102476",
-})
-
 export default function Dashboard({ code }) {
   const dispatch = useDispatch()
   const playlist = useSelector((state) => state.playlist)
@@ -29,6 +25,10 @@ export default function Dashboard({ code }) {
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
   const [lyrics, setLyrics] = useState("")
+
+  const spotifyApi = new SpotifyWebApi({
+    clientId: "31c41df5075e46c48c3547d709102476",
+  })
 
   function chooseTrack(track) {
     dispatch(addTrack(track))
@@ -115,7 +115,7 @@ export default function Dashboard({ code }) {
         <div>
           {/* <Player accessToken={accessToken} trackUri={playingTrack?.uri} /> */}
           <Player
-            // spotifyApi={spotifyApi}
+            spotifyApi={spotifyApi}
             accessToken={accessToken}
             trackUris={
               playlist ? playlist.tracks.map((track) => track.uri) : null

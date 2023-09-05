@@ -3,6 +3,7 @@ import axios from "axios"
 
 const initialState = {
   tracks: [],
+  queue: [],
   loading: false,
   error: null,
 }
@@ -31,6 +32,9 @@ const playlistSlice = createSlice({
     setPlaylistError: (state, action) => {
       state.error = action.payload
     },
+    setQueue: (state, action) => {
+      state.queue = [...action.payload]
+    },
   },
 })
 
@@ -41,6 +45,7 @@ export const {
   clearPlaylist,
   setPlaylistLoading,
   setPlaylistError,
+  setQueue,
 } = playlistSlice.actions
 
 export const fetchPlaylistTracks =
@@ -74,5 +79,36 @@ export const fetchPlaylistTracks =
       dispatch(setPlaylistLoading(false))
     }
   }
+
+export const fetchQueueTracks = (accessToken) => async (dispatch) => {
+  try {
+    const response = await axios.get(
+      `https://api.spotify.com/v1/me/player/queue`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    const queue = response.data.queue.map((item) => ({
+      title: item.name,
+      artist: item.artists[0].name,
+      album: item.album.name,
+      duration: item.duration_ms,
+      uri: item.uri,
+      id: item.id,
+    }))
+    console.log("queue", queue)
+    dispatch(setQueue(queue))
+
+    //******************************************************
+    //insert api call to backend here to send the latest queue
+    //
+    //Not sure we can use this - it is wrapping the queue as opposed to unshifting it
+    //******************************************************
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export default playlistSlice.reducer
