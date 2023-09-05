@@ -8123,15 +8123,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _useAuth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useAuth */ "./client/Components/useAuth.js");
 /* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Player */ "./client/Components/Player.js");
-/* harmony import */ var _TrackSearchResult__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TrackSearchResult */ "./client/Components/TrackSearchResult.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
-/* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! spotify-web-api-node */ "./node_modules/spotify-web-api-node/src/client.js");
-/* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _TestAudioClip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TestAudioClip */ "./client/Components/TestAudioClip.js");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-/* harmony import */ var _store_playlistSlice__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../store/playlistSlice */ "./client/store/playlistSlice.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
+/* harmony import */ var _WebPlayback__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./WebPlayback */ "./client/Components/WebPlayback.js");
+/* harmony import */ var _TrackSearchResult__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TrackSearchResult */ "./client/Components/TrackSearchResult.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! spotify-web-api-node */ "./node_modules/spotify-web-api-node/src/client.js");
+/* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(spotify_web_api_node__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _TestAudioClip__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TestAudioClip */ "./client/Components/TestAudioClip.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _store_playlistSlice__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../store/playlistSlice */ "./client/store/playlistSlice.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 
 
 
@@ -8143,21 +8144,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const spotifyApi = new (spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4___default())({
+
+const spotifyApi = new (spotify_web_api_node__WEBPACK_IMPORTED_MODULE_5___default())({
   clientId: "31c41df5075e46c48c3547d709102476"
 });
 function Dashboard({
   code
 }) {
-  const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_6__.useDispatch)();
-  const playlist = (0,react_redux__WEBPACK_IMPORTED_MODULE_6__.useSelector)(state => state.playlist);
+  const dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_7__.useDispatch)();
+  const playlist = (0,react_redux__WEBPACK_IMPORTED_MODULE_7__.useSelector)(state => state.playlist);
   const accessToken = (0,_useAuth__WEBPACK_IMPORTED_MODULE_1__["default"])(code);
   const [search, setSearch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [searchResults, setSearchResults] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [playingTrack, setPlayingTrack] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [lyrics, setLyrics] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   function chooseTrack(track) {
-    dispatch((0,_store_playlistSlice__WEBPACK_IMPORTED_MODULE_7__.addTrack)(track));
+    dispatch((0,_store_playlistSlice__WEBPACK_IMPORTED_MODULE_8__.addTrack)(track));
     setPlayingTrack([track]);
     setSearch("");
     setLyrics("");
@@ -8170,7 +8172,7 @@ function Dashboard({
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
     const playlistId = "6WESoRu7keGwiyag0owvuV";
-    dispatch((0,_store_playlistSlice__WEBPACK_IMPORTED_MODULE_7__.fetchPlaylistTracks)(playlistId, accessToken));
+    dispatch((0,_store_playlistSlice__WEBPACK_IMPORTED_MODULE_8__.fetchPlaylistTracks)(playlistId, accessToken));
   }, [!!accessToken]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!search) return setSearchResults([]);
@@ -8196,12 +8198,12 @@ function Dashboard({
     });
     return () => cancel = true;
   }, [search, accessToken]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__["default"], {
     className: "bg-dark d-flex flex-column py-3",
     style: {
       height: "90vh"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__["default"].Control, {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_11__["default"].Control, {
     type: "search",
     placeholder: "Search Songs/Artists",
     value: search,
@@ -8212,7 +8214,7 @@ function Dashboard({
     style: {
       overflowY: "auto"
     }
-  }, searchResults.map(track => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_TrackSearchResult__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, searchResults.map(track => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_TrackSearchResult__WEBPACK_IMPORTED_MODULE_4__["default"], {
     track: track,
     key: track.uri,
     chooseTrack: chooseTrack
@@ -8221,8 +8223,9 @@ function Dashboard({
     style: {
       whiteSpace: "pre"
     }
-  }, lyrics)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_TestAudioClip__WEBPACK_IMPORTED_MODULE_5__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Player__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    spotifyApi: spotifyApi,
+  }, lyrics)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_TestAudioClip__WEBPACK_IMPORTED_MODULE_6__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Player__WEBPACK_IMPORTED_MODULE_2__["default"]
+  // spotifyApi={spotifyApi}
+  , {
     accessToken: accessToken,
     trackUris: playlist ? playlist.tracks.map(track => track.uri) : null
   }))));
@@ -8287,27 +8290,38 @@ __webpack_require__.r(__webpack_exports__);
 
 function Player({
   accessToken,
-  trackUris,
-  spotifyApi
+  trackUris
 }) {
+  const [player, setPlayer] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [play, setPlay] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [audio] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(new Audio("audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"));
+  audio.addEventListener("play", () => {
+    console.log("Audio started playing");
+    if (player) player.setVolume(0.5);
+  });
+  audio.addEventListener("ended", async () => {
+    console.log("Audio ended");
+    if (player) {
+      await player.setVolume(1);
+      await player.getVolume().then(state => {
+        if (!state) {
+          return;
+        }
+        console.log("Volume state", state);
+        !state ? setPlay(false) : setPlay(true);
+      });
+    }
+  });
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setPlay(true), [trackUris];
-    // spotifyApi.setVolume(50).then(
-    //   function () {
-    //     console.log("Setting volume to 50.")
-    //   },
-    //   function (err) {
-    //     //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-    //     console.log("Something went wrong!", err)
-    //   }
-    // )
   });
-
   if (!accessToken) return null;
   let djCue, volumeCue;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    getPlayer: player => {
+      console.log(player);
+      setPlayer(player);
+    },
     token: accessToken,
     showSaveIcon: true,
     callback: state => {
@@ -8315,28 +8329,19 @@ function Player({
       if (!state.isPlaying) {
         console.log("State is not playing, clearing scheduled DJ audio");
         clearTimeout(djCue);
-        clearTimeout(volumeCue);
         setPlay(true);
       }
       if (state.isPlaying && !state.error) {
-        console.log(`State is playing and no error, scheduling DJ audio in ${state.track.durationMs - state.progressMs - 6500} milliseconds`);
+        console.log(`State is playing and no error, scheduling DJ audio in ${state.track.durationMs - state.progressMs - (audio.duration && audio.duration * 1000 / 2)} milliseconds`);
         clearTimeout(djCue);
         djCue = setTimeout(() => {
           console.log("VOLUME DOWN");
           console.log("DJ CUE");
-          spotifyApi.setVolume(50);
           audio.play();
-          clearTimeout(volumeCue);
-          volumeCue = setTimeout(() => {
-            console.log("VOLUME UP");
-            spotifyApi.setVolume(100);
-          }, 13000);
-        }, state.track.durationMs - state.progressMs - 6500);
+        }, state.track.durationMs - state.progressMs - (audio?.duration && audio.duration * 1000 / 2));
       }
     },
-    play: play
-    // play={true}
-    ,
+    play: play,
     uris: trackUris ? trackUris : []
     // or can use uri of playlist
     // uris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}
@@ -8491,6 +8496,121 @@ function TrackSearchResult({
     className: "text-light"
   }, track.artist)));
 }
+
+/***/ }),
+
+/***/ "./client/Components/WebPlayback.js":
+/*!******************************************!*\
+  !*** ./client/Components/WebPlayback.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const track = {
+  name: "",
+  album: {
+    images: [{
+      url: ""
+    }]
+  },
+  artists: [{
+    name: ""
+  }]
+};
+function WebPlayback(props) {
+  const [is_paused, setPaused] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [is_active, setActive] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [player, setPlayer] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(undefined);
+  const [current_track, setTrack] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(track);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.async = true;
+    document.body.appendChild(script);
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      console.log("Spotify Web Playback SDK is ready", {
+        props
+      });
+      const player = new window.Spotify.Player({
+        name: "Web Playback SDK",
+        getOAuthToken: cb => {
+          cb(props.token);
+        },
+        volume: 0.5
+      });
+      console.log("Player created", player);
+      console.log(setPlayer(player));
+      player.addListener("ready", ({
+        device_id
+      }) => {
+        console.log("Ready with Device ID", device_id);
+      });
+      player.addListener("not_ready", ({
+        device_id
+      }) => {
+        console.log("Device ID has gone offline", device_id);
+      });
+      player.addListener("player_state_changed", state => {
+        if (!state) {
+          return;
+        }
+        setTrack(state.track_window.current_track);
+        setPaused(state.paused);
+        player.getCurrentState().then(state => {
+          console.log("Current state", state);
+          !state ? setActive(false) : setActive(true);
+        });
+      });
+      player.connect();
+    };
+  }, []);
+  if (!is_active) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "container text-light"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "main-wrapper"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, "Instance not active. Transfer your playback using your Spotify app", " "))));
+  } else {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "container text-light"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "main-wrapper"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+      src: current_track.album.images[0].url,
+      className: "now-playing__cover",
+      alt: ""
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "now-playing__side"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "now-playing__name"
+    }, current_track.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "now-playing__artist"
+    }, current_track.artists[0].name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "btn-spotify",
+      onClick: () => {
+        player.previousTrack();
+      }
+    }, "<<"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "btn-spotify",
+      onClick: () => {
+        player.togglePlay();
+      }
+    }, is_paused ? "PLAY" : "PAUSE"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "btn-spotify",
+      onClick: () => {
+        player.nextTrack();
+      }
+    }, ">>")))));
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WebPlayback);
 
 /***/ }),
 
@@ -8655,7 +8775,6 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    console.log("response: ", response);
     const tracks = response.data.items.map(item => ({
       title: item.track.name,
       artist: item.track.artists[0].name,

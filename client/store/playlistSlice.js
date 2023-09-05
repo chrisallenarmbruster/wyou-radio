@@ -56,7 +56,6 @@ export const fetchPlaylistTracks =
           },
         }
       )
-      console.log("response: ", response)
       const tracks = response.data.items.map((item) => ({
         title: item.track.name,
         artist: item.track.artists[0].name,

@@ -2,7 +2,8 @@ import React from "react"
 import { useState, useEffect } from "react"
 import SpotifyPlayer, { spotifyApi } from "react-spotify-web-playback"
 
-export default function Player({ accessToken, trackUris, spotifyApi }) {
+export default function Player({ accessToken, trackUris }) {
+  const [player, setPlayer] = useState(null)
   const [play, setPlay] = useState(false)
   const [audio] = useState(
     new Audio(
@@ -10,23 +11,37 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
     )
   )
 
+  audio.addEventListener("play", () => {
+    console.log("Audio started playing")
+    if (player) player.setVolume(0.5)
+  })
+
+  audio.addEventListener("ended", async () => {
+    console.log("Audio ended")
+    if (player) {
+      await player.setVolume(1)
+      await player.getVolume().then((state) => {
+        if (!state) {
+          return
+        }
+        console.log("Volume state", state)
+        !state ? setPlay(false) : setPlay(true)
+      })
+    }
+  })
+
   useEffect(() => {
     setPlay(true), [trackUris]
-    // spotifyApi.setVolume(50).then(
-    //   function () {
-    //     console.log("Setting volume to 50.")
-    //   },
-    //   function (err) {
-    //     //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-    //     console.log("Something went wrong!", err)
-    //   }
-    // )
   })
 
   if (!accessToken) return null
   let djCue, volumeCue
   return (
     <SpotifyPlayer
+      getPlayer={(player) => {
+        console.log(player)
+        setPlayer(player)
+      }}
       token={accessToken}
       showSaveIcon
       callback={(state) => {
@@ -35,31 +50,25 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
         if (!state.isPlaying) {
           console.log("State is not playing, clearing scheduled DJ audio")
           clearTimeout(djCue)
-          clearTimeout(volumeCue)
           setPlay(true)
         }
         if (state.isPlaying && !state.error) {
           console.log(
             `State is playing and no error, scheduling DJ audio in ${
-              state.track.durationMs - state.progressMs - 6500
+              state.track.durationMs -
+              state.progressMs -
+              (audio.duration && (audio.duration * 1000) / 2)
             } milliseconds`
           )
           clearTimeout(djCue)
           djCue = setTimeout(() => {
             console.log("VOLUME DOWN")
             console.log("DJ CUE")
-            spotifyApi.setVolume(50)
             audio.play()
-            clearTimeout(volumeCue)
-            volumeCue = setTimeout(() => {
-              console.log("VOLUME UP")
-              spotifyApi.setVolume(100)
-            }, 13000)
-          }, state.track.durationMs - state.progressMs - 6500)
+          }, state.track.durationMs - state.progressMs - (audio?.duration && (audio.duration * 1000) / 2))
         }
       }}
       play={play}
-      // play={true}
       uris={trackUris ? trackUris : []}
       // or can use uri of playlist
       // uris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}

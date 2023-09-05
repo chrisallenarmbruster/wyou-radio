@@ -2,6 +2,7 @@ import React from "react"
 import { useState, useEffect } from "react"
 import useAuth from "./useAuth"
 import Player from "./Player"
+import WebPlayback from "./WebPlayback"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
@@ -114,12 +115,20 @@ export default function Dashboard({ code }) {
         <div>
           {/* <Player accessToken={accessToken} trackUri={playingTrack?.uri} /> */}
           <Player
-            spotifyApi={spotifyApi}
+            // spotifyApi={spotifyApi}
             accessToken={accessToken}
             trackUris={
               playlist ? playlist.tracks.map((track) => track.uri) : null
             }
           />
+          {/* {accessToken ? (
+            <WebPlayback
+              token={accessToken}
+              trackUris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}
+            />
+          ) : (
+            <div>loading</div>
+          )} */}
         </div>
       </Container>
     </>
