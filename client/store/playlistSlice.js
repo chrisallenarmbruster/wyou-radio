@@ -33,7 +33,7 @@ const playlistSlice = createSlice({
       state.error = action.payload
     },
     setQueue: (state, action) => {
-      state.queue = [...action.payload]
+      state.queue = action.payload
     },
   },
 })
@@ -69,7 +69,7 @@ export const fetchPlaylistTracks =
         uri: item.track.uri,
         id: item.track.id,
       }))
-
+      console.log("tracks", tracks)
       dispatch(addTracks(tracks))
       dispatch(setPlaylistError(null))
       dispatch(setPlaylistLoading(false))
@@ -80,8 +80,9 @@ export const fetchPlaylistTracks =
     }
   }
 
-export const fetchQueueTracks = (accessToken) => async (dispatch) => {
+export const fetchQueueTracks = () => async (dispatch, getState) => {
   try {
+    const accessToken = getState().user.details.accessToken
     const response = await axios.get(
       `https://api.spotify.com/v1/me/player/queue`,
       {
@@ -90,24 +91,21 @@ export const fetchQueueTracks = (accessToken) => async (dispatch) => {
         },
       }
     )
-    const queue = response.data.queue.map((item) => ({
-      title: item.name,
-      artist: item.artists[0].name,
-      album: item.album.name,
-      duration: item.duration_ms,
-      uri: item.uri,
-      id: item.id,
-    }))
+
+    const queue = response.data.queue.map((item) => {
+      return {
+        title: item.name,
+        artist: item.artists[0].name,
+        album: item.album.name,
+        duration: item.duration_ms,
+        uri: item.uri,
+        id: item.id,
+      }
+    })
     console.log("queue", queue)
     dispatch(setQueue(queue))
-
-    //******************************************************
-    //insert api call to backend here to send the latest queue
-    //
-    //Not sure we can use this - it is wrapping the queue as opposed to unshifting it
-    //******************************************************
   } catch (error) {
-    console.log(error)
+    console.log("Redux Error!", error)
   }
 }
 
