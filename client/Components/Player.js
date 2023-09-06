@@ -1,5 +1,5 @@
 import React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import SpotifyPlayer from "react-spotify-web-playback"
 // import { spotifyApi } from "react-spotify-web-playback"
 import { useDispatch } from "react-redux"
@@ -8,14 +8,11 @@ import { fetchQueueTracks } from "../store/playlistSlice"
 let djAudioTimeout = null
 
 export default function Player({ accessToken, trackUris, spotifyApi }) {
-  const [player, setPlayer] = useState(null)
+  const [player, setPlayer] = useState({ player: null })
   const [play, setPlay] = useState(false)
   const [djAudioPending, setDjAudioPending] = useState(false)
-  const [audio] = useState(
-    new Audio(
-      "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
-    )
-  )
+  const [audio, setAudio] = useState(new Audio())
+  const [cbState, setCbState] = useState(null)
   const dispatch = useDispatch()
   const MAX_VOICE_OVER_DURATION = 10000
 
@@ -32,6 +29,7 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
     //state.type = track_update, player_update, status_update, progress_update"
     //key state props = isActive, isPlaying, needsUpdate, progressMs, status, track (obj), type
     //key track props = artists [], durationMs, id, image, name, uri
+
     console.log(
       `${state.type.toUpperCase()} EVENT\nstatus = ${
         state.status
@@ -79,7 +77,10 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
     //const dataUri await axios call to backend
     const dataUri =
       "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
-    audio.src = dataUri
+    setAudio((prev) => {
+      prev.src = dataUri
+      return prev
+    })
     setDjAudioPending(false)
     scheduleDjAudio()
   }
@@ -89,12 +90,14 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
     let duration, progress
     window.clearTimeout(djAudioTimeout)
     if (!state) {
-      let currentState = player && (await player.getCurrentState())
-      currentState = player && (await player.getCurrentState())
-      currentState = player && (await player.getCurrentState())
-      currentState = player && (await player.getCurrentState())
-      currentState = player && (await player.getCurrentState())
-      currentState = player && (await player.getCurrentState())
+      if (!player) return
+      console.log("Player", player)
+      let currentState = await player.getPlaybackState()
+      // currentState = player && (await player.getCurrentState())
+      // currentState = player && (await player.getCurrentState())
+      // currentState = player && (await player.getCurrentState())
+      // currentState = player && (await player.getCurrentState())
+      // currentState = player && (await player.getCurrentState())
       console.log("Current state", currentState)
       duration = currentState?.duration
       progress = currentState?.position
@@ -102,7 +105,7 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
       duration = state.track.durationMs
       progress = state.progressMs
     }
-
+    console.log("Duration", duration, "Progress", progress)
     djAudioTimeout = setTimeout(() => {
       audio.play()
     }, duration - progress - (audio?.duration && (audio?.duration * 1000) / 2))
@@ -113,21 +116,30 @@ export default function Player({ accessToken, trackUris, spotifyApi }) {
     setPlayer(player)
   }
 
-  audio.addEventListener("play", () => {
-    console.log("Audio started playing")
-    if (player) player.setVolume(0.25)
-  })
+  const getPlayer = useCallback(
+    async (playerInstance) => {
+      setPlayer({ player: playerInstance })
+    },
+    [setPlayer]
+  )
 
-  audio.addEventListener("ended", () => {
-    console.log("Audio ended")
-    if (player) player.setVolume(0.5)
-    prepareNextDjAudio()
-  })
+  useEffect(() => {
+    audio.addEventListener("play", () => {
+      console.log("Audio started playing")
+      if (player) player.setVolume(0.25)
+    })
+
+    audio.addEventListener("ended", () => {
+      console.log("Audio ended")
+      if (player) player.setVolume(0.5)
+      prepareNextDjAudio()
+    })
+  }, [])
 
   if (!accessToken) return null
   return (
     <SpotifyPlayer
-      getPlayer={setSpotifyPlayerInstance}
+      getPlayer={getPlayer}
       token={accessToken}
       showSaveIcon
       callback={spotifyEventHandler}
