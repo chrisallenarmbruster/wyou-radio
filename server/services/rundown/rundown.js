@@ -165,9 +165,8 @@ async function getContent(showWithSongs) {
         element.bandName,
         showWithSongs.date
       );
-      //TODO: Turn this back on!
-      // let audioURI = await convertMP3FileToDataURI(fileName);
-      // return audioURI;
+      let audioURI = await convertMP3FileToDataURI(fileName);
+      return audioURI;
       return null
     } else if (element.type === "talk_show") {
       // this.content = createTalk();

@@ -12,7 +12,7 @@ const fs = require("fs");
 
 const chat = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY,
-  // modelName: "gpt-4",
+  modelName: "gpt-3.5-turbo",
   temperature: 1.3,
 });
 
@@ -23,9 +23,10 @@ const chatPrompt = ChatPromptTemplate.fromPromptMessages([
   new MessagesPlaceholder("history"),
   HumanMessagePromptTemplate.fromTemplate("{input}"),
 ]);
+const memory = new BufferMemory({ returnMessages: true, memoryKey: "history" });
 
 const chain = new ConversationChain({
-  memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
+  memory: memory,
   prompt: chatPrompt,
   llm: chat,
   verbose: true,
@@ -33,8 +34,8 @@ const chain = new ConversationChain({
 
 const debugTracker = [];
 function saveDebugTrackerToFile(debugTracker) {
-  const data = JSON.stringify(debugTracker);
-  fs.appendFile("./debug/debugTracker.json", data, (err) => {
+  const data = `${JSON.stringify(debugTracker)}`;
+  fs.writeFile("./debug/debugTracker.json", data, (err) => {
     if (err) throw err;
     console.log("Debug tracker saved to file.");
   });
@@ -123,17 +124,42 @@ function songPrompts(
     "Mention a trivia about a traditional sport from another culture.",
   ];
 
-  const promptList = [
-    `You are a gruff, irreverent, and humorous disk jockey. Create a script with no titles or headings that refelects verbatum what a disk jockey would say to tee up the ${songName} by ${bandName} on the ${radioStation}. The showName is ${showName}. The date is ${date}.  The timeSlot is ${timeSlot}.  ${getRandomElement(
-      djTopics
-    )} Keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
-    `You are a gruff, irreverent, and humorous disk jockey. Be very brief. Create a script with no titles or headings that refelects verbatum what a disk jockey would say to tee up the ${songName} by ${bandName} keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
-    `You are a gruff, irreverent, and humorous disk jockey. ${getRandomElement(
-      djTopics
-    )} Create a script with no titles or headings that refelects verbatum what a disk jockey would say to tee up the ${songName} by ${bandName} keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
-  ];
+  //Can this be constructed as to remove repetion but keep the variability?
+  const promptListWithCounts = {
+    type1: {
+      prompt: `You are a gruff, irreverent, and humorous disk jockey. Create a script with no titles or headings that reflects verbatim what a disk jockey would say to tee up the ${songName} by ${bandName} on the ${radioStation}. The showName is ${showName}. The date is ${date}.  The timeSlot is ${timeSlot}.  ${getRandomElement(
+        djTopics
+      )} Keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
+      frequency: 1,
+    },
+    type2: {
+      prompt: `You are a gruff, irreverent, and humorous disk jockey. ${getRandomElement(
+        djTopics
+      )} Create a script with no titles or headings that reflects verbatim what a disk jockey would say to tee up the ${songName} by ${bandName} keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
+      frequency: 3,
+    },
+    type3: {
+      prompt: `You are a gruff, irreverent, and humorous disk jockey. Be very brief. Create a script with no titles or headings that reflects verbatim what a disk jockey would say to tee up the ${songName} by ${bandName} keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
+      frequency: 2,
+    },
+  };
 
-  return getRandomElement(promptList);
+  function createPromptsArray(promptListWithCounts) {
+    let promptsArray = [];
+
+    for (const type in promptListWithCounts) {
+      for (let i = 0; i < promptListWithCounts[type].frequency; i++) {
+        promptsArray.push(promptListWithCounts[type].prompt);
+      }
+    }
+
+    return promptsArray;
+  }
+
+  const resultArray = createPromptsArray(promptListWithCounts);
+  console.log(resultArray);
+
+  return getRandomElement(resultArray);
 }
 
 //TODO: Need to set this up to create Weather, News, etc. Also need to construct chat history.
@@ -147,12 +173,7 @@ async function createContent(
   timeSlot
 ) {
   try {
-    //TODO: Need to construct the chat history.
-    //TODO: Need to be able to pass in different types of prompts depending on the type of content we want to
-    console.log("chain ", chain);
-    debugTracker.push({ chain: JSON.stringify(chain) });
-
-    debugTracker.push({ memory: JSON.stringify(chain.memory) });
+    debugTracker.push({ memory: await memory.chatHistory.getMessages() });
     const result = await chain.call({
       input: songPrompts(
         radioStation,
@@ -164,43 +185,30 @@ async function createContent(
       ),
     });
 
-    debugTracker.push({ result: result });
-    console.log({ result });
-
-    // const result = await predictMessages([
-    //   new HumanMessage(
-    //     songPrompts(radioStation, showName, songName, bandName, date, timeSlot)
-    //   ),
-    // ]);
-    // console.log(result.content);
-
     // await getVoiceDetails(voiceID).then((details) => {
     //   console.log(details);
     // });
-
-    //   const timestamp = Date.now();
-    //NOTE: TURN THIS BACK ON
-    //   const response = await fetchSpeech(
-    //     voiceID,
-    //     result.text,
-    //     `${songName}_${bandName}_${timestamp}`,
-    //     prompt
-    //   );
-    //   if (response === "error") {
-    //     console.log(response);
-    //     return;
-    //   } else return response;
-
-    //   // streamTextToSpeech(voiceID, result.content)
-    //   //   .then(() => {
-    //   //     console.log("Streaming completed.");
-    //   //   })
-    //   //   .catch((error) => {
-    //   //     console.error("Error:", error);
-    //   //   });
     saveDebugTrackerToFile(debugTracker);
-    console.log(debugTracker);
-    return null;
+    const timestamp = Date.now();
+
+    //NOTE: TURN THIS BACK ON
+    const response = await fetchSpeech(
+      voiceID,
+      result.response,
+      `${songName}_${bandName}_${timestamp}`
+    );
+    if (response === "error") {
+      console.log(response);
+      return;
+    } else return response;
+
+    // streamTextToSpeech(voiceID, result.content)
+    //   .then(() => {
+    //     console.log("Streaming completed.");
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
   } catch (error) {
     console.log(error);
   }
