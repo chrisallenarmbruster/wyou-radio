@@ -29,9 +29,9 @@ const fetchSpeech = async (voiceID, text, fileName) => {
   fileName = removeSpecialCharacters(fileName);
 
   const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceID}`;
-
+  //TODO: fix text
   const data = {
-    text: text,
+    text: "I",
     model_id: "eleven_monolingual_v1",
     voice_settings: {
       stability: 0.5,

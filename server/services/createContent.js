@@ -8,7 +8,8 @@ const {
   MessagesPlaceholder,
 } = require("langchain/prompts");
 const { BufferMemory } = require("langchain/memory");
-const fs = require("fs");
+const { saveDebugTrackerToFile } = require("./utl/debugTracker");
+const { getRandomElement } = require("./utl/randomElement");
 
 const chat = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY,
@@ -33,30 +34,31 @@ const chain = new ConversationChain({
 });
 
 const debugTracker = [];
-function saveDebugTrackerToFile(debugTracker) {
-  const data = `${JSON.stringify(debugTracker)}`;
-  fs.writeFile("./debug/debugTracker.json", data, (err) => {
-    if (err) throw err;
-    console.log("Debug tracker saved to file.");
-  });
-}
 
-const {
-  HumanMessage,
-  ChatMessage,
-  SystemMessage,
-} = require("langchain/schema");
-
-const { predictMessages } = require("./openAIService");
 const voiceID = "krnShwoOTYlrQktZt9g7";
 
-function getRandomElement(arr) {
-  if (!arr.length) {
-    throw new Error("Array is empty!");
-  }
-  const randomIndex = Math.floor(Math.random() * arr.length);
-  debugTracker.push({ randomIndex: randomIndex });
-  return arr[randomIndex];
+function constructPromptListWithCounts(details, djTopics) {
+  let djStyle = "You are a gruff, irreverent, and humorous disk jockey.";
+  let djCoreInstructions = `Create a script with no titles, headings or reference to the speaker followed by a colon. Keep in mind what you have said previously. Be creative and do not repeat yourself. The script should reflects verbatim what a disk jockey would say to tee up the ${details.songName} by ${details.bandName}`;
+  let djChannel = `The Station is called ${details.radioStation}. The showName is ${details.showName}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
+  let brevity = "Be very brief.";
+
+  return {
+    type1: {
+      prompt: `${djStyle} ${djCoreInstructions} ${djChannel} ${getRandomElement(
+        djTopics
+      )}`,
+      frequency: 1,
+    },
+    type2: {
+      prompt: `${djStyle} ${djCoreInstructions} ${getRandomElement(djTopics)}`,
+      frequency: 3,
+    },
+    type3: {
+      prompt: `${djStyle} ${djCoreInstructions} ${brevity}`,
+      frequency: 2,
+    },
+  };
 }
 
 function songPrompts(
@@ -124,37 +126,26 @@ function songPrompts(
     "Mention a trivia about a traditional sport from another culture.",
   ];
 
-  //Can this be constructed as to remove repetion but keep the variability?
-  const promptListWithCounts = {
-    type1: {
-      prompt: `You are a gruff, irreverent, and humorous disk jockey. Create a script with no titles or headings that reflects verbatim what a disk jockey would say to tee up the ${songName} by ${bandName} on the ${radioStation}. The showName is ${showName}. The date is ${date}.  The timeSlot is ${timeSlot}.  ${getRandomElement(
-        djTopics
-      )} Keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
-      frequency: 1,
-    },
-    type2: {
-      prompt: `You are a gruff, irreverent, and humorous disk jockey. ${getRandomElement(
-        djTopics
-      )} Create a script with no titles or headings that reflects verbatim what a disk jockey would say to tee up the ${songName} by ${bandName} keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
-      frequency: 3,
-    },
-    type3: {
-      prompt: `You are a gruff, irreverent, and humorous disk jockey. Be very brief. Create a script with no titles or headings that reflects verbatim what a disk jockey would say to tee up the ${songName} by ${bandName} keeping in mind what you have said previously. Be creative and do not repeat yourself.`,
-      frequency: 2,
-    },
-  };
+   const details = {
+     radioStation,
+     showName,
+     songName,
+     bandName,
+     date,
+     timeSlot,
+   };
 
   function createPromptsArray(promptListWithCounts) {
     let promptsArray = [];
-
     for (const type in promptListWithCounts) {
       for (let i = 0; i < promptListWithCounts[type].frequency; i++) {
         promptsArray.push(promptListWithCounts[type].prompt);
       }
     }
-
     return promptsArray;
   }
+
+  const promptListWithCounts = constructPromptListWithCounts(details, djTopics);
 
   const resultArray = createPromptsArray(promptListWithCounts);
   console.log(resultArray);
@@ -185,13 +176,9 @@ async function createContent(
       ),
     });
 
-    // await getVoiceDetails(voiceID).then((details) => {
-    //   console.log(details);
-    // });
     saveDebugTrackerToFile(debugTracker);
     const timestamp = Date.now();
 
-    //NOTE: TURN THIS BACK ON
     const response = await fetchSpeech(
       voiceID,
       result.response,
@@ -201,14 +188,6 @@ async function createContent(
       console.log(response);
       return;
     } else return response;
-
-    // streamTextToSpeech(voiceID, result.content)
-    //   .then(() => {
-    //     console.log("Streaming completed.");
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
   } catch (error) {
     console.log(error);
   }

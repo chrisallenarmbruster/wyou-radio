@@ -163,11 +163,11 @@ async function getContent(showWithSongs) {
         showWithSongs.showName,
         element.songName,
         element.bandName,
-        showWithSongs.date
+        showWithSongs.date,
+        showWithSongs.timeSlot
       );
       let audioURI = await convertMP3FileToDataURI(fileName);
       return audioURI;
-      return null
     } else if (element.type === "talk_show") {
       // this.content = createTalk();
       return null;
