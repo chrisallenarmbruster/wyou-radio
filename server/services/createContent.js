@@ -35,7 +35,8 @@ const chain = new ConversationChain({
 
 const debugTracker = [];
 
-const voiceID = "krnShwoOTYlrQktZt9g7";``
+const voiceID = "krnShwoOTYlrQktZt9g7";
+``;
 
 function constructPromptListWithCounts(details, djTopics) {
   let djStyle = "You are a gruff, irreverent, and humorous disk jockey.";

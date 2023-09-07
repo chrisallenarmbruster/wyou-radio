@@ -8305,6 +8305,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-spotify-web-playback */ "./node_modules/react-spotify-web-playback/dist/index.mjs");
 /* harmony import */ var _store_playlistSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/playlistSlice */ "./client/store/playlistSlice.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+
 
 
 
@@ -8357,13 +8359,19 @@ class PlayerClass extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
   };
   async prepareNextDjAudio() {
     this.djAudioPending = true;
-    const dataUri = "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3";
+    const playlist = this.props.reduxState.playlist.tracks;
+    console.log(playlist);
+    const dataUri = await axios__WEBPACK_IMPORTED_MODULE_4__["default"].post("/api/content/next-content", playlist);
+    console.log(dataUri);
+    // "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+    //TODO: Fix with call to server to get next audio file
+
     const metadataLoadedPromise = new Promise(resolve => {
       this.audio.addEventListener("loadedmetadata", () => {
         resolve();
       });
     });
-    this.audio.src = dataUri;
+    this.audio.src = dataUri.data;
     await metadataLoadedPromise;
     this.djAudioPending = false;
     this.scheduleDjAudio();
@@ -8641,6 +8649,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   exportPlaylist: () => (/* binding */ exportPlaylist),
 /* harmony export */   fetchPlaylistTracks: () => (/* binding */ fetchPlaylistTracks),
+/* harmony export */   fetchQueueTracks: () => (/* binding */ fetchQueueTracks),
+/* harmony export */   nextDJTrack: () => (/* binding */ nextDJTrack),
 /* harmony export */   removeTrack: () => (/* binding */ removeTrack),
 /* harmony export */   setPlaylistError: () => (/* binding */ setPlaylistError),
 /* harmony export */   setPlaylistLoading: () => (/* binding */ setPlaylistLoading),
@@ -8680,8 +8690,9 @@ const playlistSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSli
     },
     setPlaylistLoading: (state, action) => {
       state.loading = action.payload;
-      exportPlaylist(state.tracks);
+      // exportPlaylist(state.tracks);
     },
+
     setPlaylistError: (state, action) => {
       state.error = action.payload;
     },
@@ -8724,6 +8735,50 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
     console.log(error);
     dispatch(setPlaylistError(error.message));
     dispatch(setPlaylistLoading(false));
+  }
+};
+const exportPlaylist = async playlist => {
+  try {
+    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("api/content/add-playlist", {
+      playlist: playlist
+    });
+    console.log(response.data);
+    debugger;
+  } catch (error) {
+    console.log(error);
+  }
+};
+const nextDJTrack = async index => {
+  try {
+    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].get(`api/content/next-content?index=${index}`);
+    console.log(response.data);
+    debugger;
+  } catch (error) {
+    console.log(error);
+  }
+};
+const fetchQueueTracks = () => async (dispatch, getState) => {
+  try {
+    const accessToken = getState().user.details.accessToken;
+    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].get(`https://api.spotify.com/v1/me/player/queue`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const queue = response.data.queue.map(item => {
+      return {
+        title: item.name,
+        artist: item.artists[0].name,
+        album: item.album.name,
+        duration: item.duration_ms,
+        uri: item.uri,
+        id: item.id
+      };
+    });
+    console.log("queue", queue);
+    dispatch(setQueue(queue));
+  } catch (error) {
+    console.log("Redux Error!", error);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (playlistSlice.reducer);

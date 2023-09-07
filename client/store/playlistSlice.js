@@ -31,14 +31,14 @@ const playlistSlice = createSlice({
     },
     setPlaylistLoading: (state, action) => {
       state.loading = action.payload;
-      exportPlaylist(state.tracks);
+      // exportPlaylist(state.tracks);
     },
     setPlaylistError: (state, action) => {
       state.error = action.payload;
     },
     setQueue: (state, action) => {
-      console.log("setQueue", action.payload)
-      state.queue = [...action.payload]
+      console.log("setQueue", action.payload);
+      state.queue = [...action.payload];
     },
   },
 });
@@ -51,7 +51,7 @@ export const {
   setPlaylistLoading,
   setPlaylistError,
   setQueue,
-} = playlistSlice.actions
+} = playlistSlice.actions;
 
 export const fetchPlaylistTracks =
   (playlistId, accessToken) => async (dispatch) => {
@@ -65,7 +65,7 @@ export const fetchPlaylistTracks =
             Authorization: `Bearer ${accessToken}`,
           },
         }
-      )
+      );
       const tracks = response.data.items.map((item) => ({
         title: item.track.name,
         artist: item.track.artists[0].name,
@@ -73,11 +73,11 @@ export const fetchPlaylistTracks =
         duration: item.track.duration_ms,
         uri: item.track.uri,
         id: item.track.id,
-      }))
-      console.log("tracks", tracks)
-      dispatch(addTracks(tracks))
-      dispatch(setPlaylistError(null))
-      dispatch(setPlaylistLoading(false))
+      }));
+      console.log("tracks", tracks);
+      dispatch(addTracks(tracks));
+      dispatch(setPlaylistError(null));
+      dispatch(setPlaylistLoading(false));
     } catch (error) {
       console.log(error);
       dispatch(setPlaylistError(error.message));
@@ -109,7 +109,7 @@ export const nextDJTrack = async (index) => {
 
 export const fetchQueueTracks = () => async (dispatch, getState) => {
   try {
-    const accessToken = getState().user.details.accessToken
+    const accessToken = getState().user.details.accessToken;
     const response = await axios.get(
       `https://api.spotify.com/v1/me/player/queue`,
       {
@@ -117,7 +117,7 @@ export const fetchQueueTracks = () => async (dispatch, getState) => {
           Authorization: `Bearer ${accessToken}`,
         },
       }
-    )
+    );
 
     const queue = response.data.queue.map((item) => {
       return {
@@ -127,13 +127,13 @@ export const fetchQueueTracks = () => async (dispatch, getState) => {
         duration: item.duration_ms,
         uri: item.uri,
         id: item.id,
-      }
-    })
-    console.log("queue", queue)
-    dispatch(setQueue(queue))
+      };
+    });
+    console.log("queue", queue);
+    dispatch(setQueue(queue));
   } catch (error) {
-    console.log("Redux Error!", error)
+    console.log("Redux Error!", error);
   }
-}
+};
 
-export default playlistSlice.reducer
+export default playlistSlice.reducer;

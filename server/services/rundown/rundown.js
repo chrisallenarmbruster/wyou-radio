@@ -50,10 +50,9 @@ function reset() {
   currentIndex = 0;
 }
 const show = createDefaultShow();
+let songIndex = 1;
+function addPlaylistToRundown(newPlaylist) {
 
-  function addPlaylistToRundown(newPlaylist) {
-
-  let songIndex = 0;
   //BUG: This is shifting the songs by one every time it loads a new playlist and replaying each song over and over.
   for (let i = currentIndex; i < show.rundown.length; i++) {
     const element = show.rundown[i];
@@ -61,8 +60,8 @@ const show = createDefaultShow();
       if (
         !previousRundown ||
         (previousRundown &&
-          (JSON.stringify(previousRundown.rundown[i].songName) !==
-            JSON.stringify(newPlaylist[i].title)))
+          JSON.stringify(previousRundown.rundown[i].songName) !==
+            JSON.stringify(newPlaylist[i].title))
       ) {
         element.songName = newPlaylist[songIndex].title;
         element.bandName = newPlaylist[songIndex].artist;
