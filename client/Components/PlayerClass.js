@@ -3,12 +3,13 @@ import { connect } from "react-redux"
 import SpotifyPlayer from "react-spotify-web-playback"
 import { fetchQueueTracks } from "../store/playlistSlice"
 import axios from "axios"
-// import store from "../store"
+import Button from "react-bootstrap/Button"
+import Container from "react-bootstrap/Container"
 
 export class PlayerClass extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = { playSpotify: false }
     this.audio = new Audio()
     this.djAudioTimeout = null
     this.djAudioPending = false
@@ -20,6 +21,10 @@ export class PlayerClass extends Component {
     this.scheduleDjAudio = this.scheduleDjAudio.bind(this)
     this.audioPlayHandler = this.audioPlayHandler.bind(this)
     this.audioEndedHandler = this.audioEndedHandler.bind(this)
+    this.increaseDjVolume = this.increaseDjVolume.bind(this)
+    this.decreaseDjVolume = this.decreaseDjVolume.bind(this)
+    this.increaseSpotifyVolume = this.increaseSpotifyVolume.bind(this)
+    this.decreaseSpotifyVolume = this.decreaseSpotifyVolume.bind(this)
   }
 
   componentDidMount = () => {
@@ -141,29 +146,127 @@ export class PlayerClass extends Component {
     }, duration - progress - (this.audio?.duration && (this.audio?.duration * 1000) / 2))
   }
 
+  increaseDjVolume() {
+    if (this.audio) {
+      if (this.audio.volume < 1) {
+        this.audio.volume = Math.min(this.audio.volume + 0.1, 1)
+        console.log("Increased DJ volume to", this.audio.volume.toFixed(1))
+      }
+    }
+  }
+
+  decreaseDjVolume() {
+    if (this.audio) {
+      if (this.audio.volume > 0) {
+        this.audio.volume = Math.max(this.audio.volume - 0.1, 0)
+        console.log("Decreased DJ volume to", this.audio.volume.toFixed(1))
+      }
+    }
+  }
+
+  async increaseSpotifyVolume() {
+    try {
+      const currentVolume = await this.player.player.getVolume()
+      if (currentVolume < 1) {
+        const newVolume = Math.min(currentVolume + 0.1, 1)
+        await this.player.player.setVolume(newVolume)
+        console.log("Increased Spotify volume to", newVolume.toFixed(1))
+      }
+    } catch (error) {
+      console.error("Error changing Spotify volume", error)
+    }
+  }
+
+  async decreaseSpotifyVolume() {
+    try {
+      const currentVolume = await this.player.player.getVolume()
+      if (currentVolume > 0) {
+        const newVolume = Math.max(currentVolume - 0.1, 0)
+        await this.player.player.setVolume(newVolume)
+        console.log("Decreased Spotify volume to", newVolume.toFixed(1))
+      }
+    } catch (error) {
+      console.error("Error changing Spotify volume", error)
+    }
+  }
+
   render() {
     let { accessToken, trackUris } = this.props
-    console.log("PlayerClass rendered", this.props)
+
     if (!accessToken) return null
     return (
-      <SpotifyPlayer
-        getPlayer={this.getPlayer}
-        token={accessToken}
-        showSaveIcon
-        callback={this.spotifyEventHandler}
-        play={false}
-        uris={trackUris ? trackUris : []}
-        initialVolume={0.5}
-        styles={{
-          activeColor: "#fff",
-          bgColor: "#333",
-          color: "#fff",
-          loaderColor: "#fff",
-          sliderColor: "#1cb954",
-          trackArtistColor: "#ccc",
-          trackNameColor: "#fff",
-        }}
-      />
+      <>
+        <Container className="">
+          <Button className="m-1" onClick={() => this.audio?.play()}>
+            Play DJ Track
+          </Button>
+          <Button className="m-1" onClick={() => this.audio?.pause()}>
+            Pause DJ Track
+          </Button>
+          <Button className="m-1" onClick={this.increaseDjVolume}>
+            Vol Up
+          </Button>
+          <Button className="m-1" onClick={this.decreaseDjVolume}>
+            Vol Down
+          </Button>
+        </Container>
+        <Container className="mb-2">
+          <Button
+            className="m-1"
+            onClick={() => this.setState({ playSpotify: true })}
+          >
+            Load Music
+          </Button>
+          <Button
+            className="m-1"
+            onClick={() => this.player?.player?.togglePlay()}
+          >
+            Toggle Music
+          </Button>
+          <Button className="m-1" onClick={() => this.player?.player?.pause()}>
+            Pause Music
+          </Button>
+          <Button className="m-1" onClick={() => this.player?.player?.resume()}>
+            Resume Music
+          </Button>
+          <Button
+            className="m-1"
+            onClick={() => this.player?.player?.previousTrack()}
+          >
+            Previous
+          </Button>
+          <Button
+            className="m-1"
+            onClick={() => this.player?.player?.nextTrack()}
+          >
+            Next
+          </Button>
+          <Button className="m-1" onClick={this.increaseSpotifyVolume}>
+            Vol Up
+          </Button>
+          <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
+            Vol Down
+          </Button>
+        </Container>
+        <SpotifyPlayer
+          getPlayer={this.getPlayer}
+          token={accessToken}
+          showSaveIcon
+          callback={this.spotifyEventHandler}
+          play={this.state.playSpotify}
+          uris={trackUris ? trackUris : []}
+          initialVolume={0.5}
+          styles={{
+            activeColor: "#fff",
+            bgColor: "#333",
+            color: "#fff",
+            loaderColor: "#fff",
+            sliderColor: "#1cb954",
+            trackArtistColor: "#ccc",
+            trackNameColor: "#fff",
+          }}
+        />
+      </>
     )
   }
 }
