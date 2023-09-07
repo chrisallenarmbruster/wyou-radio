@@ -1,147 +1,150 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import SpotifyPlayer from "react-spotify-web-playback";
-import { fetchQueueTracks } from "../store/playlistSlice";
-import axios from "axios";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import SpotifyPlayer from "react-spotify-web-playback"
+import { fetchQueueTracks } from "../store/playlistSlice"
+import axios from "axios"
 // import store from "../store"
 
 export class PlayerClass extends Component {
   constructor(props) {
-    super(props);
-    this.state = {};
-    this.audio = new Audio();
-    this.djAudioTimeout = null;
-    this.djAudioPending = false;
-    this.player = { player: null };
-    this.maxVoiceOverDuration = 10000;
-    this.getPlayer = this.getPlayer.bind(this);
-    this.spotifyEventHandler = this.spotifyEventHandler.bind(this);
-    this.prepareNextDjAudio = this.prepareNextDjAudio.bind(this);
-    this.scheduleDjAudio = this.scheduleDjAudio.bind(this);
-    this.audioPlayHandler = this.audioPlayHandler.bind(this);
-    this.audioEndedHandler = this.audioEndedHandler.bind(this);
+    super(props)
+    this.state = {}
+    this.audio = new Audio()
+    this.djAudioTimeout = null
+    this.djAudioPending = false
+    this.player = { player: null }
+    this.maxVoiceOverDuration = 10000
+    this.getPlayer = this.getPlayer.bind(this)
+    this.spotifyEventHandler = this.spotifyEventHandler.bind(this)
+    this.prepareNextDjAudio = this.prepareNextDjAudio.bind(this)
+    this.scheduleDjAudio = this.scheduleDjAudio.bind(this)
+    this.audioPlayHandler = this.audioPlayHandler.bind(this)
+    this.audioEndedHandler = this.audioEndedHandler.bind(this)
   }
 
   componentDidMount = () => {
-    console.log("PlayerClass mounted");
+    console.log("PlayerClass mounted")
 
-    this.audio.addEventListener("play", this.audioPlayHandler);
-    this.audio.addEventListener("ended", this.audioEndedHandler);
-  };
+    this.audio.addEventListener("play", this.audioPlayHandler)
+    this.audio.addEventListener("ended", this.audioEndedHandler)
+  }
 
   componentWillUnmount = () => {
-    console.log("PlayerClass unmounted");
-    this.audio?.pause();
-    window.clearTimeout(this.djAudioTimeout);
-    this.audio?.removeEventListener("play", this.audioPlayHandler);
-    this.audio?.removeEventListener("ended", this.audioEndedHandler);
-  };
+    console.log("PlayerClass unmounted")
+    this.audio?.pause()
+    window.clearTimeout(this.djAudioTimeout)
+    this.audio?.removeEventListener("play", this.audioPlayHandler)
+    this.audio?.removeEventListener("ended", this.audioEndedHandler)
+  }
 
   componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.trackUris !== this.props.trackUris) {
-      console.log("PlayerClass updated");
+      console.log("PlayerClass updated")
     }
-  };
+  }
 
   audioPlayHandler = () => {
-    console.log("Audio started playing");
-    if (this.player) this.player?.player?.setVolume(0.25);
-  };
+    console.log("Audio started playing")
+    if (this.player) this.player?.player?.setVolume(0.25)
+  }
 
   audioEndedHandler = () => {
-    console.log("Audio ended");
-    if (this.player) this.player?.player?.setVolume(1);
-    this.prepareNextDjAudio();
-  };
+    console.log("Audio ended")
+    if (this.player) this.player?.player?.setVolume(1)
+    this.prepareNextDjAudio()
+  }
 
   async prepareNextDjAudio() {
-    this.djAudioPending = true;
+    this.djAudioPending = true
 
-    const playlist = this.props.reduxState.playlist.tracks;
-    console.log(playlist);
+    const playlist = this.props.reduxState.playlist.tracks
+    console.log(playlist)
 
-    const dataUri = await axios.post("/api/content/next-content", playlist);
-    console.log(dataUri);
-    // "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+    // const dataUri = await axios.post("/api/content/next-content", playlist);
+    // console.log(dataUri);
     //TODO: Fix with call to server to get next audio file
 
     const metadataLoadedPromise = new Promise((resolve) => {
       this.audio.addEventListener("loadedmetadata", () => {
-        resolve();
-      });
-    });
+        resolve()
+      })
+    })
 
-    this.audio.src = dataUri.data;
-    await metadataLoadedPromise;
+    // this.audio.src = dataUri.data;
 
-    this.djAudioPending = false;
-    this.scheduleDjAudio();
+    this.audio.src =
+      "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+
+    await metadataLoadedPromise
+
+    this.djAudioPending = false
+    this.scheduleDjAudio()
   }
 
   getPlayer = async (playerInstance) => {
-    this.player = { player: await playerInstance };
-  };
+    this.player = { player: await playerInstance }
+  }
 
   spotifyEventHandler = (state) => {
-    console.log(state);
+    console.log(state)
 
     if (state.type === "track_update") {
       if (this.props.accessToken) {
-        this.props.fetchQueueTracks();
+        this.props.fetchQueueTracks()
       }
 
       if (!this.audio || !this.audio.src || this.audio.paused) {
-        this.prepareNextDjAudio();
+        this.prepareNextDjAudio()
       }
     }
 
     if (state.type === "player_update") {
       if (state.isPlaying && state.progressMs > 100) {
-        this.scheduleDjAudio(state);
+        this.scheduleDjAudio(state)
       } else {
-        window.clearTimeout(this.djAudioTimeout);
+        window.clearTimeout(this.djAudioTimeout)
       }
     }
 
     if (state.type === "progress_update") {
-      this.scheduleDjAudio(state);
+      this.scheduleDjAudio(state)
     }
-  };
+  }
 
   async scheduleDjAudio(state = null) {
-    if (this.djAudioPending) return;
-    let duration, progress;
-    window.clearTimeout(this.djAudioTimeout);
+    if (this.djAudioPending) return
+    let duration, progress
+    window.clearTimeout(this.djAudioTimeout)
     if (!state) {
       if (!this.player) {
         console.log(
           "Aborted scheduling next DJ audio: no player instance available."
-        );
-        return;
+        )
+        return
       }
-      let currentState = await this.player.player.getCurrentState();
-      console.log("Current state:", currentState);
-      duration = currentState?.duration;
-      progress = currentState?.position;
+      let currentState = await this.player.player.getCurrentState()
+      console.log("Current state:", currentState)
+      duration = currentState?.duration
+      progress = currentState?.position
     } else {
-      duration = state.track.durationMs;
-      progress = state.progressMs;
+      duration = state.track.durationMs
+      progress = state.progressMs
     }
     if (!duration || !this.audio?.duration) {
       console.log(
         "Aborted scheduling next DJ audio: no current track duration or DJ audio duration available."
-      );
-      return;
+      )
+      return
     }
     this.djAudioTimeout = setTimeout(() => {
-      this.audio.play();
-    }, duration - progress - (this.audio?.duration && (this.audio?.duration * 1000) / 2));
+      this.audio.play()
+    }, duration - progress - (this.audio?.duration && (this.audio?.duration * 1000) / 2))
   }
 
   render() {
-    let { accessToken, trackUris } = this.props;
-    console.log("PlayerClass rendered", this.props);
-    if (!accessToken) return null;
+    let { accessToken, trackUris } = this.props
+    console.log("PlayerClass rendered", this.props)
+    if (!accessToken) return null
     return (
       <SpotifyPlayer
         getPlayer={this.getPlayer}
@@ -161,16 +164,16 @@ export class PlayerClass extends Component {
           trackNameColor: "#fff",
         }}
       />
-    );
+    )
   }
 }
 
 const mapStateToProps = (reduxState) => ({
   reduxState: reduxState,
-});
+})
 
 const mapDispatchToProps = (dispatch) => ({
   fetchQueueTracks: () => dispatch(fetchQueueTracks()),
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlayerClass);
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerClass)
