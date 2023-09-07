@@ -8639,8 +8639,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   addTracks: () => (/* binding */ addTracks),
 /* harmony export */   clearPlaylist: () => (/* binding */ clearPlaylist),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   exportPlaylist: () => (/* binding */ exportPlaylist),
 /* harmony export */   fetchPlaylistTracks: () => (/* binding */ fetchPlaylistTracks),
-/* harmony export */   fetchQueueTracks: () => (/* binding */ fetchQueueTracks),
 /* harmony export */   removeTrack: () => (/* binding */ removeTrack),
 /* harmony export */   setPlaylistError: () => (/* binding */ setPlaylistError),
 /* harmony export */   setPlaylistLoading: () => (/* binding */ setPlaylistLoading),
@@ -8662,18 +8662,25 @@ const playlistSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSli
   reducers: {
     addTrack: (state, action) => {
       state.tracks.push(action.payload);
+      // exportPlaylist(state.tracks);
     },
+
     addTracks: (state, action) => {
       state.tracks = [...state.tracks, ...action.payload];
+      // exportPlaylist(state.tracks);
     },
+
     removeTrack: (state, action) => {
       state.tracks = state.tracks.filter(track => track.id !== action.payload.id);
+      // exportPlaylist(state.tracks);
     },
+
     clearPlaylist: state => {
       state.tracks = [];
     },
     setPlaylistLoading: (state, action) => {
       state.loading = action.payload;
+      exportPlaylist(state.tracks);
     },
     setPlaylistError: (state, action) => {
       state.error = action.payload;
@@ -8717,30 +8724,6 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
     console.log(error);
     dispatch(setPlaylistError(error.message));
     dispatch(setPlaylistLoading(false));
-  }
-};
-const fetchQueueTracks = () => async (dispatch, getState) => {
-  try {
-    const accessToken = getState().user.details.accessToken;
-    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].get(`https://api.spotify.com/v1/me/player/queue`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-    const queue = response.data.queue.map(item => {
-      return {
-        title: item.name,
-        artist: item.artists[0].name,
-        album: item.album.name,
-        duration: item.duration_ms,
-        uri: item.uri,
-        id: item.id
-      };
-    });
-    console.log("queue", queue);
-    dispatch(setQueue(queue));
-  } catch (error) {
-    console.log("Redux Error!", error);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (playlistSlice.reducer);

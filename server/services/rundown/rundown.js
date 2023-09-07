@@ -1,25 +1,9 @@
-const { createContent } = require("../createContent")
-const currentWeather = require("../currentWeather")
-// const createTalk = require("../createTalk");
-// const createNews = require("../createNews");
+const { createContent } = require("../createContent");
+const currentWeather = require("../currentWeather");
+const path = require("path");
+const fs = require("fs");
 
-let show = {
-  radioStation: "1-2-3 FM",
-  showName: "Rock Retrospectives with DJ Spike",
-  date: "2023-09-01",
-  timeSlot: "7:00 AM - 8:00 AM",
-  rundown: [
-    { type: "intro" },
-    { type: "weather" },
-    { type: "song", songName: null, bandName: null, duration: null },
-    { type: "song", songName: null, bandName: null, duration: null },
-    { type: "news" },
-    { type: "talk_show" },
-    { type: "song", songName: null, bandName: null, duration: null },
-    { type: "song", songName: null, bandName: null, duration: null },
-    { type: "outro" },
-  ],
-}
+let currentIndex = 0;
 
 let playlist = [
   {
@@ -48,68 +32,169 @@ let playlist = [
     duration: 537,
   },
   { title: "Don't Cry", artist: "Guns N Roses", album: "test", duration: 284 },
-]
+];
 
-let currentContent = (function () {
-  let currentIndex = 0 // start with the first item in the rundown
+let previousRundown = null;
 
-  return {
-    next: async function (showWithSongs) {
-      if (currentIndex < showWithSongs.rundown.length) {
-        let content = await getContent(showWithSongs, currentIndex)
-        currentIndex++ // Move to the next index
-        return content
-      } else {
-        console.log("End of rundown reached.")
-      }
-    },
-    reset: function () {
-      currentIndex = 0 // reset index to start
-    },
-  }
-})()
-
-function addPlaylistToRundown(show, playlist) {
-  let songIndex = 0
-
-  show.rundown.forEach((element) => {
-    if (element.type === "song" && songIndex < playlist.length) {
-      element.songName = playlist[songIndex].title
-      element.bandName = playlist[songIndex].artist
-      element.albumName = playlist[songIndex].album
-      element.duration = playlist[songIndex].duration
-      songIndex++ // Move to the next song in the playlist
-    }
-  })
-  return show
-}
-
-async function getContent(showWithSongs, index) {
-  const element = showWithSongs.rundown[index]
-  if (!element) return
-
-  if (element.type === "weather") {
-    return await currentWeather()
-  } else if (element.type === "song") {
-    return await createContent(
-      showWithSongs.radioStation,
-      showWithSongs.showName,
-      element.songName,
-      element.bandName,
-      showWithSongs.date
-    )
-  } else if (element.type === "talk_show") {
-    // this.content = createTalk();
-  } else if (element.type === "news") {
-    // this.content = createNews();
+async function next(showWithSongs) {
+  if (currentIndex < showWithSongs.rundown.length) {
+    const content = await getContent(showWithSongs);
+    currentIndex++;
+    return content;
   } else {
-    console.warn(`Invalid content type: ${element.type}`)
+    console.log("End of rundown reached.");
   }
 }
 
-// console.log(createShow(show, playlist));
+function reset() {
+  currentIndex = 0;
+}
+const show = createDefaultShow();
+
+  function addPlaylistToRundown(newPlaylist) {
+
+  let songIndex = 0;
+  //BUG: This is shifting the songs by one every time it loads a new playlist and replaying each song over and over.
+  for (let i = currentIndex; i < show.rundown.length; i++) {
+    const element = show.rundown[i];
+    if (element.type === "song" && songIndex < newPlaylist.length) {
+      if (
+        !previousRundown ||
+        (previousRundown &&
+          (JSON.stringify(previousRundown.rundown[i].songName) !==
+            JSON.stringify(newPlaylist[i].title)))
+      ) {
+        element.songName = newPlaylist[songIndex].title;
+        element.bandName = newPlaylist[songIndex].artist;
+        element.albumName = newPlaylist[songIndex].album;
+        element.duration = newPlaylist[songIndex].duration;
+      }
+      songIndex++;
+    }
+  }
+
+  previousRundown = JSON.parse(JSON.stringify(show));
+
+  return show;
+}
+
+function createDefaultShow() {
+  return {
+    radioStation: "WYOU",
+    showName: "Rock Retrospectives with DJ Spike",
+    date: "2023-09-01",
+    timeSlot: "7:00 AM - 8:00 AM",
+    rundown: [
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+      { type: "weather" },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+    ],
+  };
+}
+
+async function convertMP3FileToDataURI(filePath) {
+  try {
+    const mp3Data = await fs.promises.readFile(filePath);
+    const base64Data = mp3Data.toString("base64");
+    const dataURI = `data:audio/mpeg;base64, ${base64Data}`;
+    // console.log("Data URI:", dataURI);
+    return dataURI;
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+}
+
+async function getContent(showWithSongs) {
+  const element = showWithSongs.rundown[currentIndex];
+  if (!element) return;
+
+  if (
+    !previousRundown ||
+    previousRundown
+    //TODO: Need to compare and run if the content hasn't been created yet.
+    // &&
+    // JSON.stringify(previousRundown.rundown[currentIndex]) !==
+    //   JSON.stringify(element))
+  ) {
+    if (element.type === "weather") {
+      let weatherReport = await currentWeather();
+      let fileName = await createContent(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        weatherReport
+      );
+      let audioURI = await convertMP3FileToDataURI(fileName);
+      return audioURI;
+    } else if (element.type === undefined || element.type === "song") {
+      let fileName = await createContent(
+        showWithSongs.radioStation,
+        showWithSongs.showName,
+        element.songName,
+        element.bandName,
+        showWithSongs.date,
+        showWithSongs.timeSlot
+      );
+      let audioURI = await convertMP3FileToDataURI(fileName);
+      return audioURI;
+    } else if (element.type === "talk_show") {
+      // this.content = createTalk();
+      return null;
+    } else if (element.type === "news") {
+      // this.content = createNews();
+      return null;
+    } else {
+      console.warn(`Invalid content type: ${element.type}`);
+      return null;
+    }
+  }
+}
 
 module.exports = {
-  currentContent,
+  next,
+  reset,
   addPlaylistToRundown,
-}
+};
