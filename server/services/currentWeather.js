@@ -117,15 +117,14 @@ async function currenWeather() {
     const windDirectionCardinal = determineWindDirection(wind_deg);
 
     return `
-  As of ${dt} today, the weather is described as ${mainDescription}, more specifically: ${detailedDescription}. 
+  As of ${dt} today, the weather is ${detailedDescription}. 
   The temperature is currently ${Math.round(
     temp
-  )} degrees, but it feels like ${Math.round(feels_like)}.
+  )} degrees.
   The sun rose at ${sunrise} and will set at ${sunset}.
   Humidity stands at ${Math.round(
     humidity
-  )} percent, with a dew point of ${Math.round(dew_point)} degrees.
-  The ultraviolet index is currently at ${uvi}.
+  )} percent.
   The sky is ${clouds} percent cloudy, with a visibility of approximately ${Math.round(
       visibility
     )} miles.

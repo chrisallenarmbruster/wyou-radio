@@ -14,7 +14,7 @@ router.post("/next-content", async (req, res) => {
   res.json(content);
 });
 
-router.get("/reset", (req, res) => {
+router.post("/reset", (req, res) => {
   reset();
   res.send("Rundown index reset!");
 });
