@@ -35,7 +35,7 @@ const chain = new ConversationChain({
 
 const debugTracker = [];
 
-const voiceID = "krnShwoOTYlrQktZt9g7";
+const voiceID = "krnShwoOTYlrQktZt9g7";``
 
 function constructPromptListWithCounts(details, djTopics) {
   let djStyle = "You are a gruff, irreverent, and humorous disk jockey.";
@@ -56,7 +56,7 @@ function constructPromptListWithCounts(details, djTopics) {
     },
     type3: {
       prompt: `${djStyle} ${djCoreInstructions} ${brevity}`,
-      frequency: 2,
+      frequency: 5,
     },
   };
 }
@@ -126,14 +126,14 @@ function songPrompts(
     "Mention a trivia about a traditional sport from another culture.",
   ];
 
-   const details = {
-     radioStation,
-     showName,
-     songName,
-     bandName,
-     date,
-     timeSlot,
-   };
+  const details = {
+    radioStation,
+    showName,
+    songName,
+    bandName,
+    date,
+    timeSlot,
+  };
 
   function createPromptsArray(promptListWithCounts) {
     let promptsArray = [];
@@ -161,20 +161,28 @@ async function createContent(
   songName,
   bandName,
   date,
-  timeSlot
+  timeSlot,
+  weather
 ) {
   try {
     debugTracker.push({ memory: await memory.chatHistory.getMessages() });
-    const result = await chain.call({
-      input: songPrompts(
-        radioStation,
-        showName,
-        songName,
-        bandName,
-        date,
-        timeSlot
-      ),
-    });
+    let result;
+    if (weather) {
+      result = await chain.call({
+        input: weather,
+      });
+    } else {
+      result = await chain.call({
+        input: songPrompts(
+          radioStation,
+          showName,
+          songName,
+          bandName,
+          date,
+          timeSlot
+        ),
+      });
+    }
 
     saveDebugTrackerToFile(debugTracker);
     const timestamp = Date.now();

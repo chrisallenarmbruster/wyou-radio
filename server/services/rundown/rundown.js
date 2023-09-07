@@ -49,19 +49,20 @@ async function next(showWithSongs) {
 function reset() {
   currentIndex = 0;
 }
+const show = createDefaultShow();
 
-function addPlaylistToRundown(newPlaylist) {
-  const show = createDefaultShow();
+  function addPlaylistToRundown(newPlaylist) {
+
   let songIndex = 0;
-
+  //BUG: This is shifting the songs by one every time it loads a new playlist and replaying each song over and over.
   for (let i = currentIndex; i < show.rundown.length; i++) {
     const element = show.rundown[i];
     if (element.type === "song" && songIndex < newPlaylist.length) {
       if (
         !previousRundown ||
         (previousRundown &&
-          JSON.stringify(previousRundown.rundown[i]) !==
-            JSON.stringify(element))
+          (JSON.stringify(previousRundown.rundown[i].songName) !==
+            JSON.stringify(newPlaylist[i].title)))
       ) {
         element.songName = newPlaylist[songIndex].title;
         element.bandName = newPlaylist[songIndex].artist;
@@ -79,7 +80,7 @@ function addPlaylistToRundown(newPlaylist) {
 
 function createDefaultShow() {
   return {
-    radioStation: "1-2-3 FM",
+    radioStation: "WYOU",
     showName: "Rock Retrospectives with DJ Spike",
     date: "2023-09-01",
     timeSlot: "7:00 AM - 8:00 AM",
@@ -156,7 +157,18 @@ async function getContent(showWithSongs) {
     //   JSON.stringify(element))
   ) {
     if (element.type === "weather") {
-      return await currentWeather();
+      let weatherReport = await currentWeather();
+      let fileName = await createContent(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        weatherReport
+      );
+      let audioURI = await convertMP3FileToDataURI(fileName);
+      return audioURI;
     } else if (element.type === undefined || element.type === "song") {
       let fileName = await createContent(
         showWithSongs.radioStation,
