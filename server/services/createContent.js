@@ -40,7 +40,7 @@ const voiceID = "krnShwoOTYlrQktZt9g7";
 
 function constructPromptListWithCounts(details, djTopics) {
   let djStyle = "You are a gruff, irreverent, and humorous disk jockey.";
-  let djCoreInstructions = `Create a script with no titles, headings or reference to the speaker followed by a colon. Keep in mind what you have said previously. Be creative and do not repeat yourself. The script should reflects verbatim what a disk jockey would say to tee up the ${details.songName} by ${details.bandName}`;
+  let djCoreInstructions = `Create a script with no titles, headings, annotations, or reference to the speaker followed by a colon. Keep in mind what you have said previously. Be creative and do not repeat yourself. The script should reflects verbatim what a disk jockey would say to tee up the ${details.songName} by ${details.bandName}`;
   let djChannel = `The Station is called ${details.radioStation}. The showName is ${details.showName}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
   let brevity = "Be very brief.";
 
