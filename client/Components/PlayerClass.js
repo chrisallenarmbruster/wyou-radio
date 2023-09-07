@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import SpotifyWebApi from "spotify-web-api-node"
 import SpotifyPlayer from "react-spotify-web-playback"
 import { fetchQueueTracks } from "../store/playlistSlice"
 import axios from "axios"
@@ -9,12 +10,15 @@ import Container from "react-bootstrap/Container"
 export class PlayerClass extends Component {
   constructor(props) {
     super(props)
-    this.state = { playSpotify: false }
+    this.state = { playSpotify: false, isAllMuted: false }
     this.audio = new Audio()
     this.djAudioTimeout = null
     this.djAudioPending = false
     this.player = { player: null }
     this.maxVoiceOverDuration = 10000
+    this.muteReturnToDjVol = 1
+    this.muteReturnToSpotifyVol = 1
+    this.spotifyApi = new SpotifyWebApi()
     this.getPlayer = this.getPlayer.bind(this)
     this.spotifyEventHandler = this.spotifyEventHandler.bind(this)
     this.prepareNextDjAudio = this.prepareNextDjAudio.bind(this)
@@ -25,6 +29,8 @@ export class PlayerClass extends Component {
     this.decreaseDjVolume = this.decreaseDjVolume.bind(this)
     this.increaseSpotifyVolume = this.increaseSpotifyVolume.bind(this)
     this.decreaseSpotifyVolume = this.decreaseSpotifyVolume.bind(this)
+    this.toggleMuteAll = this.toggleMuteAll.bind(this)
+    this.getUsersPlaylists = this.getUsersPlaylists.bind(this)
   }
 
   componentDidMount = () => {
@@ -50,12 +56,13 @@ export class PlayerClass extends Component {
 
   audioPlayHandler = () => {
     console.log("Audio started playing")
-    if (this.player) this.player?.player?.setVolume(0.25)
+    if (this.player && !this.state.isAllMuted)
+      this.player?.player?.setVolume(0.25)
   }
 
   audioEndedHandler = () => {
     console.log("Audio ended")
-    if (this.player) this.player?.player?.setVolume(1)
+    if (this.player && !this.state.isAllMuted) this.player?.player?.setVolume(1)
     this.prepareNextDjAudio()
   }
 
@@ -63,7 +70,7 @@ export class PlayerClass extends Component {
     this.djAudioPending = true
 
     const playlist = this.props.reduxState.playlist.tracks
-    console.log(playlist)
+    console.log("Redux Playlist", playlist)
 
     // const dataUri = await axios.post("/api/content/next-content", playlist);
     // console.log(dataUri);
@@ -88,6 +95,7 @@ export class PlayerClass extends Component {
 
   getPlayer = async (playerInstance) => {
     this.player = { player: await playerInstance }
+    this.player?.player?.setName("WYOU Radio")
   }
 
   spotifyEventHandler = (state) => {
@@ -190,12 +198,57 @@ export class PlayerClass extends Component {
     }
   }
 
+  async toggleMuteAll() {
+    const { isAllMuted } = this.state
+    this.setState({ isAllMuted: !isAllMuted }, async () => {
+      const preMuteDjVol = this.audio?.volume
+      const preMuteSpotifyVol = await this.player?.player?.getVolume()
+      if (!isAllMuted) {
+        this.audio.volume = 0
+        await this.player?.player?.setVolume(0)
+      } else {
+        this.audio.volume = this.muteReturnToDjVol
+        await this.player?.player?.setVolume(this.muteReturnToSpotifyVol)
+      }
+
+      this.muteReturnToDjVol = preMuteDjVol
+      this.muteReturnToSpotifyVol = preMuteSpotifyVol
+    })
+  }
+
+  async getUsersPlaylists() {
+    this.spotifyApi.setAccessToken(this.props.accessToken)
+    let data = await this.spotifyApi.getUserPlaylists()
+    console.log("User's Playlists: ", data.body.items)
+    data = await this.spotifyApi.getFeaturedPlaylists({
+      limit: 5,
+      offset: 0,
+      country: "US",
+    })
+    console.log("Featured Playlists: ", data.body.playlists.items)
+    data = await this.spotifyApi.searchPlaylists("classic rock")
+    console.log("Search Classic Rock Playlists: ", data.body.playlists.items)
+  }
+
   render() {
     let { accessToken, trackUris } = this.props
 
     if (!accessToken) return null
     return (
       <>
+        <Container className="">
+          <Button
+            className={`m-1 ${
+              this.state.isAllMuted ? "btn-danger" : "btn-primary"
+            }`}
+            onClick={this.toggleMuteAll}
+          >
+            Toggle Mute All
+          </Button>
+          <Button className="m-1" onClick={this.getUsersPlaylists}>
+            Log Playlists
+          </Button>
+        </Container>
         <Container className="">
           <Button className="m-1" onClick={() => this.audio?.play()}>
             Play DJ Track
