@@ -33,7 +33,8 @@ const playlistSlice = createSlice({
       state.error = action.payload
     },
     setQueue: (state, action) => {
-      state.queue = action.payload
+      console.log("setQueue", action.payload)
+      state.queue = [...action.payload]
     },
   },
 })

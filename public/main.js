@@ -8305,11 +8305,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-spotify-web-playback */ "./node_modules/react-spotify-web-playback/dist/index.mjs");
 /* harmony import */ var _store_playlistSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/playlistSlice */ "./client/store/playlistSlice.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 
 
 
 
+// import store from "../store"
 
 class PlayerClass extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor(props) {
@@ -8376,10 +8376,9 @@ class PlayerClass extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
   spotifyEventHandler = state => {
     console.log(state);
     if (state.type === "track_update") {
-      // if (store.getState().user.details.accessToken) {
-      //   store.dispatch(fetchQueueTracks())
-      // }
-
+      if (this.props.accessToken) {
+        this.props.fetchQueueTracks();
+      }
       if (!this.audio || !this.audio.src || this.audio.paused) {
         this.prepareNextDjAudio();
       }
@@ -8405,6 +8404,7 @@ class PlayerClass extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
         return;
       }
       let currentState = await this.player.player.getCurrentState();
+      console.log("Current state:", currentState);
       duration = currentState?.duration;
       progress = currentState?.position;
     } else {
@@ -8449,7 +8449,9 @@ class PlayerClass extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
 const mapStateToProps = reduxState => ({
   reduxState: reduxState
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = dispatch => ({
+  fetchQueueTracks: () => dispatch((0,_store_playlistSlice__WEBPACK_IMPORTED_MODULE_3__.fetchQueueTracks)())
+});
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapStateToProps, mapDispatchToProps)(PlayerClass));
 
 /***/ }),
@@ -8677,7 +8679,8 @@ const playlistSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSli
       state.error = action.payload;
     },
     setQueue: (state, action) => {
-      state.queue = action.payload;
+      console.log("setQueue", action.payload);
+      state.queue = [...action.payload];
     }
   }
 });

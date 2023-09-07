@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import SpotifyPlayer from "react-spotify-web-playback"
 import { fetchQueueTracks } from "../store/playlistSlice"
-import store from "../store"
+// import store from "../store"
 
 export class PlayerClass extends Component {
   constructor(props) {
@@ -80,9 +80,9 @@ export class PlayerClass extends Component {
     console.log(state)
 
     if (state.type === "track_update") {
-      // if (store.getState().user.details.accessToken) {
-      //   store.dispatch(fetchQueueTracks())
-      // }
+      if (this.props.accessToken) {
+        this.props.fetchQueueTracks()
+      }
 
       if (!this.audio || !this.audio.src || this.audio.paused) {
         this.prepareNextDjAudio()
@@ -114,6 +114,7 @@ export class PlayerClass extends Component {
         return
       }
       let currentState = await this.player.player.getCurrentState()
+      console.log("Current state:", currentState)
       duration = currentState?.duration
       progress = currentState?.position
     } else {
@@ -162,6 +163,8 @@ const mapStateToProps = (reduxState) => ({
   reduxState: reduxState,
 })
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = (dispatch) => ({
+  fetchQueueTracks: () => dispatch(fetchQueueTracks()),
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerClass)
