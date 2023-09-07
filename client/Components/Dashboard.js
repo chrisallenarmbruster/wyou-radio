@@ -42,9 +42,11 @@ export default function Dashboard({ code }) {
   }, [accessToken])
 
   useEffect(() => {
+    let playlistId
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
-    const playlistId = "6WESoRu7keGwiyag0owvuV"
+    playlistId = "6WESoRu7keGwiyag0owvuV" //20 items
+    playlistId = "3DYUw0nHB9o8tLZKQup4zp" //100 items
     dispatch(fetchPlaylistTracks(playlistId, accessToken))
   }, [!!accessToken])
 
