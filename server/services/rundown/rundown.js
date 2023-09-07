@@ -1,9 +1,8 @@
 const { createContent } = require("../createContent");
 const currentWeather = require("../currentWeather");
-const path = require("path");
 const fs = require("fs");
 
-let currentIndex = 0;
+let currentRundownIndex = 0;
 
 let playlist = [
   {
@@ -35,44 +34,44 @@ let playlist = [
 ];
 
 let previousRundown = null;
+let nextElement = null;
 
 async function next(showWithSongs) {
-  if (currentIndex < showWithSongs.rundown.length) {
-    const content = await getContent(showWithSongs);
-    currentIndex++;
-    return content;
-  } else {
-    console.log("End of rundown reached.");
+  if (currentRundownIndex >= showWithSongs.rundown.length) {
+    console.log("End of rundown reached. Starting over...");
+    currentRundownIndex = 0;
   }
+
+  const content = await getContent(showWithSongs);
+
+  // if (showWithSongs.rundown[currentRundownIndex].type !== "song") {
+  //   currentRundownIndex += 2;
+
+  return content;
 }
 
 function reset() {
-  currentIndex = 0;
+  currentRundownIndex = 0;
 }
-const show = createDefaultShow();
-let songIndex = 1;
-function addPlaylistToRundown(newPlaylist) {
 
-  //BUG: This is shifting the songs by one every time it loads a new playlist and replaying each song over and over.
-  for (let i = currentIndex; i < show.rundown.length; i++) {
-    const element = show.rundown[i];
-    if (element.type === "song" && songIndex < newPlaylist.length) {
-      if (
-        !previousRundown ||
-        (previousRundown &&
-          JSON.stringify(previousRundown.rundown[i].songName) !==
-            JSON.stringify(newPlaylist[i].title))
-      ) {
-        element.songName = newPlaylist[songIndex].title;
-        element.bandName = newPlaylist[songIndex].artist;
-        element.albumName = newPlaylist[songIndex].album;
-        element.duration = newPlaylist[songIndex].duration;
-      }
-      songIndex++;
+//addPlaylistToRundown
+function addPlaylistToRundown(playlist) {
+  let show = createDefaultShow();
+  let songIndex = 0;
+
+  for (let i = 0; i < show.rundown.length; i++) {
+    let segment = show.rundown[i];
+
+    if (segment.type === "song" && segment.songName === null) {
+      segment.songName = playlist[songIndex].title;
+      segment.bandName = playlist[songIndex].artist;
+      segment.albumName = playlist[songIndex].album;
+      segment.duration = playlist[songIndex].duration;
+
+      // Move to next song in playlist or reset if at the end
+      songIndex = (songIndex + 1) % playlist.length;
     }
   }
-
-  previousRundown = JSON.parse(JSON.stringify(show));
 
   return show;
 }
@@ -84,20 +83,20 @@ function createDefaultShow() {
     date: "2023-09-01",
     timeSlot: "7:00 AM - 8:00 AM",
     rundown: [
-      {
-        type: "song",
-        songName: null,
-        bandName: null,
-        albumName: null,
-        duration: null,
-      },
-      {
-        type: "song",
-        songName: null,
-        bandName: null,
-        albumName: null,
-        duration: null,
-      },
+      // {
+      //   type: "song",
+      //   songName: null,
+      //   bandName: null,
+      //   albumName: null,
+      //   duration: null,
+      // },
+      // {
+      //   type: "song",
+      //   songName: null,
+      //   bandName: null,
+      //   albumName: null,
+      //   duration: null,
+      // },
       {
         type: "song",
         songName: null,
@@ -142,20 +141,78 @@ async function convertMP3FileToDataURI(filePath) {
     console.error("Error:", error.message);
   }
 }
-
+//NOTE: added +1 to currentRundownIndex to get the next element in the rundown.
 async function getContent(showWithSongs) {
-  const element = showWithSongs.rundown[currentIndex];
-  if (!element) return;
+  console.log(
+    "rundown :",
+    showWithSongs.rundown,
+    "currentRundownIndex:",
+    currentRundownIndex,
+    "type:",
+    showWithSongs.rundown[currentRundownIndex].type
+  );
+  let weatherSong = "";
+
+  //IF THE CURRENT Rundown INDEX IS A SONG, THEN set nextElement to the next element in the rundown and increment the currentRundownIndex of the rundown by 1. Then check if the segment after next is a weather segment. If it is, then set weatherSong to the song after the weather segment.
+
+  //ELSE IF THE CURRENT Rundown INDEX IS A SONG, THEN set nextElement to the next element in the rundown and increment the currentRundownIndex of the rundown by 2 to reach the element after next because the weather segment will queue up the song after. Then increment the currentRundownIndex of the rundown by 2.
+  if (showWithSongs.rundown[currentRundownIndex].type === "song") {
+    nextElement = showWithSongs.rundown[currentRundownIndex + 1];
+    if (showWithSongs.rundown[currentRundownIndex + 1].type === "weather") {
+      weatherSong = showWithSongs.rundown[currentRundownIndex + 2];
+    }
+    if (currentRundownIndex >= showWithSongs.rundown.length) {
+      currentRundownIndex = 0;
+    } else {
+      currentRundownIndex++;
+    }
+  } else {
+    nextElement = showWithSongs.rundown[currentRundownIndex + 2];
+    if (currentRundownIndex >= showWithSongs.rundown.length) {
+      currentRundownIndex = 0;
+    } else {
+      currentRundownIndex = currentRundownIndex + 2;
+    }
+  }
+
+  //IF THE CURRENT Rundown INDEX IS A SONG, THEN set nextElement to the next element in the rundown and increment the currentRundownIndex of the rundown by 2 to reach the element after next because the weather segment will queue up the song after. Then increment the currentRundownIndex of the rundown by 2.
+  // if (showWithSongs.rundown[currentRundownIndex].type === "weather") {
+  //   nextElement = showWithSongs.rundown[currentRundownIndex + 2];
+  //   if (currentRundownIndex >= showWithSongs.rundown.length) {
+  //     currentRundownIndex = 0;
+  //   } else {
+  //     currentRundownIndex = currentRundownIndex + 2;
+  //   }
+  // }
+
+  // if (currentRundownIndex > 0 && showWithSongs.rundown[currentRundownIndex].type !== "song") {
+  //   nextElement = showWithSongs.rundown[currentRundownIndex + 2];
+  //   console.log("nextElement:", nextElement, "increment by 2");
+  //   if (currentRundownIndex >= showWithSongs.rundown.length) {
+  //     currentRundownIndex = 0;
+  //   } else {
+  //     currentRundownIndex = currentRundownIndex + 2;
+  //   }
+  // } else {
+  //   nextElement = showWithSongs.rundown[currentRundownIndex + 1];
+  //   console.log("nextElement:", nextElement, "increment by 1");
+  //   if (currentRundownIndex >= showWithSongs.rundown.length) {
+  //     currentRundownIndex = 0;
+  //   } else {
+  //     currentRundownIndex++;
+  //   }
+  // }
+  // if (!nextElement) return;
 
   if (
     !previousRundown ||
     previousRundown
     //TODO: Need to compare and run if the content hasn't been created yet.
     // &&
-    // JSON.stringify(previousRundown.rundown[currentIndex]) !==
-    //   JSON.stringify(element))
+    // JSON.stringify(previousRundown.rundown[currentRundownIndex]) !==
+    //   JSON.stringify(nextElement))
   ) {
-    if (element.type === "weather") {
+    if (nextElement.type === "weather") {
       let weatherReport = await currentWeather();
       let fileName = await createContent(
         null,
@@ -164,25 +221,26 @@ async function getContent(showWithSongs) {
         null,
         null,
         null,
-        weatherReport
+        `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${weatherSong.bandName} called ${weatherSong.songName}. Be very brief.`
       );
       let audioURI = await convertMP3FileToDataURI(fileName);
       return audioURI;
-    } else if (element.type === undefined || element.type === "song") {
+    } else if (nextElement.type === undefined || nextElement.type === "song") {
+      console.log(nextElement.songName);
       let fileName = await createContent(
         showWithSongs.radioStation,
         showWithSongs.showName,
-        element.songName,
-        element.bandName,
+        nextElement.songName,
+        nextElement.bandName,
         showWithSongs.date,
         showWithSongs.timeSlot
       );
       let audioURI = await convertMP3FileToDataURI(fileName);
       return audioURI;
-    } else if (element.type === "talk_show") {
+    } else if (nextElement.type === "talk_show") {
       // this.content = createTalk();
       return null;
-    } else if (element.type === "news") {
+    } else if (nextElement.type === "news") {
       // this.content = createNews();
       return null;
     } else {

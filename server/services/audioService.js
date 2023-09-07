@@ -25,7 +25,7 @@ function removeSpecialCharacters(str) {
   return str.replace(/[^a-zA-Z0-9 ]/g, "");
 }
 
-const fetchSpeech = async (voiceID, text, fileName) => {
+const fetchSpeech =async (voiceID, text, fileName) => {
   fileName = removeSpecialCharacters(fileName);
 
   const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceID}`;
