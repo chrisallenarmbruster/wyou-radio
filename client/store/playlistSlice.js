@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
   tracks: [],
+  queue: [],
   loading: false,
   error: null,
 };
@@ -35,6 +36,10 @@ const playlistSlice = createSlice({
     setPlaylistError: (state, action) => {
       state.error = action.payload;
     },
+    setQueue: (state, action) => {
+      console.log("setQueue", action.payload)
+      state.queue = [...action.payload]
+    },
   },
 });
 
@@ -45,7 +50,8 @@ export const {
   clearPlaylist,
   setPlaylistLoading,
   setPlaylistError,
-} = playlistSlice.actions;
+  setQueue,
+} = playlistSlice.actions
 
 export const fetchPlaylistTracks =
   (playlistId, accessToken) => async (dispatch) => {
@@ -59,8 +65,7 @@ export const fetchPlaylistTracks =
             Authorization: `Bearer ${accessToken}`,
           },
         }
-      );
-      console.log("response: ", response);
+      )
       const tracks = response.data.items.map((item) => ({
         title: item.track.name,
         artist: item.track.artists[0].name,
@@ -68,11 +73,11 @@ export const fetchPlaylistTracks =
         duration: item.track.duration_ms,
         uri: item.track.uri,
         id: item.track.id,
-      }));
-
-      dispatch(addTracks(tracks));
-      dispatch(setPlaylistError(null));
-      dispatch(setPlaylistLoading(false));
+      }))
+      console.log("tracks", tracks)
+      dispatch(addTracks(tracks))
+      dispatch(setPlaylistError(null))
+      dispatch(setPlaylistLoading(false))
     } catch (error) {
       console.log(error);
       dispatch(setPlaylistError(error.message));
@@ -102,4 +107,33 @@ export const nextDJTrack = async (index) => {
   }
 };
 
-export default playlistSlice.reducer;
+export const fetchQueueTracks = () => async (dispatch, getState) => {
+  try {
+    const accessToken = getState().user.details.accessToken
+    const response = await axios.get(
+      `https://api.spotify.com/v1/me/player/queue`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+
+    const queue = response.data.queue.map((item) => {
+      return {
+        title: item.name,
+        artist: item.artists[0].name,
+        album: item.album.name,
+        duration: item.duration_ms,
+        uri: item.uri,
+        id: item.id,
+      }
+    })
+    console.log("queue", queue)
+    dispatch(setQueue(queue))
+  } catch (error) {
+    console.log("Redux Error!", error)
+  }
+}
+
+export default playlistSlice.reducer
