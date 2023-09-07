@@ -2,10 +2,10 @@ import React from "react"
 import { useState, useEffect } from "react"
 import useAuth from "./useAuth"
 import Player from "./Player"
+import PlayerClass from "./PlayerClass"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
-import TestAudioClip from "./TestAudioClip"
 import { useDispatch, useSelector } from "react-redux"
 import {
   addTrack,
@@ -13,12 +13,8 @@ import {
   removeTrack,
   clearPlaylist,
   fetchPlaylistTracks,
+  fetchQueueTracks,
 } from "../store/playlistSlice"
-import store from "../store"
-
-const spotifyApi = new SpotifyWebApi({
-  clientId: "31c41df5075e46c48c3547d709102476",
-})
 
 export default function Dashboard({ code }) {
   const dispatch = useDispatch()
@@ -28,6 +24,10 @@ export default function Dashboard({ code }) {
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
   const [lyrics, setLyrics] = useState("")
+
+  const spotifyApi = new SpotifyWebApi({
+    clientId: "31c41df5075e46c48c3547d709102476",
+  })
 
   function chooseTrack(track) {
     dispatch(addTrack(track))
@@ -53,6 +53,7 @@ export default function Dashboard({ code }) {
     if (!accessToken) return
 
     let cancel = false
+    spotifyApi.setAccessToken(accessToken)
     spotifyApi.searchTracks(search).then((res) => {
       if (cancel) return
       setSearchResults(
@@ -87,34 +88,34 @@ export default function Dashboard({ code }) {
         className="bg-dark d-flex flex-column py-3"
         style={{ height: "90vh" }}
       >
-        <Form.Control
-          type="search"
-          placeholder="Search Songs/Artists"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="p-2"
-        />
-        <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
-          {searchResults.map((track) => (
-            <TrackSearchResult
-              track={track}
-              key={track.uri}
-              chooseTrack={chooseTrack}
+        {accessToken && (
+          <>
+            <Form.Control
+              type="search"
+              placeholder="Search Songs/Artists"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="p-2"
             />
-          ))}
-          {searchResults.length === 0 && (
-            <div className="text-center" style={{ whiteSpace: "pre" }}>
-              {lyrics}
+            <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
+              {searchResults.map((track) => (
+                <TrackSearchResult
+                  track={track}
+                  key={track.uri}
+                  chooseTrack={chooseTrack}
+                />
+              ))}
+              {searchResults.length === 0 && (
+                <div className="text-center" style={{ whiteSpace: "pre" }}>
+                  {lyrics}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
+
         <div>
-          <TestAudioClip />
-        </div>
-        <div>
-          {/* <Player accessToken={accessToken} trackUri={playingTrack?.uri} /> */}
-          <Player
-            spotifyApi={spotifyApi}
+          <PlayerClass
             accessToken={accessToken}
             trackUris={
               playlist ? playlist.tracks.map((track) => track.uri) : null

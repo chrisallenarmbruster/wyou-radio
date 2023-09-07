@@ -1,1 +1,8 @@
 /* Style overrides here */
+._VolumeInlineRSWP {
+  display: none !important;
+}
+
+._VolumeRSWP {
+  display: none !important;
+}

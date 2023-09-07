@@ -7240,114 +7240,6 @@ function useWillUnmount(fn) {
 
 /***/ }),
 
-/***/ "./node_modules/@restart/ui/esm/Button.js":
-/*!************************************************!*\
-  !*** ./node_modules/@restart/ui/esm/Button.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   isTrivialHref: () => (/* binding */ isTrivialHref),
-/* harmony export */   useButtonProps: () => (/* binding */ useButtonProps)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-const _excluded = ["as", "disabled"];
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-
-function isTrivialHref(href) {
-  return !href || href.trim() === '#';
-}
-function useButtonProps({
-  tagName,
-  disabled,
-  href,
-  target,
-  rel,
-  role,
-  onClick,
-  tabIndex = 0,
-  type
-}) {
-  if (!tagName) {
-    if (href != null || target != null || rel != null) {
-      tagName = 'a';
-    } else {
-      tagName = 'button';
-    }
-  }
-  const meta = {
-    tagName
-  };
-  if (tagName === 'button') {
-    return [{
-      type: type || 'button',
-      disabled
-    }, meta];
-  }
-  const handleClick = event => {
-    if (disabled || tagName === 'a' && isTrivialHref(href)) {
-      event.preventDefault();
-    }
-    if (disabled) {
-      event.stopPropagation();
-      return;
-    }
-    onClick == null ? void 0 : onClick(event);
-  };
-  const handleKeyDown = event => {
-    if (event.key === ' ') {
-      event.preventDefault();
-      handleClick(event);
-    }
-  };
-  if (tagName === 'a') {
-    // Ensure there's a href so Enter can trigger anchor button.
-    href || (href = '#');
-    if (disabled) {
-      href = undefined;
-    }
-  }
-  return [{
-    role: role != null ? role : 'button',
-    // explicitly undefined so that it overrides the props disabled in a spread
-    // e.g. <Tag {...props} {...hookProps} />
-    disabled: undefined,
-    tabIndex: disabled ? undefined : tabIndex,
-    href,
-    target: tagName === 'a' ? target : undefined,
-    'aria-disabled': !disabled ? undefined : disabled,
-    rel: tagName === 'a' ? rel : undefined,
-    onClick: handleClick,
-    onKeyDown: handleKeyDown
-  }, meta];
-}
-const Button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((_ref, ref) => {
-  let {
-      as: asProp,
-      disabled
-    } = _ref,
-    props = _objectWithoutPropertiesLoose(_ref, _excluded);
-  const [buttonProps, {
-    tagName: Component
-  }] = useButtonProps(Object.assign({
-    tagName: asProp,
-    disabled
-  }, props));
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Component, Object.assign({}, props, buttonProps, {
-    ref: ref
-  }));
-});
-Button.displayName = 'Button';
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
-
-/***/ }),
-
 /***/ "./node_modules/@restart/ui/esm/DataKey.js":
 /*!*************************************************!*\
   !*** ./node_modules/@restart/ui/esm/DataKey.js ***!
@@ -8123,15 +8015,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _useAuth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useAuth */ "./client/Components/useAuth.js");
 /* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Player */ "./client/Components/Player.js");
-/* harmony import */ var _TrackSearchResult__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TrackSearchResult */ "./client/Components/TrackSearchResult.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
-/* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! spotify-web-api-node */ "./node_modules/spotify-web-api-node/src/client.js");
-/* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _TestAudioClip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TestAudioClip */ "./client/Components/TestAudioClip.js");
+/* harmony import */ var _PlayerClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PlayerClass */ "./client/Components/PlayerClass.js");
+/* harmony import */ var _TrackSearchResult__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TrackSearchResult */ "./client/Components/TrackSearchResult.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! spotify-web-api-node */ "./node_modules/spotify-web-api-node/src/client.js");
+/* harmony import */ var spotify_web_api_node__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(spotify_web_api_node__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _store_playlistSlice__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../store/playlistSlice */ "./client/store/playlistSlice.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 
 
 
@@ -8142,10 +8033,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-const spotifyApi = new (spotify_web_api_node__WEBPACK_IMPORTED_MODULE_4___default())({
-  clientId: "31c41df5075e46c48c3547d709102476"
-});
 function Dashboard({
   code
 }) {
@@ -8156,6 +8043,9 @@ function Dashboard({
   const [searchResults, setSearchResults] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [playingTrack, setPlayingTrack] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)();
   const [lyrics, setLyrics] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
+  const spotifyApi = new (spotify_web_api_node__WEBPACK_IMPORTED_MODULE_5___default())({
+    clientId: "31c41df5075e46c48c3547d709102476"
+  });
   function chooseTrack(track) {
     dispatch((0,_store_playlistSlice__WEBPACK_IMPORTED_MODULE_7__.addTrack)(track));
     setPlayingTrack([track]);
@@ -8176,6 +8066,7 @@ function Dashboard({
     if (!search) return setSearchResults([]);
     if (!accessToken) return;
     let cancel = false;
+    spotifyApi.setAccessToken(accessToken);
     spotifyApi.searchTracks(search).then(res => {
       if (cancel) return;
       setSearchResults(res.body.tracks.items.map(track => {
@@ -8196,12 +8087,12 @@ function Dashboard({
     });
     return () => cancel = true;
   }, [search, accessToken]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["default"], {
     className: "bg-dark d-flex flex-column py-3",
     style: {
       height: "90vh"
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__["default"].Control, {
+  }, accessToken && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["default"].Control, {
     type: "search",
     placeholder: "Search Songs/Artists",
     value: search,
@@ -8212,7 +8103,7 @@ function Dashboard({
     style: {
       overflowY: "auto"
     }
-  }, searchResults.map(track => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_TrackSearchResult__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, searchResults.map(track => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_TrackSearchResult__WEBPACK_IMPORTED_MODULE_4__["default"], {
     track: track,
     key: track.uri,
     chooseTrack: chooseTrack
@@ -8221,8 +8112,7 @@ function Dashboard({
     style: {
       whiteSpace: "pre"
     }
-  }, lyrics)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_TestAudioClip__WEBPACK_IMPORTED_MODULE_5__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Player__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    spotifyApi: spotifyApi,
+  }, lyrics))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_PlayerClass__WEBPACK_IMPORTED_MODULE_3__["default"], {
     accessToken: accessToken,
     trackUris: playlist ? playlist.tracks.map(track => track.uri) : null
   }))));
@@ -8277,71 +8167,112 @@ const mapStateToProps = state => ({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Player)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-spotify-web-playback */ "./node_modules/react-spotify-web-playback/dist/index.mjs");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-spotify-web-playback */ "./node_modules/react-spotify-web-playback/dist/index.mjs");
+/* harmony import */ var _store_playlistSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/playlistSlice */ "./client/store/playlistSlice.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./client/store/index.js");
 
 
 
-function Player({
-  accessToken,
-  trackUris,
-  spotifyApi
-}) {
-  const [play, setPlay] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [audio] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(new Audio("audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"));
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    setPlay(true), [trackUris];
-    // spotifyApi.setVolume(50).then(
-    //   function () {
-    //     console.log("Setting volume to 50.")
-    //   },
-    //   function (err) {
-    //     //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-    //     console.log("Something went wrong!", err)
-    //   }
-    // )
+
+
+const MAX_VOICE_OVER_DURATION = 10000;
+let djAudioTimeout = null;
+let player = {
+  player: null
+};
+let djAudioPending = false;
+const audio = new Audio();
+audio.addEventListener("play", () => {
+  console.log("Audio started playing");
+  if (player) player?.player?.setVolume(0.25);
+});
+audio.addEventListener("ended", () => {
+  console.log("Audio ended");
+  if (player) player?.player?.setVolume(1);
+  prepareNextDjAudio();
+});
+async function prepareNextDjAudio() {
+  const dataUri = "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3";
+  const metadataLoadedPromise = new Promise(resolve => {
+    audio.addEventListener("loadedmetadata", () => {
+      resolve();
+    });
   });
+  audio.src = dataUri;
+  await metadataLoadedPromise;
+  scheduleDjAudio();
+}
+async function scheduleDjAudio(state = null) {
+  if (djAudioPending) return;
+  let duration, progress;
+  window.clearTimeout(djAudioTimeout);
+  if (!state) {
+    if (!player) {
+      console.log("Aborted scheduling next DJ audio: no player instance available.");
+      return;
+    }
+    let currentState = await player.player.getCurrentState();
+    duration = currentState?.duration;
+    progress = currentState?.position;
+  } else {
+    duration = state.track.durationMs;
+    progress = state.progressMs;
+  }
+  if (!duration || !audio?.duration) {
+    console.log("Aborted scheduling next DJ audio: no current track duration or DJ audio duration available.");
+    return;
+  }
+  djAudioTimeout = setTimeout(() => {
+    audio.play();
+  }, duration - progress - (audio?.duration && audio?.duration * 1000 / 2));
+}
+const getPlayer = async playerInstance => {
+  player = {
+    player: await playerInstance
+  };
+};
+const spotifyEventHandler = state => {
+  //state.type = track_update, player_update, status_update, progress_update"
+  //key state props = isActive, isPlaying, needsUpdate, progressMs, status, track (obj), type
 
+  console.log(state);
+  if (state.type === "track_update") {
+    if (_store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().user.details.accessToken) {
+      _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_store_playlistSlice__WEBPACK_IMPORTED_MODULE_3__.fetchQueueTracks)());
+    }
+    if (!audio || !audio.src || audio.paused) {
+      prepareNextDjAudio();
+    }
+  }
+  if (state.type === "player_update") {
+    if (state.isPlaying && state.progressMs > 100) {
+      scheduleDjAudio(state);
+    } else {
+      window.clearTimeout(djAudioTimeout);
+    }
+  }
+  if (state.type === "progress_update") {
+    scheduleDjAudio(state);
+  }
+};
+const Player = ({
+  accessToken,
+  trackUris
+}) => {
   if (!accessToken) return null;
-  let djCue, volumeCue;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    getPlayer: getPlayer,
     token: accessToken,
     showSaveIcon: true,
-    callback: state => {
-      console.log(state);
-      if (!state.isPlaying) {
-        console.log("State is not playing, clearing scheduled DJ audio");
-        clearTimeout(djCue);
-        clearTimeout(volumeCue);
-        setPlay(true);
-      }
-      if (state.isPlaying && !state.error) {
-        console.log(`State is playing and no error, scheduling DJ audio in ${state.track.durationMs - state.progressMs - 6500} milliseconds`);
-        clearTimeout(djCue);
-        djCue = setTimeout(() => {
-          console.log("VOLUME DOWN");
-          console.log("DJ CUE");
-          spotifyApi.setVolume(50);
-          audio.play();
-          clearTimeout(volumeCue);
-          volumeCue = setTimeout(() => {
-            console.log("VOLUME UP");
-            spotifyApi.setVolume(100);
-          }, 13000);
-        }, state.track.durationMs - state.progressMs - 6500);
-      }
-    },
-    play: play
-    // play={true}
-    ,
-    uris: trackUris ? trackUris : []
-    // or can use uri of playlist
-    // uris={["spotify:playlist:6WESoRu7keGwiyag0owvuV"]}
-    ,
-    initialVolume: 1,
+    callback: spotifyEventHandler,
+    play: false,
+    uris: trackUris ? trackUris : [],
+    initialVolume: 0.5,
     styles: {
       activeColor: "#fff",
       bgColor: "#333",
@@ -8352,7 +8283,176 @@ function Player({
       trackNameColor: "#fff"
     }
   });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Player);
+
+/***/ }),
+
+/***/ "./client/Components/PlayerClass.js":
+/*!******************************************!*\
+  !*** ./client/Components/PlayerClass.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PlayerClass: () => (/* binding */ PlayerClass),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-spotify-web-playback */ "./node_modules/react-spotify-web-playback/dist/index.mjs");
+/* harmony import */ var _store_playlistSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/playlistSlice */ "./client/store/playlistSlice.js");
+
+
+
+
+// import store from "../store"
+
+class PlayerClass extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.audio = new Audio();
+    this.djAudioTimeout = null;
+    this.djAudioPending = false;
+    this.player = {
+      player: null
+    };
+    this.maxVoiceOverDuration = 10000;
+    this.getPlayer = this.getPlayer.bind(this);
+    this.spotifyEventHandler = this.spotifyEventHandler.bind(this);
+    this.prepareNextDjAudio = this.prepareNextDjAudio.bind(this);
+    this.scheduleDjAudio = this.scheduleDjAudio.bind(this);
+    this.audioPlayHandler = this.audioPlayHandler.bind(this);
+    this.audioEndedHandler = this.audioEndedHandler.bind(this);
+  }
+  componentDidMount = () => {
+    console.log("PlayerClass mounted");
+    this.audio.addEventListener("play", this.audioPlayHandler);
+    this.audio.addEventListener("ended", this.audioEndedHandler);
+  };
+  componentWillUnmount = () => {
+    console.log("PlayerClass unmounted");
+    this.audio?.pause();
+    window.clearTimeout(this.djAudioTimeout);
+    this.audio?.removeEventListener("play", this.audioPlayHandler);
+    this.audio?.removeEventListener("ended", this.audioEndedHandler);
+  };
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevProps.trackUris !== this.props.trackUris) {
+      console.log("PlayerClass updated");
+    }
+  };
+  audioPlayHandler = () => {
+    console.log("Audio started playing");
+    if (this.player) this.player?.player?.setVolume(0.25);
+  };
+  audioEndedHandler = () => {
+    console.log("Audio ended");
+    if (this.player) this.player?.player?.setVolume(1);
+    this.prepareNextDjAudio();
+  };
+  async prepareNextDjAudio() {
+    this.djAudioPending = true;
+    const dataUri = "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3";
+    const metadataLoadedPromise = new Promise(resolve => {
+      this.audio.addEventListener("loadedmetadata", () => {
+        resolve();
+      });
+    });
+    this.audio.src = dataUri;
+    await metadataLoadedPromise;
+    this.djAudioPending = false;
+    this.scheduleDjAudio();
+  }
+  getPlayer = async playerInstance => {
+    this.player = {
+      player: await playerInstance
+    };
+  };
+  spotifyEventHandler = state => {
+    console.log(state);
+    if (state.type === "track_update") {
+      if (this.props.accessToken) {
+        this.props.fetchQueueTracks();
+      }
+      if (!this.audio || !this.audio.src || this.audio.paused) {
+        this.prepareNextDjAudio();
+      }
+    }
+    if (state.type === "player_update") {
+      if (state.isPlaying && state.progressMs > 100) {
+        this.scheduleDjAudio(state);
+      } else {
+        window.clearTimeout(this.djAudioTimeout);
+      }
+    }
+    if (state.type === "progress_update") {
+      this.scheduleDjAudio(state);
+    }
+  };
+  async scheduleDjAudio(state = null) {
+    if (this.djAudioPending) return;
+    let duration, progress;
+    window.clearTimeout(this.djAudioTimeout);
+    if (!state) {
+      if (!this.player) {
+        console.log("Aborted scheduling next DJ audio: no player instance available.");
+        return;
+      }
+      let currentState = await this.player.player.getCurrentState();
+      console.log("Current state:", currentState);
+      duration = currentState?.duration;
+      progress = currentState?.position;
+    } else {
+      duration = state.track.durationMs;
+      progress = state.progressMs;
+    }
+    if (!duration || !this.audio?.duration) {
+      console.log("Aborted scheduling next DJ audio: no current track duration or DJ audio duration available.");
+      return;
+    }
+    this.djAudioTimeout = setTimeout(() => {
+      this.audio.play();
+    }, duration - progress - (this.audio?.duration && this.audio?.duration * 1000 / 2));
+  }
+  render() {
+    let {
+      accessToken,
+      trackUris
+    } = this.props;
+    console.log("PlayerClass rendered", this.props);
+    if (!accessToken) return null;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_spotify_web_playback__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      getPlayer: this.getPlayer,
+      token: accessToken,
+      showSaveIcon: true,
+      callback: this.spotifyEventHandler,
+      play: false,
+      uris: trackUris ? trackUris : [],
+      initialVolume: 0.5,
+      styles: {
+        activeColor: "#fff",
+        bgColor: "#333",
+        color: "#fff",
+        loaderColor: "#fff",
+        sliderColor: "#1cb954",
+        trackArtistColor: "#ccc",
+        trackNameColor: "#fff"
+      }
+    });
+  }
 }
+const mapStateToProps = reduxState => ({
+  reduxState: reduxState
+});
+const mapDispatchToProps = dispatch => ({
+  fetchQueueTracks: () => dispatch((0,_store_playlistSlice__WEBPACK_IMPORTED_MODULE_3__.fetchQueueTracks)())
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapStateToProps, mapDispatchToProps)(PlayerClass));
 
 /***/ }),
 
@@ -8384,68 +8484,6 @@ function SpotifyLogin() {
     href: AUTH_URL
   }, "Login With Spotify"));
 }
-
-/***/ }),
-
-/***/ "./client/Components/TestAudioClip.js":
-/*!********************************************!*\
-  !*** ./client/Components/TestAudioClip.js ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_bootstrap_Container__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap/Container */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap_Form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap/Form */ "./node_modules/react-bootstrap/esm/Form.js");
-
-
-
-
-function TestAudioClip() {
-  const audioUrl = "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"; // Replace with your audio URL
-  const [isPlaying, setIsPlaying] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [volume, setVolume] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0.5); // Initialize the volume to 0.5 (50% volume)
-  const audioRef = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-  const toggleAudio = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-  const handleVolumeChange = event => {
-    const newVolume = event.target.value;
-    audioRef.current.volume = newVolume;
-    setVolume(newVolume);
-  };
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Container__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    className: "my-5 text-light"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("audio", {
-    ref: audioRef,
-    src: audioUrl
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Play a separate audio track simultaneously (non-Spotify):"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "d-flex align-items-center px-5"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    className: "me-5",
-    onClick: toggleAudio
-  }, isPlaying ? "Pause" : "Play"), "Volume:", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_bootstrap_Form__WEBPACK_IMPORTED_MODULE_3__["default"].Range, {
-    type: "range",
-    min: "0",
-    max: "1",
-    step: "0.01",
-    value: volume,
-    onChange: handleVolumeChange,
-    className: "ms-2"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("hr", null));
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TestAudioClip);
 
 /***/ }),
 
@@ -8602,9 +8640,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   clearPlaylist: () => (/* binding */ clearPlaylist),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   fetchPlaylistTracks: () => (/* binding */ fetchPlaylistTracks),
+/* harmony export */   fetchQueueTracks: () => (/* binding */ fetchQueueTracks),
 /* harmony export */   removeTrack: () => (/* binding */ removeTrack),
 /* harmony export */   setPlaylistError: () => (/* binding */ setPlaylistError),
-/* harmony export */   setPlaylistLoading: () => (/* binding */ setPlaylistLoading)
+/* harmony export */   setPlaylistLoading: () => (/* binding */ setPlaylistLoading),
+/* harmony export */   setQueue: () => (/* binding */ setQueue)
 /* harmony export */ });
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
@@ -8612,6 +8652,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const initialState = {
   tracks: [],
+  queue: [],
   loading: false,
   error: null
 };
@@ -8636,6 +8677,10 @@ const playlistSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSli
     },
     setPlaylistError: (state, action) => {
       state.error = action.payload;
+    },
+    setQueue: (state, action) => {
+      console.log("setQueue", action.payload);
+      state.queue = [...action.payload];
     }
   }
 });
@@ -8645,7 +8690,8 @@ const {
   removeTrack,
   clearPlaylist,
   setPlaylistLoading,
-  setPlaylistError
+  setPlaylistError,
+  setQueue
 } = playlistSlice.actions;
 const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
   try {
@@ -8655,7 +8701,6 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    console.log("response: ", response);
     const tracks = response.data.items.map(item => ({
       title: item.track.name,
       artist: item.track.artists[0].name,
@@ -8664,6 +8709,7 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
       uri: item.track.uri,
       id: item.track.id
     }));
+    console.log("tracks", tracks);
     dispatch(addTracks(tracks));
     dispatch(setPlaylistError(null));
     dispatch(setPlaylistLoading(false));
@@ -8671,6 +8717,30 @@ const fetchPlaylistTracks = (playlistId, accessToken) => async dispatch => {
     console.log(error);
     dispatch(setPlaylistError(error.message));
     dispatch(setPlaylistLoading(false));
+  }
+};
+const fetchQueueTracks = () => async (dispatch, getState) => {
+  try {
+    const accessToken = getState().user.details.accessToken;
+    const response = await axios__WEBPACK_IMPORTED_MODULE_1__["default"].get(`https://api.spotify.com/v1/me/player/queue`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const queue = response.data.queue.map(item => {
+      return {
+        title: item.name,
+        artist: item.artists[0].name,
+        album: item.album.name,
+        duration: item.duration_ms,
+        uri: item.uri,
+        id: item.id
+      };
+    });
+    console.log("queue", queue);
+    dispatch(setQueue(queue));
+  } catch (error) {
+    console.log("Redux Error!", error);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (playlistSlice.reducer);
@@ -14746,61 +14816,6 @@ function getSharedManager(options) {
   return sharedManager;
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BootstrapModalManager);
-
-/***/ }),
-
-/***/ "./node_modules/react-bootstrap/esm/Button.js":
-/*!****************************************************!*\
-  !*** ./node_modules/react-bootstrap/esm/Button.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _restart_ui_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @restart/ui/Button */ "./node_modules/@restart/ui/esm/Button.js");
-/* harmony import */ var _ThemeProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ThemeProvider */ "./node_modules/react-bootstrap/esm/ThemeProvider.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-
-
-
-
-
-const Button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(({
-  as,
-  bsPrefix,
-  variant = 'primary',
-  size,
-  active = false,
-  disabled = false,
-  className,
-  ...props
-}, ref) => {
-  const prefix = (0,_ThemeProvider__WEBPACK_IMPORTED_MODULE_3__.useBootstrapPrefix)(bsPrefix, 'btn');
-  const [buttonProps, {
-    tagName
-  }] = (0,_restart_ui_Button__WEBPACK_IMPORTED_MODULE_4__.useButtonProps)({
-    tagName: as,
-    disabled,
-    ...props
-  });
-  const Component = tagName;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(Component, {
-    ...buttonProps,
-    ...props,
-    ref: ref,
-    disabled: disabled,
-    className: classnames__WEBPACK_IMPORTED_MODULE_0___default()(className, prefix, active && 'active', variant && `${prefix}-${variant}`, size && `${prefix}-${size}`, props.href && disabled && 'disabled')
-  });
-});
-Button.displayName = 'Button';
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
 
 /***/ }),
 
