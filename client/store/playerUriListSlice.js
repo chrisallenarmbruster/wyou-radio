@@ -15,9 +15,9 @@ const playerUriListSlice = createSlice({
       state.spotifyUris = action.payload
     },
     clearPlayerUriList: (state) => {
-      state.spotifyUris = []
+      state.spotifyUris = state.spotifyUris.filter(() => false)
     },
-    addToPlayerUriList: (state, action) => {
+    appendPlayerUriList: (state, action) => {
       state.spotifyUris.push(action.payload)
     },
     removeFromPlayerUriList: (state, action) => {
@@ -31,16 +31,16 @@ const playerUriListSlice = createSlice({
 export const {
   setPlayerUriList,
   clearPlayerUriList,
-  addToPlayerUriList,
+  appendPlayerUriList,
   removeFromPlayerUriList,
 } = playerUriListSlice.actions
 
-export const addUriToPlayer = (uri) => async (dispatch, getState) => {
+export const addToPlayerByUri = (uri) => async (dispatch, getState) => {
   try {
     if (!getState().user.details.accessToken) return
     spotifyApi.setAccessToken(getState().user.details.accessToken)
     const res = await spotifyApi.getPlaylist(uri)
-    dispatch(addToPlayerUriList(res.body))
+    dispatch(appendPlayerUriList(res.body))
   } catch (error) {
     console.log(error)
   }

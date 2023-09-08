@@ -7,7 +7,11 @@ import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
 import { useDispatch, useSelector } from "react-redux"
 import { addTrack, fetchPlaylistTracks } from "../store/playlistSlice"
-import { addUriToPlayer } from "../store/playerUriListSlice"
+import {
+  appendPlayerUriList,
+  setPlayerUriList,
+  addToPlayerByUri,
+} from "../store/playerUriListSlice"
 
 export default function Dashboard({ code }) {
   const dispatch = useDispatch()
@@ -22,8 +26,15 @@ export default function Dashboard({ code }) {
     clientId: "31c41df5075e46c48c3547d709102476",
   })
 
-  function chooseTrack(track) {
-    dispatch(addTrack(track))
+  function addTrack(track) {
+    dispatch(appendPlayerUriList(track))
+    setPlayingTrack([track])
+    setSearch("")
+    setLyrics("")
+  }
+
+  function playTrack(track) {
+    dispatch(setPlayerUriList([track]))
     setPlayingTrack([track])
     setSearch("")
     setLyrics("")
@@ -41,7 +52,7 @@ export default function Dashboard({ code }) {
     playlistId = "6WESoRu7keGwiyag0owvuV" //20 items
     // playlistId = "3DYUw0nHB9o8tLZKQup4zp" //100 items
     // dispatch(fetchPlaylistTracks(playlistId, accessToken))
-    dispatch(addUriToPlayer(playlistId))
+    dispatch(addToPlayerByUri(playlistId))
     return
   }, [!!accessToken])
 
@@ -60,7 +71,7 @@ export default function Dashboard({ code }) {
             },
             track.album.images[0]
           )
-          console.log("search results", res.body.tracks.items)
+
           return {
             title: track.name,
             artist: track.artists[0].name,
@@ -69,6 +80,7 @@ export default function Dashboard({ code }) {
             uri: track.uri,
             albumUrl: smallestAlbumImage.url,
             id: track.id,
+            type: track.type,
           }
         })
       )
@@ -96,7 +108,8 @@ export default function Dashboard({ code }) {
                 <TrackSearchResult
                   track={track}
                   key={track.uri}
-                  chooseTrack={chooseTrack}
+                  playTrack={playTrack}
+                  addTrack={addTrack}
                 />
               ))}
               {searchResults.length === 0 && (

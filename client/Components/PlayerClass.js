@@ -2,9 +2,11 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import SpotifyWebApi from "spotify-web-api-node"
 import SpotifyPlayer from "react-spotify-web-playback"
+import { spotifyApi as spotifyApiImports } from "react-spotify-web-playback"
 import axios from "axios"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
+import { clearPlayerUriList } from "../store/playerUriListSlice"
 
 export class PlayerClass extends Component {
   constructor(props) {
@@ -87,6 +89,7 @@ export class PlayerClass extends Component {
     }
 
     let dataUri
+    //uncomment following line when ready to test with backend
     // dataUri = await axios.post("/api/content/next-content", payload);
 
     const metadataLoadedPromise = new Promise((resolve) => {
@@ -235,6 +238,8 @@ export class PlayerClass extends Component {
     console.log("Featured Playlists: ", data.body.playlists.items)
     data = await this.spotifyApi.searchPlaylists("classic rock")
     console.log("Search Classic Rock Playlists: ", data.body.playlists.items)
+    data = await spotifyApiImports.getQueue(this.props.accessToken)
+    console.log("Queue: ", data)
   }
 
   render() {
@@ -307,6 +312,13 @@ export class PlayerClass extends Component {
           <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
             Vol Down
           </Button>
+          <Button
+            className="m-1"
+            variant="danger"
+            onClick={this.props.clearPlayerUriList}
+          >
+            Eject
+          </Button>
         </Container>
         <SpotifyPlayer
           getPlayer={this.getPlayer}
@@ -314,7 +326,7 @@ export class PlayerClass extends Component {
           showSaveIcon
           callback={this.spotifyEventHandler}
           play={this.state.playSpotify}
-          uris={this.props.playerUriList.map((uri) => uri.uri)}
+          uris={this.props.playerUriList.map((uri) => uri?.uri)}
           initialVolume={0.5}
           styles={{
             activeColor: "#fff",
@@ -338,7 +350,7 @@ const mapStateToProps = (reduxState) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  // dispatchFunction: () => dispatch(action())
+  clearPlayerUriList: () => dispatch(clearPlayerUriList()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerClass)
