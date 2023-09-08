@@ -1,20 +1,13 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import useAuth from "./useAuth"
-import Player from "./Player"
 import PlayerClass from "./PlayerClass"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
 import { useDispatch, useSelector } from "react-redux"
-import {
-  addTrack,
-  addTracks,
-  removeTrack,
-  clearPlaylist,
-  fetchPlaylistTracks,
-  fetchQueueTracks,
-} from "../store/playlistSlice"
+import { addTrack, fetchPlaylistTracks } from "../store/playlistSlice"
+import { addUriToPlayer } from "../store/playerUriListSlice"
 
 export default function Dashboard({ code }) {
   const dispatch = useDispatch()
@@ -46,18 +39,18 @@ export default function Dashboard({ code }) {
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
     playlistId = "6WESoRu7keGwiyag0owvuV" //20 items
-    playlistId = "3DYUw0nHB9o8tLZKQup4zp" //100 items
-    dispatch(fetchPlaylistTracks(playlistId, accessToken))
+    // playlistId = "3DYUw0nHB9o8tLZKQup4zp" //100 items
+    // dispatch(fetchPlaylistTracks(playlistId, accessToken))
+    dispatch(addUriToPlayer(playlistId))
+    return
   }, [!!accessToken])
 
   useEffect(() => {
     if (!search) return setSearchResults([])
     if (!accessToken) return
 
-    let cancel = false
     spotifyApi.setAccessToken(accessToken)
     spotifyApi.searchTracks(search).then((res) => {
-      if (cancel) return
       setSearchResults(
         res.body.tracks.items.map((track) => {
           const smallestAlbumImage = track.album.images.reduce(
@@ -67,7 +60,7 @@ export default function Dashboard({ code }) {
             },
             track.album.images[0]
           )
-
+          console.log("search results", res.body.tracks.items)
           return {
             title: track.name,
             artist: track.artists[0].name,
@@ -80,8 +73,7 @@ export default function Dashboard({ code }) {
         })
       )
     })
-
-    return () => (cancel = true)
+    return
   }, [search, accessToken])
 
   return (

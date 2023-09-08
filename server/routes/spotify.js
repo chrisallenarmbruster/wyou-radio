@@ -13,12 +13,12 @@ router.post("/refresh", (req, res) => {
 
   spotifyApi
     .refreshAccessToken()
-    .then((data) => {
-      req.session.accessToken = data.body.access_token
-      req.session.expiresIn = data.body.expires_in
+    .then(({ body }) => {
+      req.session.accessToken = body.access_token
+      req.session.expiresIn = body.expires_in
       res.json({
-        accessToken: data.body.access_token,
-        expiresIn: data.body.expires_in,
+        accessToken: body.access_token,
+        expiresIn: body.expires_in,
         email: req.session.email,
         displayName: req.session.displayName,
         refreshToken: req.session.refreshToken,
@@ -40,30 +40,31 @@ router.post("/login", (req, res) => {
 
   spotifyApi
     .authorizationCodeGrant(code)
-    .then((data) => {
-      spotifyApi.setAccessToken(data.body.access_token)
+    .then(({ body }) => {
+      spotifyApi.setAccessToken(body.access_token)
       spotifyApi
         .getMe()
         .then(
-          function (data) {
+          function ({ body }) {
             User.findOrCreate({
-              where: { email: data.body.email },
+              where: { email: body.email },
               defaults: {
-                product: data.body.product,
-                display_name: data.body.display_name,
+                product: body.product,
+                display_name: body.display_name,
               },
             })
-            req.session.email = data.body.email
-            req.session.displayName = data.body.display_name
+            req.session.email = body.email
+            req.session.displayName = body.display_name
           },
           function (err) {
             console.log("Something went wrong!", err)
           }
         )
         .then(() => {
-          req.session.accessToken = data.body.access_token
-          req.session.refreshToken = data.body.refresh_token
-          req.session.expiresIn = data.body.expires_in
+          req.session.accessToken = body.access_token
+          req.session.refreshToken = body.refresh_token
+          req.session.expiresIn = body.expires_in
+          console.log(`${req.session.email} logged in successfully!`)
           res.json({
             email: req.session.email,
             displayName: req.session.displayName,
