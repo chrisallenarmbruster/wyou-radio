@@ -4,7 +4,7 @@ const syncAndSeed = require("./seed");
 const Profile = require("./Profile");
 const Settings = require("./Settings");
 const JamSession = require("./JamSession");
-const Tracks = require("./Tracks");
+const CurrentTracks = require("./CurrentTracks");
 
 User.hasOne(Profile, {
   foreignKey: "userEmail",
@@ -39,13 +39,13 @@ JamSession.belongsTo(User, {
   targetKey: "email",
 });
 
-User.hasOne(Tracks, {
+User.hasOne(CurrentTracks, {
   foreignKey: "userEmail",
   sourceKey: "email",
   onDelete: "CASCADE",
 });
 
-Tracks.belongsTo(User, {
+CurrentTracks.belongsTo(User, {
   foreignKey: "userEmail",
   targetKey: "email",
 });

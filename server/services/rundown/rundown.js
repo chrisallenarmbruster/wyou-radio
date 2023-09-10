@@ -1,7 +1,8 @@
 const { createContent } = require("../createContent");
 const currentWeather = require("../currentWeather");
 const fs = require("fs");
-const Tracks = require("../../db/Tracks");
+
+let currentRundownIndex = 0;
 
 let playlist = [
   {
@@ -35,24 +36,13 @@ let playlist = [
 let previousRundown = null;
 let nextElement = null;
 
-async function getCurrentRundownIndex(userEmail) {
-  const userTracks = await Tracks.findOne({ where: { userEmail } });
-  return userTracks ? userTracks.currentRundownIndex : 0;
-}
-
-async function updateCurrentRundownIndex(userEmail, index) {
-  await Tracks.update({ currentRundownIndex: index }, { where: { userEmail } });
-}
-
-async function next(showWithSongs, userEmail) {
-  const currentRundownIndex = await getCurrentRundownIndex(userEmail);
-
+async function next(showWithSongs) {
   if (currentRundownIndex >= showWithSongs.rundown.length) {
     console.log("End of rundown reached. Starting over...");
-    await updateCurrentRundownIndex(userEmail, 0);
+    currentRundownIndex = 0;
   }
 
-  const content = await getContent(showWithSongs, userEmail);
+  const content = await getContent(showWithSongs);
 
   // if (showWithSongs.rundown[currentRundownIndex].type !== "song") {
   //   currentRundownIndex += 2;
@@ -60,24 +50,14 @@ async function next(showWithSongs, userEmail) {
   return content;
 }
 
-async function reset(userEmail) {
-  await updateCurrentRundownIndex(userEmail, 0);
+function reset() {
+  currentRundownIndex = 0;
 }
 // {curTrack: {uri: 'spotify:track:2SiXAy7TuUkycRVbbWDEpo', name: 'You Shook Me All Night Long', artist: 'AC/DC'}
 // nextTrack: {uri: 'spotify:track:6QnVsqsS9W3E7HIc28vxpL', name: 'Feels Like the First Time', artist: 'Foreigner'}}
 //addPlaylistToRundown]
-async function addPlaylistToRundown(userEmail) {
-  const currentRundownIndex = await getCurrentRundownIndex(userEmail);
-  const userTracks = await Tracks.findOne({ where: { userEmail } });
 
-  if (!userTracks) {
-    console.error(`Tracks for user ${userEmail} not found.`);
-    return null; // Or handle this situation differently as needed
-  }
-
-  const curTrack = userTracks.curTrack;
-  const nextTrack = userTracks.nextTrack;
-
+function addPlaylistToRundown(playlist) {
   let show = createDefaultShow();
   if (currentRundownIndex >= show.rundown.length - 1) {
     reset();
@@ -86,12 +66,12 @@ async function addPlaylistToRundown(userEmail) {
 
   for (let i = currentRundownIndex; i < show.rundown.length; i++) {
     if (show.rundown[i].type === "song" && songsPopulated === 0) {
-      show.rundown[i].songName = curTrack.name;
-      show.rundown[i].bandName = curTrack.artist;
+      show.rundown[i].songName = playlist.curTrack.name;
+      show.rundown[i].bandName = playlist.curTrack.artist;
       songsPopulated++;
     } else if (show.rundown[i].type === "song" && songsPopulated === 1) {
-      show.rundown[i].songName = nextTrack.name;
-      show.rundown[i].bandName = nextTrack.artist;
+      show.rundown[i].songName = playlist.nextTrack.name;
+      show.rundown[i].bandName = playlist.nextTrack.artist;
       songsPopulated++;
     }
 
@@ -162,14 +142,22 @@ async function convertMP3FileToDataURI(filePath) {
     const mp3Data = await fs.promises.readFile(filePath);
     const base64Data = mp3Data.toString("base64");
     const dataURI = `data:audio/mpeg;base64, ${base64Data}`;
+    // console.log("Data URI:", dataURI);
     return dataURI;
   } catch (error) {
     console.error("Error:", error.message);
   }
 }
-async function getContent(showWithSongs, userEmail) {
-  const currentRundownIndex = await getCurrentRundownIndex(userEmail);
+async function getContent(showWithSongs) {
   if (showWithSongs.rundown[currentRundownIndex + 1]) {
+    console.log(
+      "rundown :",
+      showWithSongs.rundown,
+      "currentRundownIndex:",
+      currentRundownIndex,
+      "type:",
+      showWithSongs.rundown[currentRundownIndex].type
+    );
     let weatherSong = "";
 
     //IF THE CURRENT Rundown INDEX IS A SONG, THEN set nextElement to the next element in the rundown and increment the currentRundownIndex of the rundown by 1. Then check if the segment after next is a weather segment. If it is, then set weatherSong to the song after the weather segment.
@@ -182,16 +170,16 @@ async function getContent(showWithSongs, userEmail) {
         weatherSong = showWithSongs.rundown[currentRundownIndex + 2];
       }
       if (currentRundownIndex >= showWithSongs.rundown.length) {
-        await updateCurrentRundownIndex(userEmail, 0);
+        currentRundownIndex = 0;
       } else {
-        await updateCurrentRundownIndex(userEmail, currentRundownIndex + 1);
+        currentRundownIndex++;
       }
     } else {
       nextElement = showWithSongs.rundown[currentRundownIndex + 2];
       if (currentRundownIndex >= showWithSongs.rundown.length) {
-        await updateCurrentRundownIndex(userEmail, 0);
+        currentRundownIndex = 0;
       } else {
-        await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2);
+        currentRundownIndex = currentRundownIndex + 2;
       }
     }
 

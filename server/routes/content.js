@@ -1,6 +1,5 @@
 // Setup an endpoint that the frontend can call
 const router = require("express").Router();
-const Tracks = require("../db/Tracks"); // adjust the path to where your CurrentTracks model is located
 
 const {
   next,
@@ -9,16 +8,8 @@ const {
 } = require("../services/rundown/rundown");
 
 router.post("/next-content", async (req, res) => {
-  const userEmail = req.user.email;
-  const { curTrack, nextTrack } = req.body;
-
-  await Tracks.upsert({
-    userEmail: userEmail,
-    curTrack: curTrack,
-    nextTrack: nextTrack,
-  });
-
-  const showWithSongs = addPlaylistToRundown(userEmail, curTrack, nextTrack);
+  const playlist = req.body;
+  const showWithSongs = addPlaylistToRundown(playlist);
   let content = await next(showWithSongs);
   res.json(content);
 });
