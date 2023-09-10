@@ -148,9 +148,7 @@ async function convertMP3FileToDataURI(filePath) {
     console.error("Error:", error.message);
   }
 }
-//NOTE: added +1 to currentRundownIndex to get the next element in the rundown.
 async function getContent(showWithSongs) {
-  //TODO: What happens when this is the end? Check against 1 song in playlist
   if (showWithSongs.rundown[currentRundownIndex + 1]) {
     console.log(
       "rundown :",
