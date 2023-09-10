@@ -1,20 +1,17 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import useAuth from "./useAuth"
-import Player from "./Player"
 import PlayerClass from "./PlayerClass"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
 import { useDispatch, useSelector } from "react-redux"
+import { addTrack, fetchPlaylistTracks } from "../store/playlistSlice"
 import {
-  addTrack,
-  addTracks,
-  removeTrack,
-  clearPlaylist,
-  fetchPlaylistTracks,
-  fetchQueueTracks,
-} from "../store/playlistSlice"
+  appendPlayerUriList,
+  setPlayerUriList,
+  addToPlayerByUri,
+} from "../store/playerUriListSlice"
 
 export default function Dashboard({ code }) {
   const dispatch = useDispatch()
@@ -29,8 +26,15 @@ export default function Dashboard({ code }) {
     clientId: "31c41df5075e46c48c3547d709102476",
   })
 
-  function chooseTrack(track) {
-    dispatch(addTrack(track))
+  function addTrack(track) {
+    dispatch(appendPlayerUriList(track))
+    setPlayingTrack([track])
+    setSearch("")
+    setLyrics("")
+  }
+
+  function playTrack(track) {
+    dispatch(setPlayerUriList([track]))
     setPlayingTrack([track])
     setSearch("")
     setLyrics("")
@@ -46,18 +50,18 @@ export default function Dashboard({ code }) {
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
     playlistId = "6WESoRu7keGwiyag0owvuV" //20 items
-    playlistId = "3DYUw0nHB9o8tLZKQup4zp" //100 items
-    dispatch(fetchPlaylistTracks(playlistId, accessToken))
+    // playlistId = "3DYUw0nHB9o8tLZKQup4zp" //100 items
+    // dispatch(fetchPlaylistTracks(playlistId, accessToken))
+    dispatch(addToPlayerByUri(playlistId))
+    return
   }, [!!accessToken])
 
   useEffect(() => {
     if (!search) return setSearchResults([])
     if (!accessToken) return
 
-    let cancel = false
     spotifyApi.setAccessToken(accessToken)
     spotifyApi.searchTracks(search).then((res) => {
-      if (cancel) return
       setSearchResults(
         res.body.tracks.items.map((track) => {
           const smallestAlbumImage = track.album.images.reduce(
@@ -76,12 +80,12 @@ export default function Dashboard({ code }) {
             uri: track.uri,
             albumUrl: smallestAlbumImage.url,
             id: track.id,
+            type: track.type,
           }
         })
       )
     })
-
-    return () => (cancel = true)
+    return
   }, [search, accessToken])
 
   return (
@@ -104,7 +108,8 @@ export default function Dashboard({ code }) {
                 <TrackSearchResult
                   track={track}
                   key={track.uri}
-                  chooseTrack={chooseTrack}
+                  playTrack={playTrack}
+                  addTrack={addTrack}
                 />
               ))}
               {searchResults.length === 0 && (

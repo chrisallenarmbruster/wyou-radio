@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { setUser } from "../store/userSlice"
+import { setJamSessionId } from "../store/jamSessionSlice"
 import axios from "axios"
 
 export default function useAuth(code) {
@@ -11,11 +12,12 @@ export default function useAuth(code) {
 
   useEffect(() => {
     axios
-      .post("http://localhost:3000/api/spotify/login", {
+      .post("/api/spotify/login", {
         code,
       })
       .then((res) => {
         dispatch(setUser(res.data))
+        dispatch(setJamSessionId())
         setAccessToken(res.data.accessToken)
         setRefreshToken(res.data.refreshToken)
         setExpiresIn(res.data.expiresIn)
@@ -30,7 +32,7 @@ export default function useAuth(code) {
     if (!refreshToken || !expiresIn) return
     const interval = setInterval(() => {
       axios
-        .post("http://localhost:3000/api/spotify/refresh", {
+        .post("/api/spotify/refresh", {
           refreshToken,
         })
         .then((res) => {

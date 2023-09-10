@@ -2,10 +2,11 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import SpotifyWebApi from "spotify-web-api-node"
 import SpotifyPlayer from "react-spotify-web-playback"
-import { fetchQueueTracks } from "../store/playlistSlice"
+import { spotifyApi as spotifyApiImports } from "react-spotify-web-playback"
 import axios from "axios"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
+import { clearPlayerUriList } from "../store/playerUriListSlice"
 
 export class PlayerClass extends Component {
   constructor(props) {
@@ -49,7 +50,7 @@ export class PlayerClass extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (prevProps.trackUris !== this.props.trackUris) {
+    if (prevProps.playerUriList !== this.props.playerUriList) {
       console.log("PlayerClass updated")
     }
   }
@@ -69,12 +70,27 @@ export class PlayerClass extends Component {
   async prepareNextDjAudio() {
     this.djAudioPending = true
 
-    const playlist = this.props.reduxState.playlist.tracks
-    console.log("Redux Playlist", playlist)
+    const trackState = (await this.player?.player?.getCurrentState())
+      .track_window
 
-    // const dataUri = await axios.post("/api/content/next-content", playlist);
-    // console.log(dataUri);
-    //TODO: Fix with call to server to get next audio file
+    const payload = {}
+    payload.jamSessionId = this.props.jamSession.id
+    payload.curTrack = {
+      uri: trackState.current_track.uri,
+      name: trackState.current_track.name,
+      artist: trackState.current_track.artists[0].name,
+    }
+    if (trackState.next_tracks.length > 0) {
+      payload.nextTrack = {
+        uri: trackState.next_tracks[0].uri,
+        name: trackState.next_tracks[0].name,
+        artist: trackState.next_tracks[0].artists[0].name,
+      }
+    }
+
+    let dataUri
+    //uncomment following line when ready to test with backend
+    // dataUri = await axios.post("/api/content/next-content", payload);
 
     const metadataLoadedPromise = new Promise((resolve) => {
       this.audio.addEventListener("loadedmetadata", () => {
@@ -82,9 +98,8 @@ export class PlayerClass extends Component {
       })
     })
 
-    // this.audio.src = dataUri.data;
-
     this.audio.src =
+      dataUri?.data ||
       "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
 
     await metadataLoadedPromise
@@ -102,10 +117,6 @@ export class PlayerClass extends Component {
     console.log(state)
 
     if (state.type === "track_update") {
-      if (this.props.accessToken) {
-        this.props.fetchQueueTracks()
-      }
-
       if (!this.audio || !this.audio.src || this.audio.paused) {
         this.prepareNextDjAudio()
       }
@@ -136,7 +147,6 @@ export class PlayerClass extends Component {
         return
       }
       let currentState = await this.player.player.getCurrentState()
-      console.log("Current state:", currentState)
       duration = currentState?.duration
       progress = currentState?.position
     } else {
@@ -228,6 +238,8 @@ export class PlayerClass extends Component {
     console.log("Featured Playlists: ", data.body.playlists.items)
     data = await this.spotifyApi.searchPlaylists("classic rock")
     console.log("Search Classic Rock Playlists: ", data.body.playlists.items)
+    data = await spotifyApiImports.getQueue(this.props.accessToken)
+    console.log("Queue: ", data)
   }
 
   render() {
@@ -300,6 +312,13 @@ export class PlayerClass extends Component {
           <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
             Vol Down
           </Button>
+          <Button
+            className="m-1"
+            variant="danger"
+            onClick={this.props.clearPlayerUriList}
+          >
+            Eject
+          </Button>
         </Container>
         <SpotifyPlayer
           getPlayer={this.getPlayer}
@@ -307,7 +326,7 @@ export class PlayerClass extends Component {
           showSaveIcon
           callback={this.spotifyEventHandler}
           play={this.state.playSpotify}
-          uris={trackUris ? trackUris : []}
+          uris={this.props.playerUriList.map((uri) => uri?.uri)}
           initialVolume={0.5}
           styles={{
             activeColor: "#fff",
@@ -326,10 +345,12 @@ export class PlayerClass extends Component {
 
 const mapStateToProps = (reduxState) => ({
   reduxState: reduxState,
+  playerUriList: reduxState.playerUriList.spotifyUris,
+  jamSession: reduxState.jamSession,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchQueueTracks: () => dispatch(fetchQueueTracks()),
+  clearPlayerUriList: () => dispatch(clearPlayerUriList()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerClass)
