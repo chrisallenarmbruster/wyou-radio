@@ -1,6 +1,5 @@
-const { INTEGER } = require("sequelize");
 const conn = require("./conn");
-const { STRING, INT, JSONB } = conn.Sequelize;
+const { STRING, INTEGER, JSONB } = conn.Sequelize;
 
 const Tracks = conn.define("tracks", {
   userEmail: {
@@ -21,7 +20,7 @@ const Tracks = conn.define("tracks", {
     allowNull: true,
   },
   currentRundownIndex: {
-    type: INT,
+    type: INTEGER,
     allowNull: true,
   },
 });
