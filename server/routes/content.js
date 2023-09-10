@@ -9,7 +9,7 @@ const {
 } = require("../services/rundown/rundown");
 
 router.post("/next-content", async (req, res) => {
-  const userEmail = req.user.email;
+  const userEmail = req.session.email;
   const { curTrack, nextTrack } = req.body;
 
   await Tracks.upsert({
