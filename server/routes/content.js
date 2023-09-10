@@ -3,7 +3,6 @@ const router = require("express").Router();
 const Tracks = require("../db/Tracks"); // adjust the path to where your CurrentTracks model is located
 
 const {
-  next,
   reset,
   addPlaylistToRundown,
 } = require("../services/rundown/rundown");
@@ -18,8 +17,7 @@ router.post("/next-content", async (req, res) => {
     nextTrack: nextTrack,
   });
 
-  const showWithSongs = addPlaylistToRundown(userEmail, curTrack, nextTrack);
-  let content = await next(showWithSongs);
+  const content = await addPlaylistToRundown(userEmail);
   res.json(content);
 });
 
