@@ -3,6 +3,8 @@ const currentWeather = require("../currentWeather");
 const fs = require("fs");
 const Tracks = require("../../db/Tracks");
 const { convertMP3FileToDataURI } = require("../utl/convertMP3FileToDataURI");
+const JamSessionTracks = require("../../db/JamSessionTracks");
+const { current } = require("@reduxjs/toolkit");
 
 let playlist = [
   {
@@ -32,6 +34,10 @@ let playlist = [
   },
   { title: "Don't Cry", artist: "Guns N Roses", album: "test", duration: 284 },
 ];
+
+const sessionFlag = require("../utl/globalVariableModule");
+
+console.log(sessionFlag.get());
 
 async function getCurrentRundownIndex(userEmail) {
   console.log(userEmail);
@@ -107,14 +113,44 @@ function createDefaultShow() {
   };
 }
 
+async function saveToDb(
+  jamSessionId,
+  currentRundownIndex,
+  uri,
+  name,
+  artist,
+  audioDataURI,
+  transcript
+) {
+  try {
+    await JamSessionTracks.create({
+      jamSessionId: jamSessionId,
+      runDownIndex: currentRundownIndex,
+      spotifyTrackId: uri,
+      spotifyTrackName: name,
+      spotifyTrackArtist: artist,
+      djAudioDataURI: audioDataURI,
+      djAudioTranscript: transcript,
+    });
+    console.log("Data saved successfully!");
+  } catch (error) {
+    console.error("Error saving to JamSessionTracks:", error);
+  }
+}
+
 async function reset(userEmail) {
   await updateCurrentRundownIndex(userEmail, 0);
 }
 
 let currentRundownIndex = 0;
 
-async function addPlaylistToRundown(userEmail) {
+async function addPlaylistToRundown(userEmail, jamSessionId) {
   userEmail = userEmail;
+  console.log(jamSessionId);
+  if (sessionFlag.get()) {
+    await updateCurrentRundownIndex(userEmail, 0);
+  }
+
   currentRundownIndex = await getCurrentRundownIndex(userEmail);
   if (currentRundownIndex === undefined) {
     await updateCurrentRundownIndex(userEmail, 0);
@@ -151,8 +187,40 @@ async function addPlaylistToRundown(userEmail) {
     }
   }
 
+  let tempSongName;
+  let tempBandName;
+
   let content = await getContent(show, userEmail);
-  return content;
+  if (show.rundown[currentRundownIndex + 1].type !== "song") {
+    tempSongName = show.rundown[currentRundownIndex + 2].songName;
+    tempBandName = show.rundown[currentRundownIndex + 2].bandName;
+  } else {
+    tempSongName = show.rundown[currentRundownIndex + 1].songName;
+    tempBandName = show.rundown[currentRundownIndex + 1].bandName;
+  }
+
+  // checks session flag to determine if this is the first time through. If so, saves the first song to the database.
+  if (currentRundownIndex === 0 && sessionFlag.get()) {
+    await saveToDb(
+      jamSessionId,
+      currentRundownIndex,
+      curTrack.uri,
+      show.rundown[currentRundownIndex].songName,
+      show.rundown[currentRundownIndex].bandName
+    );
+  }
+
+  await saveToDb(
+    jamSessionId,
+    currentRundownIndex + 1,
+    nextTrack.uri,
+    tempSongName,
+    tempBandName,
+    content.audioURI,
+    content.transcript
+  );
+  sessionFlag.set(false);
+  return content.audioURI;
 }
 
 async function getContent(showWithSongs, userEmail) {
@@ -173,7 +241,7 @@ async function getContent(showWithSongs, userEmail) {
   async function weatherSong(songAfterWeather) {
     await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2);
     let weatherReport = await currentWeather();
-    let fileName = await createContent(
+    let content = await createContent(
       null,
       null,
       null,
@@ -182,13 +250,13 @@ async function getContent(showWithSongs, userEmail) {
       null,
       `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`
     );
-    let audioURI = await convertMP3FileToDataURI(fileName);
-    return audioURI;
+    let audioURI = await convertMP3FileToDataURI(content.fileName);
+    return { audioURI, transcript: content.text };
   }
 
   async function song(nextElement) {
     await updateCurrentRundownIndex(userEmail, currentRundownIndex + 1);
-    let fileName = await createContent(
+    let content = await createContent(
       showWithSongs.radioStation,
       showWithSongs.showName,
       nextElement.songName,
@@ -196,8 +264,8 @@ async function getContent(showWithSongs, userEmail) {
       showWithSongs.date,
       showWithSongs.timeSlot
     );
-    let audioURI = await convertMP3FileToDataURI(fileName);
-    return audioURI;
+    let audioURI = await convertMP3FileToDataURI(content.fileName);
+    return { audioURI, transcript: content.text };
   }
 }
 

@@ -47,7 +47,7 @@ const fetchSpeech =async (voiceID, text, fileName) => {
       path.join(projectRoot, "public/audio", `${fileName}.mp3`)
     );
     console.log("File saved successfully.");
-    return path.join(projectRoot, "public/audio", `${fileName}.mp3`);
+    return {fileName: path.join(projectRoot, "public/audio", `${fileName}.mp3`), text: text};
   } catch (error) {
     console.error("Error:", error);
   }
