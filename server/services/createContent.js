@@ -49,11 +49,11 @@ function constructPromptListWithCounts(details, djTopics) {
       prompt: `${djStyle} ${djCoreInstructions} ${djChannel} ${getRandomElement(
         djTopics
       )}`,
-      frequency: 1,
+      frequency: 0,
     },
     type2: {
       prompt: `${djStyle} ${djCoreInstructions} ${getRandomElement(djTopics)}`,
-      frequency: 3,
+      frequency: 0,
     },
     type3: {
       prompt: `${djStyle} ${djCoreInstructions} ${brevity}`,

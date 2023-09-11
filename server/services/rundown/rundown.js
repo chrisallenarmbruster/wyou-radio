@@ -111,9 +111,11 @@ async function reset(userEmail) {
   await updateCurrentRundownIndex(userEmail, 0);
 }
 
+let currentRundownIndex = 0;
+
 async function addPlaylistToRundown(userEmail) {
   userEmail = userEmail;
-  const currentRundownIndex = await getCurrentRundownIndex(userEmail);
+  currentRundownIndex = await getCurrentRundownIndex(userEmail);
   if (currentRundownIndex === undefined) {
     await updateCurrentRundownIndex(userEmail, 0);
   }
@@ -149,17 +151,19 @@ async function addPlaylistToRundown(userEmail) {
     }
   }
 
-  return getContent(show, userEmail);
+  let content = await getContent(show, userEmail);
+  return content;
 }
 
 async function getContent(showWithSongs, userEmail) {
-  const currentRundownIndex = await getCurrentRundownIndex(userEmail);
+  currentRundownIndex = await getCurrentRundownIndex(userEmail);
 
   if (showWithSongs.rundown[currentRundownIndex + 1].type === "end") {
     await updateCurrentRundownIndex(userEmail, 0);
-    addPlaylistToRundown(userEmail);
+    return await addPlaylistToRundown(userEmail); // Call the addPlaylistToRundown function here
   } else if (showWithSongs.rundown[currentRundownIndex + 1].type === "song") {
-    return await song(showWithSongs.rundown[currentRundownIndex + 1]);
+    let uri = await song(showWithSongs.rundown[currentRundownIndex + 1]);
+    return uri;
   } else if (
     showWithSongs.rundown[currentRundownIndex + 1].type === "weather"
   ) {
