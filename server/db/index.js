@@ -45,10 +45,6 @@ JamSessionTracks.belongsTo(JamSession, {
   foreignKey: "jamSessionId",
 });
 
-JamSessionTracks.belongsTo(Tracks, {
-  foreignKey: "trackId",
-});
-
 module.exports = {
   syncAndSeed,
   User,

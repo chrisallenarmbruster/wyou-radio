@@ -4,6 +4,7 @@ const fs = require("fs");
 const Tracks = require("../../db/Tracks");
 const { convertMP3FileToDataURI } = require("../utl/convertMP3FileToDataURI");
 const JamSessionTracks = require("../../db/JamSessionTracks");
+const { current } = require("@reduxjs/toolkit");
 
 let playlist = [
   {
@@ -120,8 +121,8 @@ async function saveToDb(
   try {
     await JamSessionTracks.create({
       jamSessionId: jamSessionId,
-      rundownIndex: currentRundownIndex,
-      spotifyTrackId: "uri",
+      runDownIndex: currentRundownIndex,
+      spotifyTrackId: uri,
       spotifyTrackName: name,
       spotifyTrackArtist: artist,
       djAudioDataURI: audioDataURI,
@@ -141,6 +142,7 @@ let currentRundownIndex = 0;
 
 async function addPlaylistToRundown(userEmail, jamSessionId) {
   userEmail = userEmail;
+  console.log(jamSessionId);
   currentRundownIndex = await getCurrentRundownIndex(userEmail);
   if (currentRundownIndex === undefined) {
     await updateCurrentRundownIndex(userEmail, 0);
@@ -177,20 +179,35 @@ async function addPlaylistToRundown(userEmail, jamSessionId) {
     }
   }
 
+  let tempSongName;
+  let tempBandName;
+
   let content = await getContent(show, userEmail);
-  console.log(
-    show.rundown[currentRundownIndex].uri,
-    show.rundown[currentRundownIndex].songName,
-    show.rundown[currentRundownIndex].bandName,
-    content.audioURI,
-    content.transcript
-  );
+  if (show.rundown[currentRundownIndex + 1].type !== "song") {
+    tempSongName = show.rundown[currentRundownIndex + 2].songName;
+    tempBandName = show.rundown[currentRundownIndex + 2].bandName;
+  } else {
+    tempSongName = show.rundown[currentRundownIndex + 1].songName;
+    tempBandName = show.rundown[currentRundownIndex + 1].bandName;
+  }
+
+  //TODO: I don't think this will work on loop through. Could add a flag to indicate a loop in which case if true then skip this.
+  if (currentRundownIndex === 0) {
+    await saveToDb(
+      jamSessionId,
+      currentRundownIndex,
+      curTrack.uri,
+      show.rundown[currentRundownIndex].songName,
+      show.rundown[currentRundownIndex].bandName
+    );
+  }
+
   await saveToDb(
     jamSessionId,
-    currentRundownIndex,
-    show.rundown[currentRundownIndex].uri,
-    show.rundown[currentRundownIndex].songName,
-    show.rundown[currentRundownIndex].bandName,
+    currentRundownIndex + 1,
+    nextTrack.uri,
+    tempSongName,
+    tempBandName,
     content.audioURI,
     content.transcript
   );
