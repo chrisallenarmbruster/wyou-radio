@@ -17,6 +17,8 @@ export class PlayerClass extends Component {
     this.audio = new Audio()
     this.djAudioTimeout = null
     this.djAudioPending = false
+    this.needNextDjAudio = true
+    this.isSpotifyPlaying = false
     this.maxVoiceOverDuration = 10000
     this.muteReturnToDjVol = 1
     this.muteReturnToSpotifyVol = 1
@@ -75,44 +77,72 @@ export class PlayerClass extends Component {
   }
 
   async prepareNextDjAudio() {
-    this.djAudioPending = true
+    console.log("prepareNextDjAudio called.  Analyzing what to do...")
+    if (
+      this.needNextDjAudio &&
+      !this.djAudioPending &&
+      this.isSpotifyPlaying &&
+      (!this.audio || this.audio.paused)
+    ) {
+      console.log("Going to retrieve next DJ audio from server.")
+      this.djAudioPending = true
 
-    const trackState = (await this.player?.player?.getCurrentState())
-      .track_window
+      const trackState = (await this.player?.player?.getCurrentState())
+        .track_window
 
-    const payload = {}
-    payload.jamSessionId = this.props.jamSession.id
-    payload.curTrack = {
-      uri: trackState.current_track.uri,
-      name: trackState.current_track.name,
-      artist: trackState.current_track.artists[0].name,
-    }
-    if (trackState.next_tracks.length > 0) {
-      payload.nextTrack = {
-        uri: trackState.next_tracks[0].uri,
-        name: trackState.next_tracks[0].name,
-        artist: trackState.next_tracks[0].artists[0].name,
+      const payload = {}
+      payload.jamSessionId = this.props.jamSession.id
+      payload.curTrack = {
+        uri: trackState.current_track.uri,
+        name: trackState.current_track.name,
+        artist: trackState.current_track.artists[0].name,
       }
-    }
+      if (trackState.next_tracks.length > 0) {
+        payload.nextTrack = {
+          uri: trackState.next_tracks[0].uri,
+          name: trackState.next_tracks[0].name,
+          artist: trackState.next_tracks[0].artists[0].name,
+        }
+      }
 
-    let dataUri
-    //uncomment following line when ready to test with backend
-    // dataUri = await axios.post("/api/content/next-content", payload);
+      let dataUri
+      //uncomment following line when ready to test with backend
+      // dataUri = await axios.post("/api/content/next-content", payload);
 
-    const metadataLoadedPromise = new Promise((resolve) => {
-      this.audio.addEventListener("loadedmetadata", () => {
-        resolve()
+      const metadataLoadedPromise = new Promise((resolve) => {
+        this.audio.addEventListener("loadedmetadata", () => {
+          resolve()
+        })
       })
-    })
 
-    this.audio.src =
-      dataUri?.data ||
-      "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+      this.audio.src =
+        dataUri?.data ||
+        "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
 
-    await metadataLoadedPromise
+      await metadataLoadedPromise
 
-    this.djAudioPending = false
-    this.scheduleDjAudio()
+      this.needNextDjAudio = false
+      this.djAudioPending = false
+    } else {
+      console.log(
+        `Doesn't look like I should retrieve next audio at this time because one of these is false: needNextDjAudio: ${
+          this.needNextDjAudio
+        }, !djAudioPending: ${!this.djAudioPending}, isSpotifyPlaying: ${
+          this.isSpotifyPlaying
+        }, !audio || this.audio?.paused: ${!this.audio || this.audio?.paused}.`
+      )
+    }
+    if (this.isSpotifyPlaying && this.audio.paused && !this.djAudioPending) {
+      console.log("Looks like I should schedule DJ audio.")
+      this.scheduleDjAudio()
+    } else {
+      console.log(
+        `Doesn't look like I should schedule DJ audio because one of these is false: isSpotifyPlaying: ${
+          this.isSpotifyPlaying
+        }, DJ is not Talking: ${this.audio.paused}, !djAudioPending: ${!this
+          .djAudioPending}`
+      )
+    }
   }
 
   getPlayer = async (playerInstance) => {
@@ -129,21 +159,39 @@ export class PlayerClass extends Component {
     }
 
     if (state.type === "track_update") {
-      if (!this.audio || !this.audio.src || this.audio.paused) {
-        this.prepareNextDjAudio()
-      }
+      this.needNextDjAudio = true
+      this.isSpotifyPlaying = state.isPlaying
+      this.prepareNextDjAudio()
     }
 
     if (state.type === "player_update") {
-      if (state.isPlaying && state.progressMs > 100) {
-        this.scheduleDjAudio(state)
+      this.isSpotifyPlaying = state.isPlaying
+      if (this.isSpotifyPlaying) {
+        this.prepareNextDjAudio()
       } else {
+        console.log("Player paused. Cancelling scheduled DJ audio (if any).")
         window.clearTimeout(this.djAudioTimeout)
+        this.audio?.pause()
+        // The following block is necessary for starting in an unknown state.  It fixes it
+        // but starts playing immediately where it left off (on any device).  We
+        // can get around this by hiding any player controls until the user selects
+        // a station to listen to.
+        // if (state.track.uri === "") {
+        //   setTimeout(() => {
+        //     this.player?.player?.nextTrack()
+        //   }, 250)
+        // }
       }
     }
 
     if (state.type === "progress_update") {
-      this.scheduleDjAudio(state)
+      this.isSpotifyPlaying = state.isPlaying
+      window.clearTimeout(this.djAudioTimeout)
+      if (this.isSpotifyPlaying) {
+        this.audio?.pause()
+        this.audio.currentTime = 0
+        this.scheduleDjAudio(state)
+      }
     }
   }
 
@@ -272,7 +320,8 @@ export class PlayerClass extends Component {
   async playContext(context) {
     this.spotifyApi.setAccessToken(this.props.accessToken)
     this.spotifyApi.setShuffle(true)
-
+    clearTimeout(this.djAudioTimeout)
+    this.audio?.pause()
     setTimeout(async () => {
       await this.spotifyApi.play({
         context_uri: context.uri,
@@ -379,7 +428,7 @@ export class PlayerClass extends Component {
           <SpotifyPlayer
             getPlayer={this.getPlayer}
             token={accessToken}
-            uris={""}
+            // uris={[]}
             showSaveIcon
             callback={this.spotifyEventHandler}
             play={this.state.playSpotify}
