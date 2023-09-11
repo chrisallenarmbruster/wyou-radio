@@ -1,16 +1,22 @@
-// Setup an endpoint that the frontend can call
 const router = require("express").Router();
+const Tracks = require("../db/Tracks"); 
 
 const {
-  next,
   reset,
   addPlaylistToRundown,
 } = require("../services/rundown/rundown");
 
 router.post("/next-content", async (req, res) => {
-  const playlist = req.body;
-  const showWithSongs = addPlaylistToRundown(playlist);
-  let content = await next(showWithSongs);
+  const userEmail = req.session.email;
+  const { curTrack, nextTrack } = req.body;
+
+  await Tracks.upsert({
+    userEmail: userEmail,
+    curTrack: curTrack,
+    nextTrack: nextTrack,
+  });
+
+  const content = await addPlaylistToRundown(userEmail);
   res.json(content);
 });
 
