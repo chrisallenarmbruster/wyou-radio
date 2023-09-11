@@ -1,6 +1,5 @@
-// Setup an endpoint that the frontend can call
 const router = require("express").Router();
-const Tracks = require("../db/Tracks"); // adjust the path to where your CurrentTracks model is located
+const Tracks = require("../db/Tracks"); 
 
 const {
   reset,

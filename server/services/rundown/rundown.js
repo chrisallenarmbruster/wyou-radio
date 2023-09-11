@@ -53,35 +53,35 @@ function createDefaultShow() {
     date: "2023-09-01",
     timeSlot: "7:00 AM - 8:00 AM",
     rundown: [
-      // {
-      //   type: "song",
-      //   songName: null,
-      //   bandName: null,
-      //   albumName: null,
-      //   duration: null,
-      // },
-      // {
-      //   type: "song",
-      //   songName: null,
-      //   bandName: null,
-      //   albumName: null,
-      //   duration: null,
-      // },
-      // {
-      //   type: "song",
-      //   songName: null,
-      //   bandName: null,
-      //   albumName: null,
-      //   duration: null,
-      // },
-      // { type: "weather" },
-      // {
-      //   type: "song",
-      //   songName: null,
-      //   bandName: null,
-      //   albumName: null,
-      //   duration: null,
-      // },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
+      { type: "weather" },
+      {
+        type: "song",
+        songName: null,
+        bandName: null,
+        albumName: null,
+        duration: null,
+      },
       {
         type: "song",
         songName: null,
@@ -123,7 +123,7 @@ async function addPlaylistToRundown(userEmail) {
 
   if (!userTracks) {
     console.error(`Tracks for user ${userEmail} not found.`);
-    return null; // Or handle this situation differently as needed
+    return null;
   }
 
   const curTrack = userTracks.curTrack;
@@ -147,7 +147,7 @@ async function addPlaylistToRundown(userEmail) {
     }
 
     if (songsPopulated === 2) {
-      break; // Both songs have been populated
+      break;
     }
   }
 

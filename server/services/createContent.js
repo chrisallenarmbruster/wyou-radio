@@ -40,9 +40,13 @@ const voiceID = "krnShwoOTYlrQktZt9g7";
 
 function constructPromptListWithCounts(details, djTopics) {
   let djStyle = "You are a gruff, irreverent, and humorous disk jockey.";
-  let djCoreInstructions = `Create a script with no titles, headings, annotations, or reference to the speaker followed by a colon. Keep in mind what you have said previously. Be creative and do not repeat yourself. The script should reflects verbatim what a disk jockey would say to tee up the ${details.songName} by ${details.bandName}`;
+  let djCoreInstructions = `Create a script with no titles, headings, annotations, or reference to the speaker followed by a colon. Keep in mind what you have said previously. Be creative and do not repeat yourself. The script should reflects verbatim what a disk jockey would say to tee up the ${details.songName} by ${details.bandName} . Do not refer to yourself in the third person. Do not introduce yourself more than once during the show.`;
   let djChannel = `The Station is called ${details.radioStation}. The showName is ${details.showName}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
-  let brevity = "Be very brief.";
+  let brevity = [
+    "Be very brief. Keep you response to two sentences or less.",
+    "keep your response to two to four sentences.",
+    "keep your response to four to six sentences.",
+  ];
 
   return {
     type1: {
@@ -56,7 +60,7 @@ function constructPromptListWithCounts(details, djTopics) {
       frequency: 0,
     },
     type3: {
-      prompt: `${djStyle} ${djCoreInstructions} ${brevity}`,
+      prompt: `${djStyle} ${djCoreInstructions} ${brevity[0]}`,
       frequency: 5,
     },
   };
