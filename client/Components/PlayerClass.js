@@ -16,10 +16,13 @@ export class PlayerClass extends Component {
     this.player = { player: null }
     this.audio = new Audio()
     this.djAudioTimeout = null
+    this.delayNextTrackTimeout = null
+    this.delayNextTrack = false
+    this.trackDelaySet = false
     this.djAudioPending = false
     this.needNextDjAudio = true
     this.isSpotifyPlaying = false
-    this.maxVoiceOverDuration = 10000
+    this.maxVoiceOverDuration = 20000
     this.muteReturnToDjVol = 1
     this.muteReturnToSpotifyVol = 1
     this.spotifyApi = new SpotifyWebApi()
@@ -115,9 +118,8 @@ export class PlayerClass extends Component {
         })
       })
 
-      this.audio.src =
-        dataUri?.data ||
-        "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+      this.audio.src = dataUri?.data || "audio/opening-title.mp3"
+      // "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
 
       await metadataLoadedPromise
 
@@ -151,7 +153,7 @@ export class PlayerClass extends Component {
     this.player?.player?.setName("WYOU Radio")
   }
 
-  spotifyEventHandler = (state) => {
+  spotifyEventHandler = async (state) => {
     console.log(state)
 
     if (state.type === "status_update") {
@@ -161,6 +163,14 @@ export class PlayerClass extends Component {
     if (state.type === "track_update") {
       this.needNextDjAudio = true
       this.isSpotifyPlaying = state.isPlaying
+
+      if (this.delayNextTrack) {
+        this.trackDelaySet = true
+        this.delayNextTrack = false
+        console.log("Delaying next track.")
+        await this.player?.player?.pause()
+      }
+
       this.prepareNextDjAudio()
     }
 
@@ -169,24 +179,23 @@ export class PlayerClass extends Component {
       if (this.isSpotifyPlaying) {
         this.prepareNextDjAudio()
       } else {
-        console.log("Player paused. Cancelling scheduled DJ audio (if any).")
-        window.clearTimeout(this.djAudioTimeout)
-        this.audio?.pause()
-        // The following block is necessary for starting in an unknown state.  It fixes it
-        // but starts playing immediately where it left off (on any device).  We
-        // can get around this by hiding any player controls until the user selects
-        // a station to listen to.
-        // if (state.track.uri === "") {
-        //   setTimeout(() => {
-        //     this.player?.player?.nextTrack()
-        //   }, 250)
-        // }
+        if (!this.trackDelaySet) {
+          console.log("Player paused. Cancelling scheduled DJ audio (if any).")
+          window.clearTimeout(this.djAudioTimeout)
+          window.clearTimeout(this.delayNextTrackTimeout)
+          this.delayNextTrack = false
+          this.audio?.pause()
+        } else {
+          this.trackDelaySet = false
+        }
       }
     }
 
     if (state.type === "progress_update") {
       this.isSpotifyPlaying = state.isPlaying
+      this.delayNextTrack = false
       window.clearTimeout(this.djAudioTimeout)
+      window.clearTimeout(this.delayNextTrackTimeout)
       if (this.isSpotifyPlaying) {
         this.audio?.pause()
         this.audio.currentTime = 0
@@ -219,9 +228,24 @@ export class PlayerClass extends Component {
       )
       return
     }
+    let djTimeOut
+    if (this.audio?.duration * 1000 > this.maxVoiceOverDuration) {
+      console.log("Delaying next track.")
+      this.delayNextTrack = true
+      djTimeOut = duration - progress - this.maxVoiceOverDuration / 2
+      this.delayNextTrackTimeout = setTimeout(() => {
+        this.player?.player?.resume()
+      }, djTimeOut + this.audio?.duration * 1000 - this.maxVoiceOverDuration / 2)
+    } else {
+      djTimeOut =
+        duration -
+        progress -
+        (this.audio?.duration && (this.audio?.duration * 1000) / 2)
+    }
+
     this.djAudioTimeout = setTimeout(() => {
       this.audio.play()
-    }, duration - progress - (this.audio?.duration && (this.audio?.duration * 1000) / 2))
+    }, djTimeOut)
   }
 
   increaseDjVolume() {
@@ -321,6 +345,9 @@ export class PlayerClass extends Component {
     this.spotifyApi.setAccessToken(this.props.accessToken)
     this.spotifyApi.setShuffle(true)
     clearTimeout(this.djAudioTimeout)
+    clearTimeout(this.delayNextTrackTimeout)
+    this.delayNextTrack = false
+    this.trackDelaySet = false
     this.audio?.pause()
     setTimeout(async () => {
       await this.spotifyApi.play({

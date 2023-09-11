@@ -8,7 +8,7 @@ import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/navigation"
 
-import "./styles.css"
+import "./tunerStyles.css"
 
 // import required modules
 import { EffectCoverflow, Navigation } from "swiper/modules"
