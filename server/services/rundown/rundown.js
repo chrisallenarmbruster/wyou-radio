@@ -3,6 +3,7 @@ const currentWeather = require("../currentWeather");
 const fs = require("fs");
 const Tracks = require("../../db/Tracks");
 const { convertMP3FileToDataURI } = require("../utl/convertMP3FileToDataURI");
+const JamSessionTracks = require("../../db/JamSessionTracks");
 
 let playlist = [
   {
@@ -107,13 +108,38 @@ function createDefaultShow() {
   };
 }
 
+async function saveToDb(
+  jamSessionId,
+  currentRundownIndex,
+  uri,
+  name,
+  artist,
+  audioDataURI,
+  transcript
+) {
+  try {
+    await JamSessionTracks.create({
+      jamSessionId: jamSessionId,
+      rundownIndex: currentRundownIndex,
+      spotifyTrackId: "uri",
+      spotifyTrackName: name,
+      spotifyTrackArtist: artist,
+      djAudioDataURI: audioDataURI,
+      djAudioTranscript: transcript,
+    });
+    console.log("Data saved successfully!");
+  } catch (error) {
+    console.error("Error saving to JamSessionTracks:", error);
+  }
+}
+
 async function reset(userEmail) {
   await updateCurrentRundownIndex(userEmail, 0);
 }
 
 let currentRundownIndex = 0;
 
-async function addPlaylistToRundown(userEmail) {
+async function addPlaylistToRundown(userEmail, jamSessionId) {
   userEmail = userEmail;
   currentRundownIndex = await getCurrentRundownIndex(userEmail);
   if (currentRundownIndex === undefined) {
@@ -152,7 +178,23 @@ async function addPlaylistToRundown(userEmail) {
   }
 
   let content = await getContent(show, userEmail);
-  return content;
+  console.log(
+    show.rundown[currentRundownIndex].uri,
+    show.rundown[currentRundownIndex].songName,
+    show.rundown[currentRundownIndex].bandName,
+    content.audioURI,
+    content.transcript
+  );
+  await saveToDb(
+    jamSessionId,
+    currentRundownIndex,
+    show.rundown[currentRundownIndex].uri,
+    show.rundown[currentRundownIndex].songName,
+    show.rundown[currentRundownIndex].bandName,
+    content.audioURI,
+    content.transcript
+  );
+  return content.audioURI;
 }
 
 async function getContent(showWithSongs, userEmail) {
@@ -173,7 +215,7 @@ async function getContent(showWithSongs, userEmail) {
   async function weatherSong(songAfterWeather) {
     await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2);
     let weatherReport = await currentWeather();
-    let fileName = await createContent(
+    let content = await createContent(
       null,
       null,
       null,
@@ -182,13 +224,13 @@ async function getContent(showWithSongs, userEmail) {
       null,
       `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`
     );
-    let audioURI = await convertMP3FileToDataURI(fileName);
-    return audioURI;
+    let audioURI = await convertMP3FileToDataURI(content.fileName);
+    return { audioURI, transcript: content.text };
   }
 
   async function song(nextElement) {
     await updateCurrentRundownIndex(userEmail, currentRundownIndex + 1);
-    let fileName = await createContent(
+    let content = await createContent(
       showWithSongs.radioStation,
       showWithSongs.showName,
       nextElement.songName,
@@ -196,8 +238,8 @@ async function getContent(showWithSongs, userEmail) {
       showWithSongs.date,
       showWithSongs.timeSlot
     );
-    let audioURI = await convertMP3FileToDataURI(fileName);
-    return audioURI;
+    let audioURI = await convertMP3FileToDataURI(content.fileName);
+    return { audioURI, transcript: content.text };
   }
 }
 

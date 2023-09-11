@@ -1,18 +1,14 @@
 const conn = require("./conn");
 const { STRING, INTEGER, TEXT } = conn.Sequelize;
 
-const JamSession = conn.define("jamSession", {
-  userEmail: {
-    type: STRING,
-    references: {
-      model: "users",
-      key: "email",
-    },
-    allowNull: false,
-  },
+const JamSessionTracks = conn.define("jamSessionTracks", {
   jamSessionId: {
     type: STRING,
-    primaryKey: true,
+    references: {
+      model: "jamSessions",
+      key: "jamSessionId",
+    },
+    allowNull: false,
   },
   runDownIndex: {
     type: INTEGER,
@@ -40,4 +36,4 @@ const JamSession = conn.define("jamSession", {
   },
 });
 
-module.exports = JamSession;
+module.exports = JamSessionTracks;

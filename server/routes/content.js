@@ -1,14 +1,30 @@
 const router = require("express").Router();
-const Tracks = require("../db/Tracks"); 
+const Tracks = require("../db/Tracks");
+const JamSession = require("../db/JamSession");
 
-const {
-  reset,
-  addPlaylistToRundown,
-} = require("../services/rundown/rundown");
+const { reset, addPlaylistToRundown } = require("../services/rundown/rundown");
 
 router.post("/next-content", async (req, res) => {
   const userEmail = req.session.email;
-  const { curTrack, nextTrack } = req.body;
+  const { curTrack, nextTrack, jamSessionId } = req.body;
+
+  let jamSession;
+
+  if (jamSessionId) {
+    jamSession = await JamSession.findOne({
+      where: {
+        jamSessionId: jamSessionId,
+        userEmail: userEmail,
+      },
+    });
+  }
+
+  if (!jamSession) {
+    jamSession = await JamSession.create({
+      userEmail: userEmail,
+      jamSessionId: jamSessionId,
+    });
+  }
 
   await Tracks.upsert({
     userEmail: userEmail,
@@ -16,7 +32,7 @@ router.post("/next-content", async (req, res) => {
     nextTrack: nextTrack,
   });
 
-  const content = await addPlaylistToRundown(userEmail);
+  const content = await addPlaylistToRundown(userEmail, jamSessionId);
   res.json(content);
 });
 
