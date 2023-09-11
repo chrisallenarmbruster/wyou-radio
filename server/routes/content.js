@@ -4,6 +4,7 @@ const JamSession = require("../db/JamSession");
 
 const { reset, addPlaylistToRundown } = require("../services/rundown/rundown");
 
+
 router.post("/next-content", async (req, res) => {
   const userEmail = req.session.email;
   const { curTrack, nextTrack, jamSessionId } = req.body;

@@ -35,6 +35,10 @@ let playlist = [
   { title: "Don't Cry", artist: "Guns N Roses", album: "test", duration: 284 },
 ];
 
+const sessionFlag = require("../utl/globalVariableModule");
+
+console.log(sessionFlag.get());
+
 async function getCurrentRundownIndex(userEmail) {
   console.log(userEmail);
   const userTracks = await Tracks.findOne({ where: { userEmail: userEmail } });
@@ -143,6 +147,10 @@ let currentRundownIndex = 0;
 async function addPlaylistToRundown(userEmail, jamSessionId) {
   userEmail = userEmail;
   console.log(jamSessionId);
+  if (sessionFlag.get()) {
+    await updateCurrentRundownIndex(userEmail, 0);
+  }
+
   currentRundownIndex = await getCurrentRundownIndex(userEmail);
   if (currentRundownIndex === undefined) {
     await updateCurrentRundownIndex(userEmail, 0);
@@ -191,8 +199,8 @@ async function addPlaylistToRundown(userEmail, jamSessionId) {
     tempBandName = show.rundown[currentRundownIndex + 1].bandName;
   }
 
-  //TODO: I don't think this will work on loop through. Could add a flag to indicate a loop in which case if true then skip this.
-  if (currentRundownIndex === 0) {
+  // checks session flag to determine if this is the first time through. If so, saves the first song to the database.
+  if (currentRundownIndex === 0 && sessionFlag.get()) {
     await saveToDb(
       jamSessionId,
       currentRundownIndex,
@@ -211,6 +219,7 @@ async function addPlaylistToRundown(userEmail, jamSessionId) {
     content.audioURI,
     content.transcript
   );
+  sessionFlag.set(false);
   return content.audioURI;
 }
 
