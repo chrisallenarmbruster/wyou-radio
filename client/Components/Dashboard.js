@@ -6,16 +6,10 @@ import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
 import { useDispatch, useSelector } from "react-redux"
-import { addTrack, fetchPlaylistTracks } from "../store/playlistSlice"
-import {
-  appendPlayerUriList,
-  setPlayerUriList,
-  addToPlayerByUri,
-} from "../store/playerUriListSlice"
+import { fetchStations, fetchUserStations } from "../store/tunerSlice"
 
 export default function Dashboard({ code }) {
   const dispatch = useDispatch()
-  const playlist = useSelector((state) => state.playlist)
   const accessToken = useAuth(code)
   const [search, setSearch] = useState("")
   const [searchResults, setSearchResults] = useState([])
@@ -27,14 +21,14 @@ export default function Dashboard({ code }) {
   })
 
   function addTrack(track) {
-    dispatch(appendPlayerUriList(track))
+    //need to replace with "Listen" to station aka playlist
     setPlayingTrack([track])
     setSearch("")
     setLyrics("")
   }
 
   function playTrack(track) {
-    dispatch(setPlayerUriList([track]))
+    //need to replace with "Listen" to station aka playlist
     setPlayingTrack([track])
     setSearch("")
     setLyrics("")
@@ -46,17 +40,23 @@ export default function Dashboard({ code }) {
   }, [accessToken])
 
   useEffect(() => {
-    let playlistId
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)
-    playlistId = "6WESoRu7keGwiyag0owvuV" //20 items
-    // playlistId = "3DYUw0nHB9o8tLZKQup4zp" //100 items
-    // dispatch(fetchPlaylistTracks(playlistId, accessToken))
-    dispatch(addToPlayerByUri(playlistId))
+    dispatch(
+      fetchStations([
+        "37i9dQZF1DWXRqgorJj26U",
+        "37i9dQZF1DXaJXCbmtHVHV",
+        "37i9dQZF1DX2sQHbtx0sdt",
+        "37i9dQZF1DXbcP8BbYEQaO",
+        "37i9dQZF1DWUajed02NzWR",
+      ])
+    )
+    dispatch(fetchUserStations())
     return
   }, [!!accessToken])
 
   useEffect(() => {
+    //need to refactor to search for playlists, albums and artists as opposed to tracks
     if (!search) return setSearchResults([])
     if (!accessToken) return
 
@@ -90,18 +90,16 @@ export default function Dashboard({ code }) {
 
   return (
     <>
-      <Container
-        className="bg-dark d-flex flex-column py-3"
-        style={{ height: "90vh" }}
-      >
-        {accessToken && (
+      <Container className="bg-dark d-flex flex-column py-3 justify-content-between">
+        {/* {accessToken && (
           <>
             <Form.Control
               type="search"
-              placeholder="Search Songs/Artists"
+              placeholder="Search Stations/Playlists"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="p-2"
+              disabled={true}
             />
             <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
               {searchResults.map((track) => (
@@ -119,15 +117,10 @@ export default function Dashboard({ code }) {
               )}
             </div>
           </>
-        )}
+        )} */}
 
         <div>
-          <PlayerClass
-            accessToken={accessToken}
-            trackUris={
-              playlist ? playlist.tracks.map((track) => track.uri) : null
-            }
-          />
+          <PlayerClass accessToken={accessToken} />
         </div>
       </Container>
     </>

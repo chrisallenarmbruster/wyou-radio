@@ -6,17 +6,23 @@ import { spotifyApi as spotifyApiImports } from "react-spotify-web-playback"
 import axios from "axios"
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
-import { clearPlayerUriList } from "../store/playerUriListSlice"
+import Tuner from "./Tuner"
+import TunerCarousel from "./TunerCarousel"
 
 export class PlayerClass extends Component {
   constructor(props) {
     super(props)
-    this.state = { playSpotify: false, isAllMuted: false }
+    this.state = { playSpotify: false, isAllMuted: false, deviceId: null }
+    this.player = { player: null }
     this.audio = new Audio()
     this.djAudioTimeout = null
+    this.delayNextTrackTimeout = null
+    this.delayNextTrack = false
+    this.trackDelaySet = false
     this.djAudioPending = false
-    this.player = { player: null }
-    this.maxVoiceOverDuration = 10000
+    this.needNextDjAudio = true
+    this.isSpotifyPlaying = false
+    this.maxVoiceOverDuration = 20000
     this.muteReturnToDjVol = 1
     this.muteReturnToSpotifyVol = 1
     this.spotifyApi = new SpotifyWebApi()
@@ -32,6 +38,11 @@ export class PlayerClass extends Component {
     this.decreaseSpotifyVolume = this.decreaseSpotifyVolume.bind(this)
     this.toggleMuteAll = this.toggleMuteAll.bind(this)
     this.getUsersPlaylists = this.getUsersPlaylists.bind(this)
+    this.playTrack = this.playTrack.bind(this)
+    this.addTrack = this.addTrack.bind(this)
+    this.playContext = this.playContext.bind(this)
+    this.showQueue = this.showQueue.bind(this)
+    this.setDevice = this.setDevice.bind(this)
   }
 
   componentDidMount = () => {
@@ -50,8 +61,9 @@ export class PlayerClass extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (prevProps.playerUriList !== this.props.playerUriList) {
-      console.log("PlayerClass updated")
+    if (prevState.deviceId !== this.state.deviceId) {
+      console.log("Device ID updated")
+      if (this.state.deviceId) this.setDevice()
     }
   }
 
@@ -68,70 +80,127 @@ export class PlayerClass extends Component {
   }
 
   async prepareNextDjAudio() {
-    this.djAudioPending = true
+    console.log("prepareNextDjAudio called.  Analyzing what to do...")
+    if (
+      this.needNextDjAudio &&
+      !this.djAudioPending &&
+      this.isSpotifyPlaying &&
+      (!this.audio || this.audio.paused)
+    ) {
+      console.log("Going to retrieve next DJ audio from server.")
+      this.djAudioPending = true
 
-    const trackState = (await this.player?.player?.getCurrentState())
-      .track_window
+      const trackState = (await this.player?.player?.getCurrentState())
+        .track_window
 
-    const payload = {}
-    payload.jamSessionId = this.props.jamSession.id
-    payload.curTrack = {
-      uri: trackState.current_track.uri,
-      name: trackState.current_track.name,
-      artist: trackState.current_track.artists[0].name,
-    }
-    if (trackState.next_tracks.length > 0) {
-      payload.nextTrack = {
-        uri: trackState.next_tracks[0].uri,
-        name: trackState.next_tracks[0].name,
-        artist: trackState.next_tracks[0].artists[0].name,
+      const payload = {}
+      payload.jamSessionId = this.props.jamSession.id
+      payload.curTrack = {
+        uri: trackState.current_track.uri,
+        name: trackState.current_track.name,
+        artist: trackState.current_track.artists[0].name,
       }
-    }
+      if (trackState.next_tracks.length > 0) {
+        payload.nextTrack = {
+          uri: trackState.next_tracks[0].uri,
+          name: trackState.next_tracks[0].name,
+          artist: trackState.next_tracks[0].artists[0].name,
+        }
+      }
 
-    let dataUri
-    //uncomment following line when ready to test with backend
-    // dataUri = await axios.post("/api/content/next-content", payload);
+      let dataUri
+      //uncomment following line when ready to test with backend
+      // dataUri = await axios.post("/api/content/next-content", payload);
 
-    const metadataLoadedPromise = new Promise((resolve) => {
-      this.audio.addEventListener("loadedmetadata", () => {
-        resolve()
+      const metadataLoadedPromise = new Promise((resolve) => {
+        this.audio.addEventListener("loadedmetadata", () => {
+          resolve()
+        })
       })
-    })
 
-    this.audio.src =
-      dataUri?.data ||
-      "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+      this.audio.src = dataUri?.data || "audio/opening-title.mp3"
+      // "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
 
-    await metadataLoadedPromise
+      await metadataLoadedPromise
 
-    this.djAudioPending = false
-    this.scheduleDjAudio()
+      this.needNextDjAudio = false
+      this.djAudioPending = false
+    } else {
+      console.log(
+        `Doesn't look like I should retrieve next audio at this time because one of these is false: needNextDjAudio: ${
+          this.needNextDjAudio
+        }, !djAudioPending: ${!this.djAudioPending}, isSpotifyPlaying: ${
+          this.isSpotifyPlaying
+        }, !audio || this.audio?.paused: ${!this.audio || this.audio?.paused}.`
+      )
+    }
+    if (this.isSpotifyPlaying && this.audio.paused && !this.djAudioPending) {
+      console.log("Looks like I should schedule DJ audio.")
+      this.scheduleDjAudio()
+    } else {
+      console.log(
+        `Doesn't look like I should schedule DJ audio because one of these is false: isSpotifyPlaying: ${
+          this.isSpotifyPlaying
+        }, DJ is not Talking: ${this.audio.paused}, !djAudioPending: ${!this
+          .djAudioPending}`
+      )
+    }
   }
 
   getPlayer = async (playerInstance) => {
+    console.log("Got player instance:", playerInstance)
     this.player = { player: await playerInstance }
     this.player?.player?.setName("WYOU Radio")
   }
 
-  spotifyEventHandler = (state) => {
+  spotifyEventHandler = async (state) => {
     console.log(state)
 
+    if (state.type === "status_update") {
+      this.setState({ deviceId: state.currentDeviceId })
+    }
+
     if (state.type === "track_update") {
-      if (!this.audio || !this.audio.src || this.audio.paused) {
-        this.prepareNextDjAudio()
+      this.needNextDjAudio = true
+      this.isSpotifyPlaying = state.isPlaying
+
+      if (this.delayNextTrack) {
+        this.trackDelaySet = true
+        this.delayNextTrack = false
+        console.log("Delaying next track.")
+        await this.player?.player?.pause()
       }
+
+      this.prepareNextDjAudio()
     }
 
     if (state.type === "player_update") {
-      if (state.isPlaying && state.progressMs > 100) {
-        this.scheduleDjAudio(state)
+      this.isSpotifyPlaying = state.isPlaying
+      if (this.isSpotifyPlaying) {
+        this.prepareNextDjAudio()
       } else {
-        window.clearTimeout(this.djAudioTimeout)
+        if (!this.trackDelaySet) {
+          console.log("Player paused. Cancelling scheduled DJ audio (if any).")
+          window.clearTimeout(this.djAudioTimeout)
+          window.clearTimeout(this.delayNextTrackTimeout)
+          this.delayNextTrack = false
+          this.audio?.pause()
+        } else {
+          this.trackDelaySet = false
+        }
       }
     }
 
     if (state.type === "progress_update") {
-      this.scheduleDjAudio(state)
+      this.isSpotifyPlaying = state.isPlaying
+      this.delayNextTrack = false
+      window.clearTimeout(this.djAudioTimeout)
+      window.clearTimeout(this.delayNextTrackTimeout)
+      if (this.isSpotifyPlaying) {
+        this.audio?.pause()
+        this.audio.currentTime = 0
+        this.scheduleDjAudio(state)
+      }
     }
   }
 
@@ -159,9 +228,24 @@ export class PlayerClass extends Component {
       )
       return
     }
+    let djTimeOut
+    if (this.audio?.duration * 1000 > this.maxVoiceOverDuration) {
+      console.log("Delaying next track.")
+      this.delayNextTrack = true
+      djTimeOut = duration - progress - this.maxVoiceOverDuration / 2
+      this.delayNextTrackTimeout = setTimeout(() => {
+        this.player?.player?.resume()
+      }, djTimeOut + this.audio?.duration * 1000 - this.maxVoiceOverDuration / 2)
+    } else {
+      djTimeOut =
+        duration -
+        progress -
+        (this.audio?.duration && (this.audio?.duration * 1000) / 2)
+    }
+
     this.djAudioTimeout = setTimeout(() => {
       this.audio.play()
-    }, duration - progress - (this.audio?.duration && (this.audio?.duration * 1000) / 2))
+    }, djTimeOut)
   }
 
   increaseDjVolume() {
@@ -242,115 +326,161 @@ export class PlayerClass extends Component {
     console.log("Queue: ", data)
   }
 
+  async playTrack(track) {
+    this.spotifyApi.setAccessToken(this.props.accessToken)
+    setTimeout(async () => {
+      await this.spotifyApi.play({
+        uris: [track.uri],
+      })
+    }, 1000)
+  }
+
+  async addTrack(track) {
+    this.spotifyApi.setAccessToken(this.props.accessToken)
+    console.log("Adding track: ", track.uri)
+    await this.spotifyApi.addToQueue(track.uri)
+  }
+
+  async playContext(context) {
+    this.spotifyApi.setAccessToken(this.props.accessToken)
+    this.spotifyApi.setShuffle(true)
+    clearTimeout(this.djAudioTimeout)
+    clearTimeout(this.delayNextTrackTimeout)
+    this.delayNextTrack = false
+    this.trackDelaySet = false
+    this.audio?.pause()
+    setTimeout(async () => {
+      await this.spotifyApi.play({
+        context_uri: context.uri,
+      })
+    }, 1000)
+  }
+
+  async showQueue() {
+    const data = await spotifyApiImports.getQueue(this.props.accessToken)
+    console.log("Queue: ", data)
+  }
+
+  async setDevice() {
+    await spotifyApiImports.setDevice(
+      this.props.accessToken,
+      this.state.deviceId,
+      false
+    )
+    console.log(`Device set with id: ${this.state.deviceId}`)
+  }
+
   render() {
     let { accessToken, trackUris } = this.props
 
     if (!accessToken) return null
     return (
-      <>
-        <Container className="">
-          <Button
-            className={`m-1 ${
-              this.state.isAllMuted ? "btn-danger" : "btn-primary"
-            }`}
-            onClick={this.toggleMuteAll}
-          >
-            Toggle Mute All
-          </Button>
-          <Button className="m-1" onClick={this.getUsersPlaylists}>
-            Log Playlists
-          </Button>
-        </Container>
-        <Container className="">
-          <Button className="m-1" onClick={() => this.audio?.play()}>
-            Play DJ Track
-          </Button>
-          <Button className="m-1" onClick={() => this.audio?.pause()}>
-            Pause DJ Track
-          </Button>
-          <Button className="m-1" onClick={this.increaseDjVolume}>
-            Vol Up
-          </Button>
-          <Button className="m-1" onClick={this.decreaseDjVolume}>
-            Vol Down
-          </Button>
-        </Container>
-        <Container className="mb-2">
-          <Button
-            className="m-1"
-            onClick={() => this.setState({ playSpotify: true })}
-          >
-            Load Music
-          </Button>
-          <Button
-            className="m-1"
-            onClick={() => this.player?.player?.togglePlay()}
-          >
-            Toggle Music
-          </Button>
-          <Button className="m-1" onClick={() => this.player?.player?.pause()}>
-            Pause Music
-          </Button>
-          <Button className="m-1" onClick={() => this.player?.player?.resume()}>
-            Resume Music
-          </Button>
-          <Button
-            className="m-1"
-            onClick={() => this.player?.player?.previousTrack()}
-          >
-            Previous
-          </Button>
-          <Button
-            className="m-1"
-            onClick={() => this.player?.player?.nextTrack()}
-          >
-            Next
-          </Button>
-          <Button className="m-1" onClick={this.increaseSpotifyVolume}>
-            Vol Up
-          </Button>
-          <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
-            Vol Down
-          </Button>
-          <Button
-            className="m-1"
-            variant="danger"
-            onClick={this.props.clearPlayerUriList}
-          >
-            Eject
-          </Button>
-        </Container>
-        <SpotifyPlayer
-          getPlayer={this.getPlayer}
-          token={accessToken}
-          showSaveIcon
-          callback={this.spotifyEventHandler}
-          play={this.state.playSpotify}
-          uris={this.props.playerUriList.map((uri) => uri?.uri)}
-          initialVolume={0.5}
-          styles={{
-            activeColor: "#fff",
-            bgColor: "#333",
-            color: "#fff",
-            loaderColor: "#fff",
-            sliderColor: "#1cb954",
-            trackArtistColor: "#ccc",
-            trackNameColor: "#fff",
-          }}
-        />
-      </>
+      <div
+        className="d-flex flex-column justify-content-between"
+        style={{ height: "90vh" }}
+      >
+        <TunerCarousel playContext={this.playContext}></TunerCarousel>
+        {/* <Tuner playContext={this.playContext}></Tuner> */}
+        <div>
+          <Container className="">
+            <Button className="m-1" onClick={() => this.showQueue()}>
+              Show Queue
+            </Button>
+          </Container>
+          <Container className="">
+            <Button
+              className={`m-1 ${
+                this.state.isAllMuted ? "btn-danger" : "btn-primary"
+              }`}
+              onClick={this.toggleMuteAll}
+            >
+              Toggle Mute All
+            </Button>
+            <Button className="m-1" onClick={this.getUsersPlaylists}>
+              Log Playlists
+            </Button>
+          </Container>
+          <Container className="">
+            <Button className="m-1" onClick={() => this.audio?.play()}>
+              Play DJ Track
+            </Button>
+            <Button className="m-1" onClick={() => this.audio?.pause()}>
+              Pause DJ Track
+            </Button>
+            <Button className="m-1" onClick={this.increaseDjVolume}>
+              Vol Up
+            </Button>
+            <Button className="m-1" onClick={this.decreaseDjVolume}>
+              Vol Down
+            </Button>
+          </Container>
+          <Container className="mb-2">
+            <Button
+              className="m-1"
+              onClick={() => this.player?.player?.togglePlay()}
+            >
+              Toggle Music
+            </Button>
+            <Button
+              className="m-1"
+              onClick={() => this.player?.player?.pause()}
+            >
+              Pause Music
+            </Button>
+            <Button
+              className="m-1"
+              onClick={() => this.player?.player?.resume()}
+            >
+              Resume Music
+            </Button>
+            <Button
+              className="m-1"
+              onClick={() => this.player?.player?.previousTrack()}
+            >
+              Previous
+            </Button>
+            <Button
+              className="m-1"
+              onClick={() => this.player?.player?.nextTrack()}
+            >
+              Next
+            </Button>
+            <Button className="m-1" onClick={this.increaseSpotifyVolume}>
+              Vol Up
+            </Button>
+            <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
+              Vol Down
+            </Button>
+          </Container>
+          <SpotifyPlayer
+            getPlayer={this.getPlayer}
+            token={accessToken}
+            // uris={[]}
+            showSaveIcon
+            callback={this.spotifyEventHandler}
+            play={this.state.playSpotify}
+            initialVolume={0.5}
+            styles={{
+              activeColor: "#fff",
+              bgColor: "#333",
+              color: "#fff",
+              loaderColor: "#fff",
+              sliderColor: "#1cb954",
+              trackArtistColor: "#ccc",
+              trackNameColor: "#fff",
+            }}
+          />
+        </div>
+      </div>
     )
   }
 }
 
 const mapStateToProps = (reduxState) => ({
   reduxState: reduxState,
-  playerUriList: reduxState.playerUriList.spotifyUris,
   jamSession: reduxState.jamSession,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  clearPlayerUriList: () => dispatch(clearPlayerUriList()),
-})
+const mapDispatchToProps = (dispatch) => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayerClass)
