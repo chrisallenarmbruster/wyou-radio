@@ -8,9 +8,10 @@ import SpotifyWebApi from "spotify-web-api-node"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchStations, fetchUserStations } from "../store/tunerSlice"
 
-export default function Dashboard({ code }) {
+export default function Dashboard() {
   const dispatch = useDispatch()
-  const accessToken = useAuth(code)
+  const user = useSelector((state) => state.user)
+  const accessToken = user?.details?.accessToken
   const [search, setSearch] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
