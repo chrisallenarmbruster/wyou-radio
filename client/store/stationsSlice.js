@@ -5,35 +5,41 @@ import SpotifyWebApi from "spotify-web-api-node"
 const spotifyApi = new SpotifyWebApi()
 
 const initialState = {
-  stations: [],
+  allStations: [],
   currentStation: null,
   loading: false,
   error: null,
 }
 
-const tunerSlice = createSlice({
-  name: "tuner",
+const stationsSlice = createSlice({
+  name: "stations",
   initialState,
   reducers: {
     addStation: (state, action) => {
-      state.stations.push(action.payload)
+      state.allStations.push(action.payload)
     },
     addStations: (state, action) => {
-      state.stations = [...state.stations, ...action.payload]
+      state.allStations = [...state.allStations, ...action.payload]
     },
     removeStation: (state, action) => {
-      state.stations = state.stations.filter(
+      state.allStations = state.allStations.filter(
         (station) => station.id !== action.payload.id
       )
     },
     clearStations: (state) => {
-      state.stations = []
+      state.allStations = []
     },
     setStationsLoading: (state, action) => {
       state.loading = action.payload
     },
     setStationsError: (state, action) => {
       state.error = action.payload
+    },
+    setCurrentStation: (state, action) => {
+      state.currentStation = action.payload
+    },
+    clearCurrentStation: (state) => {
+      state.currentStation = null
     },
   },
 })
@@ -45,11 +51,15 @@ export const {
   clearStations,
   setStationsLoading,
   setStationsError,
-} = tunerSlice.actions
+  setCurrentStation,
+  clearCurrentStation,
+} = stationsSlice.actions
 
 export const fetchStations = (uriArray) => async (dispatch, getState) => {
   try {
     if (!getState().user.details.accessToken) return
+    dispatch(setStationsLoading(true))
+
     spotifyApi.setAccessToken(getState().user.details.accessToken)
     const stationArray = await Promise.all(
       uriArray.map(async (uri) => {
@@ -59,7 +69,6 @@ export const fetchStations = (uriArray) => async (dispatch, getState) => {
     )
 
     dispatch(addStations(stationArray))
-    // dispatch(setStationsLoading(true))
   } catch (error) {
     dispatch(setStationsError(error))
   } finally {
@@ -70,6 +79,8 @@ export const fetchStations = (uriArray) => async (dispatch, getState) => {
 export const fetchUserStations = () => async (dispatch, getState) => {
   try {
     if (!getState().user.details.accessToken) return
+    dispatch(setStationsLoading(true))
+
     spotifyApi.setAccessToken(getState().user.details.accessToken)
     const res = await spotifyApi.getUserPlaylists()
     dispatch(addStations(res.body.items))
@@ -80,4 +91,4 @@ export const fetchUserStations = () => async (dispatch, getState) => {
   }
 }
 
-export default tunerSlice.reducer
+export default stationsSlice.reducer

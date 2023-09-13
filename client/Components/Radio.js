@@ -8,8 +8,10 @@ import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
 import DiscJockeys from "./DiscJockeys"
 import Player from "./Player"
-import TunerCarousel from "./TunerCarousel"
-import { fetchStations, fetchUserStations } from "../store/tunerSlice"
+import Stations from "./Stations"
+import { fetchStations, fetchUserStations } from "../store/stationsSlice"
+import { fetchDjs } from "../store/djsSlice"
+import { setCurrentTrack } from "../store/playerSlice"
 import { Routes, Route } from "react-router-dom"
 import { Link } from "react-router-dom"
 
@@ -55,6 +57,7 @@ export class Radio extends Component {
     this.audio.addEventListener("play", this.audioPlayHandler)
     this.audio.addEventListener("ended", this.audioEndedHandler)
 
+    this.props.fetchDjs()
     this.props.fetchStations([
       "37i9dQZF1DWXRqgorJj26U",
       "37i9dQZF1DXaJXCbmtHVHV",
@@ -175,6 +178,7 @@ export class Radio extends Component {
     }
 
     if (state.type === "track_update") {
+      this.props.setCurrentTrack(state.track)
       this.needNextDjAudio = true
       this.isSpotifyPlaying = state.isPlaying
 
@@ -394,20 +398,52 @@ export class Radio extends Component {
           className="d-flex flex-column justify-content-between"
           style={{ height: "90vh" }}
         >
-          <Routes>
-            <Route
-              index
-              element={<TunerCarousel playContext={this.playContext} />}
-            />
-            <Route
-              path="stations"
-              element={<TunerCarousel playContext={this.playContext} />}
-            />
-            <Route path="djs" element={<DiscJockeys />} />
-            <Route path="player" element={<Player />} />
-          </Routes>
-
-          {/* <TunerCarousel playContext={this.playContext}></TunerCarousel> */}
+          <div className="text-center">
+            <Link to="djs" className="text-light text-decoration-none mx-3">
+              Disc Jockey
+            </Link>
+            <Link
+              to="stations"
+              className="text-light text-decoration-none mx-3"
+            >
+              Station
+            </Link>
+            <Link
+              to="player"
+              className={`text-light text-decoration-none mx-3 ${
+                this.props.currentDj && this.props.currentStation
+                  ? ""
+                  : "pe-none"
+              }`}
+            >
+              Player
+            </Link>
+            <Routes>
+              <Route
+                index
+                element={
+                  <Stations
+                    playContext={this.playContext}
+                    pauseSpotify={() => this.player?.player?.pause()}
+                  />
+                }
+              />
+              <Route
+                path="stations"
+                element={
+                  <Stations
+                    playContext={this.playContext}
+                    pauseSpotify={() => this.player?.player?.pause()}
+                  />
+                }
+              />
+              <Route path="djs" element={<DiscJockeys />} />
+              <Route
+                path="player"
+                element={<Player playContext={this.playContext} />}
+              />
+            </Routes>
+          </div>
 
           <div>
             <Container className="">
@@ -486,10 +522,11 @@ export class Radio extends Component {
             <SpotifyPlayer
               getPlayer={this.getPlayer}
               token={this.props?.accessToken}
-              // uris={[]}
+              uris={[this.props.currentStation?.uri] || []}
               showSaveIcon
               callback={this.spotifyEventHandler}
               play={this.state.playSpotify}
+              // play={false}
               initialVolume={0.5}
               styles={{
                 activeColor: "#fff",
@@ -512,11 +549,15 @@ const mapStateToProps = (reduxState) => ({
   reduxState: reduxState,
   jamSession: reduxState.jamSession,
   accessToken: reduxState.user?.details?.accessToken,
+  currentStation: reduxState.stations.currentStation,
+  currentDj: reduxState.djs.currentDj,
 })
 
 const mapDispatchToProps = (dispatch) => ({
   fetchStations: (stationIds) => dispatch(fetchStations(stationIds)),
   fetchUserStations: () => dispatch(fetchUserStations()),
+  fetchDjs: () => dispatch(fetchDjs()),
+  setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Radio)

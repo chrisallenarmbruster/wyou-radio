@@ -1,20 +1,27 @@
 import React, { useRef, useState } from "react"
 import { connect } from "react-redux"
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
+import { setCurrentStation } from "../store/stationsSlice"
+import { clearCurrentTrack } from "../store/playerSlice"
 
 // Import Swiper styles
 import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/navigation"
 
-import "./tunerStyles.css"
+import "./stationsStyle.css"
 
 // import required modules
 import { EffectCoverflow, Navigation } from "swiper/modules"
 
-export function TunerCarousel(props) {
-  const { stations, playContext } = props
+export function Stations(props) {
+  const {
+    stations,
+    playContext,
+    setCurrentStation,
+    pauseSpotify,
+    clearCurrentTrack,
+  } = props
 
   return (
     <div className="swiper">
@@ -52,7 +59,12 @@ export function TunerCarousel(props) {
               <SwiperSlide key={station.id}>
                 <img
                   src={station.images[0].url}
-                  onClick={() => playContext({ uri: station.uri })}
+                  onClick={() => {
+                    // pauseSpotify()
+                    clearCurrentTrack()
+                    setCurrentStation(station)
+                    // playContext({ uri: station.uri })
+                  }}
                 />
               </SwiperSlide>
             )
@@ -64,8 +76,15 @@ export function TunerCarousel(props) {
 
 const mapStateToProps = (state) => {
   return {
-    stations: state.tuner.stations,
+    stations: state.stations.allStations,
   }
 }
 
-export default connect(mapStateToProps)(TunerCarousel)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentStation: (station) => dispatch(setCurrentStation(station)),
+    clearCurrentTrack: () => dispatch(clearCurrentTrack()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Stations)
