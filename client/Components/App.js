@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import SpotifyLogin from "./SpotifyLogin"
-import Dashboard from "./Dashboard"
 import Container from "react-bootstrap/Container"
 import NavBar from "./NavBar"
 import AppAuthWrapper from "./AppAuthWrapper"
