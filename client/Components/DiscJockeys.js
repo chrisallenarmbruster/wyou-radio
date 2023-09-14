@@ -5,6 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import Container from "react-bootstrap/Container"
 import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
+import Image from "react-bootstrap/Image"
+import Button from "react-bootstrap/Button"
 
 import "swiper/css"
 import "swiper/css/effect-fade"
@@ -42,11 +44,20 @@ export function DiscJockeys(props) {
             onClick={() => props.setCurrentDj(dj)}
           >
             <Row className="g-5">
-              <Col sm={12} md={6}>
-                {dj.name} Photo
+              <Col sm={12} md={6} className="p-5">
+                <Image src={dj.details?.image} />
               </Col>
-              <Col sm={12} md={6}>
-                <h2 className="h3">{dj.djName}</h2>
+              <Col sm={12} md={6} className="p-5 text-start bg-dark">
+                <h2 className="h3 ">
+                  {dj.djName}
+                  <Button className="ms-3" size="sm">
+                    Greeting
+                  </Button>
+                  <Button className="mx-3" size="sm">
+                    Select
+                  </Button>
+                </h2>
+                <p>{dj.details?.context}</p>
               </Col>
             </Row>
           </SwiperSlide>

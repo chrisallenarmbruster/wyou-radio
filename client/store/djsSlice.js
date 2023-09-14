@@ -51,17 +51,21 @@ export const fetchDjs = () => async (dispatch, getState) => {
     dispatch(setDjLoading(true))
 
     // need axios call here to the backend to retrieve all DJs
-    const data = [
-      { djName: "Garth Brooks" },
-      { djName: "Snoop Dogg" },
-      { djName: "Martha Quinn" },
-      { djName: "Mr. Rogers" },
-    ]
+    // const data = [
+    //   { djName: "Garth Brooks" },
+    //   { djName: "Snoop Dogg" },
+    //   { djName: "Martha Quinn" },
+    //   { djName: "Mr. Rogers" },
+    // ]
 
     const response = await axios.get("api/content/dj-characters")
     console.log("get djs", response.data)
 
-    dispatch(addDjs(data))
+    response.data.push({ id: 100, djName: "Snoop Cat" })
+    response.data.push({ id: 200, djName: "Martha Kwinn" })
+    response.data.push({ id: 300, djName: "Mr. Rojers" })
+
+    dispatch(addDjs(response.data))
   } catch (error) {
     dispatch(setDjError(error.message))
   } finally {
