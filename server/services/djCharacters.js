@@ -1,7 +1,8 @@
 const fs = require("fs");
-const { convertMP3FileToDataURI } = require("./utl/convertMP3FileToDataURI");
-
-function djCharacters(djId) {
+const path = require("path");
+const { convertFileToDataURI } = require("./utl/convertMP3FileToDataURI");
+const projectRoot = path.resolve(__dirname, "../");
+async function djCharacters(djId) {
   const djRoster = {
     1: {
       djName: "Rusty",
@@ -33,7 +34,10 @@ function djCharacters(djId) {
         ],
         context:
           "Born in a small town in the Midwest in the late 1950s, Rusty Maddox grew up in the golden era of rock and roll. By the time he was 14, he was sneaking into dive bars to catch local bands and legends alike. He got his first guitar at 16, and while he attempted to form bands (with names he now jokes about on-air), he discovered his passion lay not on stage but behind the microphone. By the late 70s, he secured a gig at a local radio station, starting as the nighttime jockey and quickly gaining popularity for his irreverent humor and distinctive voice. By the 80s, he was a staple in classic rock radio. Rusty's on-air style is best described as 'unapologetically himself'. Picture a mix between a grizzled biker and a mischievous uncle at a family barbecue. He dons faded jeans, worn-out leather jackets, and band tees that have seen countless concerts. With salt-and-pepper hair pulled back into a loose ponytail and a rugged beard, he sports classic aviator sunglasses, which he claims were a gift from a rockstar during a drunken bet.",
-        image: convertMP3FileToDataURI("../public/images/rusty.jpg"),
+        image: await convertFileToDataURI(
+          path.join(projectRoot, "services/rusty.png"),
+          "png"
+        ),
       },
     },
   };
@@ -41,7 +45,7 @@ function djCharacters(djId) {
   if (djId) {
     return djRoster[djId];
   } else {
-    return djRoster;
+    return JSON.stringify(djRoster);
   }
 }
 
