@@ -144,7 +144,7 @@ async function reset(userEmail) {
 
 let currentRundownIndex = 0;
 
-async function addPlaylistToRundown(userEmail, jamSessionId) {
+async function addPlaylistToRundown(userEmail, jamSessionId, profile, djName) {
   userEmail = userEmail;
   console.log(jamSessionId);
   if (sessionFlag.get()) {
@@ -223,7 +223,7 @@ async function addPlaylistToRundown(userEmail, jamSessionId) {
   return content.audioURI;
 }
 
-async function getContent(showWithSongs, userEmail) {
+async function getContent(showWithSongs, userEmail, profile, djName) {
   currentRundownIndex = await getCurrentRundownIndex(userEmail);
 
   if (showWithSongs.rundown[currentRundownIndex + 1].type === "end") {
@@ -248,6 +248,8 @@ async function getContent(showWithSongs, userEmail) {
       null,
       null,
       null,
+      profile.name,
+      djName,
       `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`
     );
     let audioURI = await convertMP3FileToDataURI(content.fileName);
@@ -262,7 +264,9 @@ async function getContent(showWithSongs, userEmail) {
       nextElement.songName,
       nextElement.bandName,
       showWithSongs.date,
-      showWithSongs.timeSlot
+      showWithSongs.timeSlot,
+      profile.name,
+      djName
     );
     let audioURI = await convertMP3FileToDataURI(content.fileName);
     return { audioURI, transcript: content.text };
