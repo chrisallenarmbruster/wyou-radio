@@ -6,7 +6,6 @@ const { djCharacters } = require("../services/djCharacters");
 
 const { reset, addPlaylistToRundown } = require("../services/rundown/rundown");
 
-
 router.post("/next-content", async (req, res) => {
   const userEmail = req.session.email;
   const { curTrack, nextTrack, jamSessionId, djName } = req.body;
@@ -59,6 +58,16 @@ router.get("/dj-characters/:djId", (req, res) => {
   const djId = req.params.djId;
 
   const characterDetails = djCharacters(djId);
+
+  if (characterDetails) {
+    res.json(characterDetails);
+  } else {
+    res.status(404).send("Character not found");
+  }
+});
+
+router.get("/dj-characters", (req, res) => {
+  const characterDetails = djCharacters();
 
   if (characterDetails) {
     res.json(characterDetails);
