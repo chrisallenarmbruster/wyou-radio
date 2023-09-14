@@ -24,6 +24,7 @@
     "express-session": "^1.17.3",
     "http": "^0.0.1-security",
     "langchain": "^0.0.141",
+    "less": "^4.2.0",
     "passport": "^0.6.0",
     "pg": "^8.11.3",
     "play-sound": "^1.1.6",
