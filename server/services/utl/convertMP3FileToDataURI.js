@@ -1,10 +1,24 @@
 const fs = require("fs");
 
-async function convertMP3FileToDataURI(filePath) {
+async function convertFileToDataURI(filePath, fileType = "mp3") {
   try {
-    const mp3Data = await fs.promises.readFile(filePath);
-    const base64Data = mp3Data.toString("base64");
-    const dataURI = `data:audio/mpeg;base64, ${base64Data}`;
+    const fileData = await fs.promises.readFile(filePath);
+    const base64Data = fileData.toString("base64");
+    let mimeType;
+
+    switch (fileType) {
+      case "png":
+      case "png":
+        mimeType = "image/png";
+        break;
+      case "mp3":
+        mimeType = "audio/mpeg";
+        break;
+      default:
+        throw new Error("Unsupported file type");
+    }
+
+    const dataURI = `data:${mimeType};base64,${base64Data}`;
     return dataURI;
   } catch (error) {
     console.error("Error:", error.message);
@@ -12,5 +26,5 @@ async function convertMP3FileToDataURI(filePath) {
 }
 
 module.exports = {
-  convertMP3FileToDataURI,
+  convertFileToDataURI,
 };
