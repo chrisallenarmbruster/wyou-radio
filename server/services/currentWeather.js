@@ -135,7 +135,16 @@ async function currenWeather() {
   }
 
   function determineWindDirection(degrees) {
-    const cardinalDirections = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    const cardinalDirections = [
+      "North",
+      "North East",
+      "East",
+      "South East",
+      "South",
+      "South West",
+      "West",
+      "North West",
+    ];
     const index = Math.round((degrees % 360) / 45);
     return cardinalDirections[index % 8];
   }

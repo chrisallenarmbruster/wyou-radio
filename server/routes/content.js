@@ -1,13 +1,21 @@
 const router = require("express").Router();
 const Tracks = require("../db/Tracks");
 const JamSession = require("../db/JamSession");
+const { getLatLong } = require("../services/getLatLong");
+const { djCharacters } = require("../services/djCharacters");
 
 const { reset, addPlaylistToRundown } = require("../services/rundown/rundown");
 
 
 router.post("/next-content", async (req, res) => {
   const userEmail = req.session.email;
-  const { curTrack, nextTrack, jamSessionId } = req.body;
+  const { curTrack, nextTrack, jamSessionId, djName } = req.body;
+
+  const profile = await Profile.findOne({
+    where: {
+      userEmail: userEmail,
+    },
+  });
 
   let jamSession;
 
@@ -33,7 +41,12 @@ router.post("/next-content", async (req, res) => {
     nextTrack: nextTrack,
   });
 
-  const content = await addPlaylistToRundown(userEmail, jamSessionId);
+  const content = await addPlaylistToRundown(
+    userEmail,
+    jamSessionId,
+    profile,
+    djName
+  );
   res.json(content);
 });
 
@@ -42,13 +55,16 @@ router.post("/reset", (req, res) => {
   res.send("Rundown index reset!");
 });
 
-router.post("/add-playlist", (req, res) => {
-  const { playlist } = req.body;
-  if (!playlist) {
-    return res.status(400).send("Playlist is required");
+router.get("/dj-characters/:djId", (req, res) => {
+  const djId = req.params.djId;
+
+  const characterDetails = djCharacters(djId);
+
+  if (characterDetails) {
+    res.json(characterDetails);
+  } else {
+    res.status(404).send("Character not found");
   }
-  let updatedShow = addPlaylistToRundown(playlist);
-  res.json(updatedShow);
 });
 
 module.exports = router;
