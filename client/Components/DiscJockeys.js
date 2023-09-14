@@ -36,7 +36,7 @@ export function DiscJockeys(props) {
   return (
     <>
       <div className="text-light">
-        <h1 className="h3 my-3">Select Disc Jockey</h1>
+        <h1 className="h3 mt-3">Select Disc Jockey</h1>
       </div>
       <Swiper
         spaceBetween={30}
@@ -55,10 +55,10 @@ export function DiscJockeys(props) {
         {props.djs.map((dj, idx) => (
           <SwiperSlide key={`dj-${idx}`} className="bg-dark text-light">
             <Row className="g-5 bg-dark text-light">
-              <Col sm={12} md={6} className="p-5">
+              <Col sm={12} md={6} className="px-5">
                 <Image src={dj.details?.image} />
               </Col>
-              <Col sm={12} md={6} className="p-5 text-start bg-dark">
+              <Col sm={12} md={6} className="px-5 text-start bg-dark">
                 <h2 className="h3 ">
                   {dj.djName}
                   <Button

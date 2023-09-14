@@ -24,7 +24,10 @@ export function Stations(props) {
   } = props
 
   return (
-    <div className="swiper">
+    <>
+      <div className="text-light">
+        <h1 className="h3 mt-3">Select Your Music</h1>
+      </div>
       <Swiper
         effect={"coverflow"}
         autoHeight={true}
@@ -70,7 +73,7 @@ export function Stations(props) {
             )
           })}
       </Swiper>
-    </div>
+    </>
   )
 }
 
