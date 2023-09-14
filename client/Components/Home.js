@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <>
       <div>Home</div>
-      <Link to="/radio">
+      <Link to="/radio/djs">
         <Button variant="primary">Radio</Button>
       </Link>
     </>

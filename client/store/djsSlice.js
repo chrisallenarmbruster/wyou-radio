@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import axios from "axios"
 
 const initialState = {
   allDjs: [],
@@ -56,6 +57,9 @@ export const fetchDjs = () => async (dispatch, getState) => {
       { name: "Martha Quinn" },
       { name: "Mr. Rogers" },
     ]
+
+    const response = await axios.get("api/content/dj-characters")
+    console.log(response.data)
 
     dispatch(addDjs(data))
   } catch (error) {

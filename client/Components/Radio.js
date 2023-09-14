@@ -112,6 +112,12 @@ export class Radio extends Component {
 
       const payload = {}
       payload.jamSessionId = this.props.jamSession.id
+      payload.djName = this.props.currentDj?.name
+      payload.station = {
+        name: this.props.currentStation?.name,
+        description: this.props.currentStation?.description,
+        uri: this.props.currentStation?.uri,
+      }
       payload.curTrack = {
         uri: trackState.current_track.uri,
         name: trackState.current_track.name,
@@ -124,7 +130,7 @@ export class Radio extends Component {
           artist: trackState.next_tracks[0].artists[0].name,
         }
       }
-
+      console.log("Payload:", payload)
       let dataUri
       //uncomment following line when ready to test with backend
       // dataUri = await axios.post("/api/content/next-content", payload);
@@ -197,7 +203,7 @@ export class Radio extends Component {
       if (this.isSpotifyPlaying) {
         this.prepareNextDjAudio()
       } else {
-        if (!this.trackDelaySet) {
+        if (!this.trackDelaySet || state.progressMs > 50) {
           console.log("Player paused. Cancelling scheduled DJ audio (if any).")
           window.clearTimeout(this.djAudioTimeout)
           window.clearTimeout(this.delayNextTrackTimeout)
@@ -446,14 +452,14 @@ export class Radio extends Component {
           </div>
 
           <div>
-            <Container className="">
+            {/* <Container className="">
               <Link to="stations">
                 <Button variant="primary">Radio</Button>
               </Link>
               <Button className="m-1" onClick={() => this.showQueue()}>
                 Show Queue
               </Button>
-            </Container>
+            </Container> */}
             <Container className="">
               <Button
                 className={`m-1 ${
