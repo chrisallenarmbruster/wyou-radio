@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import { connect } from "react-redux"
 import { setCurrentDj } from "../store/djsSlice"
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -17,7 +17,22 @@ import "./djsStyle.css"
 
 import { EffectFade, Navigation, Pagination } from "swiper/modules"
 
+let djAudioGreeting = new Audio()
+
 export function DiscJockeys(props) {
+  useEffect(() => {
+    return () => {
+      djAudioGreeting.pause()
+    }
+  }, [])
+
+  function handleDjAudioGreeting(dj) {
+    console.log("dj", dj)
+    djAudioGreeting.src =
+      dj.details?.audio ||
+      "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+    djAudioGreeting.play()
+  }
   return (
     <>
       <div className="text-light">
@@ -30,30 +45,34 @@ export function DiscJockeys(props) {
         grabCursor={true}
         centeredSlides={true}
         navigation={true}
-        pagination={{
-          clickable: true,
-        }}
         loop={true}
-        modules={[EffectFade, Navigation, Pagination]}
+        modules={[EffectFade, Navigation]}
         className="mySwiper"
+        onSlideChange={() => {
+          djAudioGreeting.pause()
+        }}
       >
         {props.djs.map((dj, idx) => (
-          <SwiperSlide
-            key={`dj-${idx}`}
-            className="bg-dark text-light"
-            onClick={() => props.setCurrentDj(dj)}
-          >
-            <Row className="g-5">
+          <SwiperSlide key={`dj-${idx}`} className="bg-dark text-light">
+            <Row className="g-5 bg-dark text-light">
               <Col sm={12} md={6} className="p-5">
                 <Image src={dj.details?.image} />
               </Col>
               <Col sm={12} md={6} className="p-5 text-start bg-dark">
                 <h2 className="h3 ">
                   {dj.djName}
-                  <Button className="ms-3" size="sm">
+                  <Button
+                    className="ms-3"
+                    size="sm"
+                    onClick={() => handleDjAudioGreeting(dj)}
+                  >
                     Greeting
                   </Button>
-                  <Button className="mx-3" size="sm">
+                  <Button
+                    className="mx-3"
+                    size="sm"
+                    onClick={() => props.setCurrentDj(dj)}
+                  >
                     Select
                   </Button>
                 </h2>
@@ -62,18 +81,6 @@ export function DiscJockeys(props) {
             </Row>
           </SwiperSlide>
         ))}
-        {/* <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-        </SwiperSlide> */}
       </Swiper>
     </>
   )
