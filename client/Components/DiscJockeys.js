@@ -46,7 +46,7 @@ export function DiscJockeys(props) {
                 {dj.name} Photo
               </Col>
               <Col sm={12} md={6}>
-                <h2 className="h3">{dj.name}</h2>
+                <h2 className="h3">{dj.djName}</h2>
               </Col>
             </Row>
           </SwiperSlide>

@@ -112,7 +112,7 @@ export class Radio extends Component {
 
       const payload = {}
       payload.jamSessionId = this.props.jamSession.id
-      payload.djName = this.props.currentDj?.name
+      payload.djName = this.props.currentDj?.djName
       payload.station = {
         name: this.props.currentStation?.name,
         description: this.props.currentStation?.description,
@@ -141,8 +141,10 @@ export class Radio extends Component {
         })
       })
 
-      this.audio.src = dataUri?.data || "audio/opening-title.mp3"
-      // "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+      this.audio.src =
+        dataUri?.data ||
+        "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
+      // "audio/opening-title.mp3"
 
       await metadataLoadedPromise
 

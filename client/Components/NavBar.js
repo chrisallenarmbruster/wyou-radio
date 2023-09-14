@@ -6,7 +6,7 @@ export class NavBar extends Component {
   render() {
     return (
       <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="#home" className="ms-3">
+        <Navbar.Brand href="#/radio/djs" className="ms-3">
           WYOU Radio
         </Navbar.Brand>
 
@@ -14,7 +14,7 @@ export class NavBar extends Component {
           <>
             <span className="text-light mx-3">{this.props.user?.email}</span>
             <span className="text-light mx-3">
-              DJ: {this.props.currentDj?.name}
+              DJ: {this.props.currentDj?.djName}
             </span>
             <span className="text-light mx-3">
               Station: {this.props.currentStation?.name}
