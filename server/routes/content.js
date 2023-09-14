@@ -66,8 +66,8 @@ router.get("/dj-characters/:djId", (req, res) => {
   }
 });
 
-router.get("/dj-characters", (req, res) => {
-  const characterDetails = djCharacters();
+router.get("/dj-characters", async (req, res) => {
+  const characterDetails = await djCharacters();
 
   if (characterDetails) {
     res.json(characterDetails);

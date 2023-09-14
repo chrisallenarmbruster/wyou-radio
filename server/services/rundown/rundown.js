@@ -2,7 +2,7 @@ const { createContent } = require("../createContent");
 const currentWeather = require("../currentWeather");
 const fs = require("fs");
 const Tracks = require("../../db/Tracks");
-const { convertMP3FileToDataURI } = require("../utl/convertMP3FileToDataURI");
+const { convertFileToDataURI } = require("../utl/convertMP3FileToDataURI");
 const JamSessionTracks = require("../../db/JamSessionTracks");
 const { current } = require("@reduxjs/toolkit");
 
@@ -252,7 +252,7 @@ async function getContent(showWithSongs, userEmail, profile, djName) {
       djName,
       `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`
     );
-    let audioURI = await convertMP3FileToDataURI(content.fileName);
+    let audioURI = await convertFileToDataURI(content.fileName, "mp3");
     return { audioURI, transcript: content.text };
   }
 
@@ -268,7 +268,7 @@ async function getContent(showWithSongs, userEmail, profile, djName) {
       profile.name,
       djName
     );
-    let audioURI = await convertMP3FileToDataURI(content.fileName);
+    let audioURI = await convertFileToDataURI(content.fileName, "mp3");
     return { audioURI, transcript: content.text };
   }
 }
