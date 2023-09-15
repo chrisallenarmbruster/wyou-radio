@@ -1,18 +1,19 @@
 const router = require("express").Router();
 const Tracks = require("../db/Tracks");
 const JamSession = require("../db/JamSession");
-const { getLatLong } = require("../services/getLatLong");
+const { User } = require("../db/index.js");
 const { djCharacters } = require("../services/djCharacters");
-
-const { reset, addPlaylistToRundown } = require("../services/rundown/rundown");
+const { showRunner } = require("../services/rundown/showRunner");
+const { reset } = require("../services/rundown/rundownUtlities/dbUtilities");
 
 router.post("/next-content", async (req, res) => {
   const userEmail = req.session.email;
-  const { curTrack, nextTrack, jamSessionId, djName } = req.body;
+  //TODO: Update to use djId from req.body
+  const { curTrack, nextTrack, jamSessionId, djId, station } = req.body;
 
-  const profile = await Profile.findOne({
+  const user = await User.findOne({
     where: {
-      userEmail: userEmail,
+      email: userEmail,
     },
   });
 
@@ -40,11 +41,12 @@ router.post("/next-content", async (req, res) => {
     nextTrack: nextTrack,
   });
 
-  const content = await addPlaylistToRundown(
+  const content = await showRunner(
     userEmail,
     jamSessionId,
-    profile,
-    djName
+    user.display_name,
+    djId,
+    station
   );
   res.json(content);
 });
