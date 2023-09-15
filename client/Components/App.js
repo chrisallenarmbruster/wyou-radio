@@ -10,7 +10,7 @@ export class App extends Component {
     const code = new URLSearchParams(window.location.search).get("code")
     return (
       <>
-        <Container>
+        <Container style={{ maxWidth: "1116px", width: "100%" }}>
           <NavBar />
           {code || this.props.user?.details?.accessToken ? (
             <AppAuthWrapper code={code || null} />

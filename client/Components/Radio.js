@@ -27,6 +27,7 @@ export class Radio extends Component {
       isAllMuted: false,
       deviceId: null,
       showDevTools: false,
+      pauseButton: false,
     }
     this.player = { player: null }
     this.audio = new Audio()
@@ -179,6 +180,7 @@ export class Radio extends Component {
 
   spotifyEventHandler = async (state) => {
     console.log(state)
+    this.setState({ pauseButton: state.isPlaying })
 
     if (state.type === "status_update") {
       this.setState({ deviceId: state.currentDeviceId })
@@ -401,72 +403,77 @@ export class Radio extends Component {
     if (!this.props?.accessToken) return null
     return (
       <Container className="bg-dark d-flex flex-column py-3 ">
-        <div className="d-flex flex-column ">
-          <div className="text-center">
-            <div
-              className={`${
-                this.props.currentDj && this.props.currentStation
-                  ? "visible"
-                  : "invisible"
-              }`}
-            >
-              <Link to="djs" className="text-light text-decoration-none mx-3">
-                Disc Jockey
-              </Link>
-              <Link
-                to="stations"
-                className="text-light text-decoration-none mx-3"
-              >
-                Station
-              </Link>
-              <Link
-                to="player"
-                className={`text-light text-decoration-none mx-3 ${
-                  this.props.currentDj && this.props.currentStation
-                    ? ""
-                    : "pe-none"
-                }`}
-              >
-                Broadcast
-              </Link>
-            </div>
-            <Routes>
-              <Route
-                index
-                element={
-                  <Stations
-                    playContext={this.playContext}
-                    pauseSpotify={() => this.player?.player?.pause()}
-                  />
-                }
-              />
-              <Route
-                path="stations"
-                element={
-                  <Stations
-                    playContext={this.playContext}
-                    pauseSpotify={() => this.player?.player?.pause()}
-                  />
-                }
-              />
-              <Route path="djs" element={<DiscJockeys />} />
-              <Route
-                path="player"
-                element={<Player playContext={this.playContext} />}
-              />
-            </Routes>
-          </div>
+        <div className="text-center">
           <div
-            className={`text-center ${
-              !this.props.currentDj?.djName || !this.props.currentStation?.name
-                ? "d-none"
-                : ""
+            className={`${
+              this.props.currentDj && this.props.currentStation
+                ? "visible"
+                : "invisible"
             }`}
           >
-            <Button onClick={this.toggleShowDevTools} className="mt-3 m-1">
-              Dev Tools
-            </Button>
-            {/* <Button
+            <Link to="djs" className="text-light text-decoration-none mx-3">
+              Disc Jockey
+            </Link>
+            <Link
+              to="stations"
+              className="text-light text-decoration-none mx-3"
+            >
+              Station
+            </Link>
+            <Link
+              to="player"
+              className={`text-light text-decoration-none mx-3 ${
+                this.props.currentDj && this.props.currentStation
+                  ? ""
+                  : "pe-none"
+              }`}
+            >
+              Broadcast
+            </Link>
+          </div>
+          <div style={{ height: "600px" }}>
+            <div className="radio-panel-container">
+              <div className="radio-panel">
+                <Routes>
+                  <Route
+                    index
+                    element={
+                      <Stations
+                        playContext={this.playContext}
+                        pauseSpotify={() => this.player?.player?.pause()}
+                      />
+                    }
+                  />
+                  <Route
+                    path="stations"
+                    element={
+                      <Stations
+                        playContext={this.playContext}
+                        pauseSpotify={() => this.player?.player?.pause()}
+                      />
+                    }
+                  />
+                  <Route path="djs" element={<DiscJockeys />} />
+                  <Route
+                    path="player"
+                    element={<Player playContext={this.playContext} />}
+                  />
+                </Routes>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className={`text-center ${
+            !this.props.currentDj?.djName || !this.props.currentStation?.name
+              ? "d-none"
+              : ""
+          }`}
+        >
+          <Button onClick={this.toggleShowDevTools} className="mt-3 m-1">
+            Dev Tools
+          </Button>
+          {/* <Button
               className="m-1 mt-3"
               onClick={() =>
                 this.playContext({ uri: this.props.currentStation.uri })
@@ -475,121 +482,108 @@ export class Radio extends Component {
             >
               Load
             </Button> */}
-            <Button
-              className="m-1 mt-3"
-              onClick={() => this.player?.player?.togglePlay()}
-            >
-              Toggle Music
-            </Button>
-            <Button
-              className="m-1 mt-3"
-              onClick={() => this.player?.player?.pause()}
-            >
-              Pause Music
-            </Button>
-            <Button
-              className="m-1 mt-3"
-              onClick={() => this.player?.player?.resume()}
-            >
-              Resume Music
-            </Button>
-            <Button
-              className="m-1 mt-3"
-              onClick={() => this.player?.player?.nextTrack()}
-            >
-              Next
-            </Button>
-            <Button
-              className={`m-1 mt-3 ${
-                this.state.isAllMuted ? "btn-danger" : "btn-primary"
-              }`}
-              onClick={this.toggleMuteAll}
-            >
-              Mute
-            </Button>
-          </div>
+          <Button
+            className="m-1 mt-3"
+            onClick={() => this.player?.player?.togglePlay()}
+          >
+            {this.state.pauseButton ? "Pause" : "Play"}
+          </Button>
+          <Button
+            className="m-1 mt-3"
+            onClick={() => this.player?.player?.nextTrack()}
+          >
+            Next
+          </Button>
+          <Button
+            className={`m-1 mt-3 ${
+              this.state.isAllMuted ? "btn-danger" : "btn-primary"
+            }`}
+            onClick={this.toggleMuteAll}
+          >
+            Mute
+          </Button>
+        </div>
 
-          <div className={this.state.showDevTools ? "" : "d-none"}>
-            <>
-              <hr />
-              <Container className=""></Container>
-              <Container className="">
-                <Button className="m-1" onClick={() => this.audio?.play()}>
-                  Play DJ Track
-                </Button>
-                <Button className="m-1" onClick={() => this.audio?.pause()}>
-                  Pause DJ Track
-                </Button>
-                <Button className="m-1" onClick={this.increaseDjVolume}>
-                  Vol Up
-                </Button>
-                <Button className="m-1" onClick={this.decreaseDjVolume}>
-                  Vol Down
-                </Button>
-              </Container>
-              <Container className="mb-2">
-                <Button className="m-1" onClick={() => this.showQueue()}>
-                  Show Queue
-                </Button>
-                <Button
-                  className="m-1"
-                  onClick={() => this.player?.player?.togglePlay()}
-                >
-                  Toggle Music
-                </Button>
-                <Button
-                  className="m-1"
-                  onClick={() => this.player?.player?.pause()}
-                >
-                  Pause Music
-                </Button>
-                <Button
-                  className="m-1"
-                  onClick={() => this.player?.player?.resume()}
-                >
-                  Resume Music
-                </Button>
-                <Button
-                  className="m-1"
-                  onClick={() => this.player?.player?.previousTrack()}
-                >
-                  Previous
-                </Button>
-                <Button
-                  className="m-1"
-                  onClick={() => this.player?.player?.nextTrack()}
-                >
-                  Next
-                </Button>
-                <Button className="m-1" onClick={this.increaseSpotifyVolume}>
-                  Vol Up
-                </Button>
-                <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
-                  Vol Down
-                </Button>
-              </Container>
-            </>
+        <div className={this.state.showDevTools ? "" : "d-none"}>
+          <>
+            <hr />
+            <Container className=""></Container>
+            <Container className="">
+              <Button className="m-1" onClick={() => this.audio?.play()}>
+                Play DJ Track
+              </Button>
+              <Button className="m-1" onClick={() => this.audio?.pause()}>
+                Pause DJ Track
+              </Button>
+              <Button className="m-1" onClick={this.increaseDjVolume}>
+                Vol Up
+              </Button>
+              <Button className="m-1" onClick={this.decreaseDjVolume}>
+                Vol Down
+              </Button>
+            </Container>
+            <Container className="mb-2">
+              <Button className="m-1" onClick={() => this.showQueue()}>
+                Show Queue
+              </Button>
+              <Button
+                className="m-1"
+                onClick={() => this.player?.player?.togglePlay()}
+              >
+                Toggle Music
+              </Button>
+              <Button
+                className="m-1"
+                onClick={() => this.player?.player?.pause()}
+              >
+                Pause Music
+              </Button>
+              <Button
+                className="m-1"
+                onClick={() => this.player?.player?.resume()}
+              >
+                Resume Music
+              </Button>
+              <Button
+                className="m-1"
+                onClick={() => this.player?.player?.previousTrack()}
+              >
+                Previous
+              </Button>
+              <Button
+                className="m-1"
+                onClick={() => this.player?.player?.nextTrack()}
+              >
+                Next
+              </Button>
+              <Button className="m-1" onClick={this.increaseSpotifyVolume}>
+                Vol Up
+              </Button>
+              <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
+                Vol Down
+              </Button>
+            </Container>
+          </>
 
-            <SpotifyPlayer
-              getPlayer={this.getPlayer}
-              token={this.props?.accessToken}
-              // uris={[this.props.currentStation?.uri] || []}
-              offset={0}
-              callback={this.spotifyEventHandler}
-              play={this.state.playSpotify}
-              // play={true}
-              initialVolume={0.5}
-              styles={{
-                activeColor: "#fff",
-                bgColor: "#333",
-                color: "#fff",
-                loaderColor: "#fff",
-                sliderColor: "#1cb954",
-                trackArtistColor: "#ccc",
-                trackNameColor: "#fff",
-              }}
-            />
-          </div>
+          <SpotifyPlayer
+            getPlayer={this.getPlayer}
+            token={this.props?.accessToken}
+            // uris={[this.props.currentStation?.uri] || []}
+            offset={0}
+            callback={this.spotifyEventHandler}
+            play={this.state.playSpotify}
+            // play={true}
+            initialVolume={0.5}
+            styles={{
+              activeColor: "#fff",
+              bgColor: "#333",
+              color: "#fff",
+              loaderColor: "#fff",
+              sliderColor: "#1cb954",
+              trackArtistColor: "#ccc",
+              trackNameColor: "#fff",
+            }}
+          />
         </div>
       </Container>
     )
