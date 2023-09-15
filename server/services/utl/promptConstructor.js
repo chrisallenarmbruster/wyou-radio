@@ -11,7 +11,8 @@ async function songPrompts(
   date,
   timeSlot,
   name,
-  djId
+  djId,
+  station
 ) {
   const details = {
     radioStation,
@@ -22,6 +23,7 @@ async function songPrompts(
     timeSlot,
     name,
     djId,
+    station,
   };
 
   function createPromptsArray(promptListWithCounts) {

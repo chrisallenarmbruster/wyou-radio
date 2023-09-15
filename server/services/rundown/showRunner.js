@@ -10,7 +10,13 @@ const currentWeather = require("../currentWeather");
 const { convertFileToDataURI } = require("../utl/convertMP3FileToDataURI");
 const { createContent } = require("../createContent");
 
-async function showRunner(userEmail, jamSessionId, display_name, djId) {
+async function showRunner(
+  userEmail,
+  jamSessionId,
+  display_name,
+  djId,
+  station
+) {
   let content = {};
   let { show, nextTrackURI, tempSongName, tempBandName } =
     await addPlaylistToRundown(userEmail, jamSessionId);
@@ -29,7 +35,8 @@ async function showRunner(userEmail, jamSessionId, display_name, djId) {
       show.date,
       show.timeSlot,
       display_name,
-      djId
+      djId,
+      station
     );
 
     let audioURI = await convertFileToDataURI(content.fileName, "mp3");
@@ -61,6 +68,7 @@ async function showRunner(userEmail, jamSessionId, display_name, djId) {
       null,
       display_name,
       djId,
+      station,
       `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`
     );
 

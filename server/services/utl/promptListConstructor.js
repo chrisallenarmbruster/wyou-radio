@@ -8,16 +8,20 @@ async function constructPromptListWithCounts(details) {
   let djName = djProfile.djName;
   let djStyle = djProfile.details.djStyle;
   let context = djProfile.details.context;
-  let djCoreInstructions = `Create a script with no titles, headings, annotations, or reference to the speaker followed by a colon. Keep in mind what you have said previously. Be creative and do not repeat yourself. The script should reflects verbatim what a disk jockey would say to tee up the ${details.songName} by ${details.bandName} . Do not refer to yourself in the third person. Do not introduce yourself more than once during the show.`;
-  let djChannel = `The Station is called ${details.radioStation}. The showName is ${details.showName}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
+
+  // `The following is a transcript of everything said by you, a disk jockey. The Human is prompting you on what to say and how. Respond following the provided INSTRUCTIONS. Create you answer so they are thematically consistent with the provided CONTEXT:`;
   let brevity = [
-    "Be very brief. Keep you response to two sentences or less.",
-    "keep your response to two to four sentences.",
-    "keep your response to four to six sentences.",
+    "Be very brief. Limit your script to 2 sentences.",
+    "Limit your script to 4-6 sentences.",
+    "Limit your script to 4-6 sentences.",
   ];
-  let personalization = [
-    `Refer to ${details.name} as though they are your only listener.`,
-  ];
+  let songInto = `Craft a script that reflects verbatim what a you would say to tee up the song ${details.songName} by ${details.bandName}. Respond following the provided INSTRUCTIONS. Create you answer so they are thematically consistent with the provided CONTEXT.`;
+
+  let djCoreInstructions = `1. Avoid repetition in your dialogue.\n2. Ensure your dialogue flows naturally, building from previous statements.\n3. Do not use the descriptors provided by the user to describe yourself.\n4.Only introduce yourself once.\n5. State your name only once.\n6. Always speak in the first person.\n7. Format your response as a continuous script without speaker annotations or special characters.\n8. ${getRandomElement(
+    brevity
+  )}`;
+  let djChannel = `The Station is called ${details.station.name}. The showName is ${details.showName}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
+  let personalization = [`Address ${details.name} as your primary listener.`];
 
   const djTopics = [
     "Reference something you said earlier in the conversation as a joke.",
@@ -76,21 +80,21 @@ async function constructPromptListWithCounts(details) {
 
   return {
     type1: {
-      prompt: `${djStyle} ${djCoreInstructions} ${djChannel} ${getRandomElement(
+      prompt: `${djStyle} ${songInto} ${getRandomElement(
         djTopics
-      )}`,
-      frequency: 0,
+      )}\n\n INSTRUCTIONS:\n${djCoreInstructions}\n\nCONTEXT:\nDJ Name: ${djName}\n${djChannel}`,
+      frequency: 1,
     },
     type2: {
-      prompt: `${djStyle} ${djCoreInstructions} ${getRandomElement(
+      prompt: `${djStyle} ${songInto}\n\n INSTRUCTIONS:\n${djCoreInstructions}\n9. ${getRandomElement(
         djTopics
-      )} CONTEXT: Name: ${djName} Background: ${context}`,
-      frequency: 0,
+      )}\n\nCONTEXT:\nDJ Name: ${djName}\nDJ Background: ${context}`,
+      frequency: 1,
     },
     type3: {
-      prompt: `${djStyle} ${djCoreInstructions} ${getRandomElement(
+      prompt: `${djStyle} ${songInto}\n\n INSTRUCTIONS:\n${djCoreInstructions}\n10. ${getRandomElement(
         personalization
-      )} ${brevity[0]}`,
+      )}`,
       frequency: 1,
     },
   };

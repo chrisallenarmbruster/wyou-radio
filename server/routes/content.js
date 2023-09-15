@@ -11,6 +11,11 @@ router.post("/next-content", async (req, res) => {
   //TODO: Update to use djId from req.body
   const { curTrack, nextTrack, jamSessionId } = req.body;
   let djId = 1;
+  let station = {
+    description:
+      "The perfect classical tunes for pruning, planting, and putting your feet up.",
+    name: "Classical Garden",
+  };
 
   const user = await User.findOne({
     where: {
@@ -46,7 +51,8 @@ router.post("/next-content", async (req, res) => {
     userEmail,
     jamSessionId,
     user.display_name,
-    djId
+    djId,
+    station
   );
   res.json(content);
 });

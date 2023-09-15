@@ -21,6 +21,7 @@ async function createContent(
   timeSlot,
   name,
   djId,
+  station,
   weather
 ) {
   try {
@@ -33,7 +34,7 @@ async function createContent(
       temperature: 1.3,
     });
 
-    const template = `The following is a transcript of everything said by you, a disk jockey. The Human is prompting you on what to say and how. It is important that the you not be repetative and that you remembers what you have said previosly throughout the show. Do not describe yourself by the words used by the human to describe you. Do not introduce yourself more than once during the show. Do not say your name more than once.`;
+    const template = `The following is a transcript of everything said by you, a disk jockey. The Human is prompting you on what to say and how.`;
 
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(template),
@@ -71,7 +72,8 @@ async function createContent(
         date,
         timeSlot,
         name,
-        djId
+        djId,
+        station
       );
       result = await chain.call({
         input: input,
