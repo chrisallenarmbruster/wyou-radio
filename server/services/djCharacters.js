@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
-const { convertFileToDataURI } = require("./utl/convertMP3FileToDataURI");
-const projectRoot = path.resolve(__dirname, "../");
+const fs = require("fs")
+const path = require("path")
+const { convertFileToDataURI } = require("./utl/convertMP3FileToDataURI")
+const projectRoot = path.resolve(__dirname, "../")
 async function djCharacters(djId) {
   const djRoster = [
     {
