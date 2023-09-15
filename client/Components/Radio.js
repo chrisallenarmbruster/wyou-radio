@@ -18,7 +18,12 @@ import { Link } from "react-router-dom"
 export class Radio extends Component {
   constructor(props) {
     super(props)
-    this.state = { playSpotify: false, isAllMuted: false, deviceId: null }
+    this.state = {
+      playSpotify: false,
+      isAllMuted: false,
+      deviceId: null,
+      showDevTools: false,
+    }
     this.player = { player: null }
     this.audio = new Audio()
     this.djAudioTimeout = null
@@ -49,6 +54,7 @@ export class Radio extends Component {
     this.playContext = this.playContext.bind(this)
     this.showQueue = this.showQueue.bind(this)
     this.setDevice = this.setDevice.bind(this)
+    this.toggleShowDevTools = this.toggleShowDevTools.bind(this)
   }
 
   componentDidMount = () => {
@@ -57,16 +63,16 @@ export class Radio extends Component {
     this.audio.addEventListener("play", this.audioPlayHandler)
     this.audio.addEventListener("ended", this.audioEndedHandler)
 
-    this.props.fetchDjs()
-    this.props.fetchStations([
-      "37i9dQZF1DWXRqgorJj26U",
-      "37i9dQZF1DXaJXCbmtHVHV",
-      "37i9dQZF1DX2sQHbtx0sdt",
-      "37i9dQZF1DXbcP8BbYEQaO",
-      "37i9dQZF1DWUajed02NzWR",
-    ])
+    // this.props.fetchDjs()
+    // this.props.fetchStations([
+    //   "37i9dQZF1DWXRqgorJj26U",
+    //   "37i9dQZF1DXaJXCbmtHVHV",
+    //   "37i9dQZF1DX2sQHbtx0sdt",
+    //   "37i9dQZF1DXbcP8BbYEQaO",
+    //   "37i9dQZF1DWUajed02NzWR",
+    // ])
 
-    this.props.fetchUserStations()
+    // this.props.fetchUserStations()
   }
 
   componentWillUnmount = () => {
@@ -113,6 +119,7 @@ export class Radio extends Component {
       const payload = {}
       payload.jamSessionId = this.props.jamSession.id
       payload.djName = this.props.currentDj?.djName
+      payload.djId = this.props.currentDj?.id
       payload.station = {
         name: this.props.currentStation?.name,
         description: this.props.currentStation?.description,
@@ -396,16 +403,19 @@ export class Radio extends Component {
     console.log(`Device set with id: ${this.state.deviceId}`)
   }
 
+  toggleShowDevTools = () => {
+    this.setState((prevState) => ({
+      showDevTools: !prevState.showDevTools,
+    }))
+  }
+
   render() {
     let { trackUris } = this.props
 
     if (!this.props?.accessToken) return null
     return (
-      <Container className="bg-dark d-flex flex-column py-3 justify-content-between">
-        <div
-          className="d-flex flex-column justify-content-between"
-          style={{ height: "90vh" }}
-        >
+      <Container className="bg-dark d-flex flex-column py-3 ">
+        <div className="d-flex flex-column ">
           <div className="text-center">
             <Link to="djs" className="text-light text-decoration-none mx-3">
               Disc Jockey
@@ -452,81 +462,129 @@ export class Radio extends Component {
               />
             </Routes>
           </div>
+          <div className="text-center">
+            <Button onClick={this.toggleShowDevTools} className="mt-3 m-1">
+              Dev Tools
+            </Button>
+            <Button
+              className="m-1 mt-3"
+              onClick={() =>
+                this.playContext({ uri: this.props.currentStation.uri })
+              }
+              disabled={
+                !this.props.currentDj?.djName ||
+                !this.props.currentStation?.name
+              }
+            >
+              Load
+            </Button>
+            <Button
+              className="m-1 mt-3"
+              onClick={() => this.player?.player?.togglePlay()}
+            >
+              Toggle Music
+            </Button>
+            <Button
+              className="m-1 mt-3"
+              onClick={() => this.player?.player?.pause()}
+            >
+              Pause Music
+            </Button>
+            <Button
+              className="m-1 mt-3"
+              onClick={() => this.player?.player?.resume()}
+            >
+              Resume Music
+            </Button>
+            <Button
+              className="m-1 mt-3"
+              onClick={() => this.player?.player?.nextTrack()}
+            >
+              Next
+            </Button>
+            <Button
+              className={`m-1 mt-3 ${
+                this.state.isAllMuted ? "btn-danger" : "btn-primary"
+              }`}
+              onClick={this.toggleMuteAll}
+            >
+              Mute
+            </Button>
+          </div>
 
-          <div>
-            {/* <Container className="">
-              <Link to="stations">
-                <Button variant="primary">Radio</Button>
-              </Link>
-              <Button className="m-1" onClick={() => this.showQueue()}>
-                Show Queue
-              </Button>
-            </Container> */}
-            <Container className="">
-              <Button
-                className={`m-1 ${
-                  this.state.isAllMuted ? "btn-danger" : "btn-primary"
-                }`}
-                onClick={this.toggleMuteAll}
-              >
-                Toggle Mute All
-              </Button>
-              <Button className="m-1" onClick={this.getUsersPlaylists}>
-                Log Playlists
-              </Button>
-            </Container>
-            <Container className="">
-              <Button className="m-1" onClick={() => this.audio?.play()}>
-                Play DJ Track
-              </Button>
-              <Button className="m-1" onClick={() => this.audio?.pause()}>
-                Pause DJ Track
-              </Button>
-              <Button className="m-1" onClick={this.increaseDjVolume}>
-                Vol Up
-              </Button>
-              <Button className="m-1" onClick={this.decreaseDjVolume}>
-                Vol Down
-              </Button>
-            </Container>
-            <Container className="mb-2">
-              <Button
-                className="m-1"
-                onClick={() => this.player?.player?.togglePlay()}
-              >
-                Toggle Music
-              </Button>
-              <Button
-                className="m-1"
-                onClick={() => this.player?.player?.pause()}
-              >
-                Pause Music
-              </Button>
-              <Button
-                className="m-1"
-                onClick={() => this.player?.player?.resume()}
-              >
-                Resume Music
-              </Button>
-              <Button
-                className="m-1"
-                onClick={() => this.player?.player?.previousTrack()}
-              >
-                Previous
-              </Button>
-              <Button
-                className="m-1"
-                onClick={() => this.player?.player?.nextTrack()}
-              >
-                Next
-              </Button>
-              <Button className="m-1" onClick={this.increaseSpotifyVolume}>
-                Vol Up
-              </Button>
-              <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
-                Vol Down
-              </Button>
-            </Container>
+          <div className={this.state.showDevTools ? "" : "d-none"}>
+            <>
+              <hr />
+              <Container className="">
+                <Button
+                  className={`m-1 ${
+                    this.state.isAllMuted ? "btn-danger" : "btn-primary"
+                  }`}
+                  onClick={this.toggleMuteAll}
+                >
+                  Toggle Mute All
+                </Button>
+                <Button className="m-1" onClick={this.getUsersPlaylists}>
+                  Log Playlists
+                </Button>
+              </Container>
+              <Container className="">
+                <Button className="m-1" onClick={() => this.audio?.play()}>
+                  Play DJ Track
+                </Button>
+                <Button className="m-1" onClick={() => this.audio?.pause()}>
+                  Pause DJ Track
+                </Button>
+                <Button className="m-1" onClick={this.increaseDjVolume}>
+                  Vol Up
+                </Button>
+                <Button className="m-1" onClick={this.decreaseDjVolume}>
+                  Vol Down
+                </Button>
+              </Container>
+              <Container className="mb-2">
+                <Button className="m-1" onClick={() => this.showQueue()}>
+                  Show Queue
+                </Button>
+                <Button
+                  className="m-1"
+                  onClick={() => this.player?.player?.togglePlay()}
+                >
+                  Toggle Music
+                </Button>
+                <Button
+                  className="m-1"
+                  onClick={() => this.player?.player?.pause()}
+                >
+                  Pause Music
+                </Button>
+                <Button
+                  className="m-1"
+                  onClick={() => this.player?.player?.resume()}
+                >
+                  Resume Music
+                </Button>
+                <Button
+                  className="m-1"
+                  onClick={() => this.player?.player?.previousTrack()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  className="m-1"
+                  onClick={() => this.player?.player?.nextTrack()}
+                >
+                  Next
+                </Button>
+                <Button className="m-1" onClick={this.increaseSpotifyVolume}>
+                  Vol Up
+                </Button>
+                <Button className="m-1" onClick={this.decreaseSpotifyVolume}>
+                  Vol Down
+                </Button>
+              </Container>
+            </>
+
             <SpotifyPlayer
               getPlayer={this.getPlayer}
               token={this.props?.accessToken}

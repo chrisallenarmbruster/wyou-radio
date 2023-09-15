@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useEffect } from "react"
 import { connect } from "react-redux"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { setCurrentStation } from "../store/stationsSlice"
@@ -23,12 +23,21 @@ export function Stations(props) {
     clearCurrentTrack,
   } = props
 
+  useEffect(() => {
+    setTimeout(() => {
+      // sliderRef.current.swiper.slideTo(1)
+    }, 100)
+  }, [])
+
+  const sliderRef = useRef()
+
   return (
     <>
       <div className="text-light">
         <h1 className="h3 mt-3">Select Your Music</h1>
       </div>
       <Swiper
+        ref={sliderRef}
         effect={"coverflow"}
         autoHeight={true}
         grabCursor={true}
@@ -53,9 +62,9 @@ export function Stations(props) {
           console.log({ activeIndex, snapIndex, previousIndex, realIndex })
         }}
       >
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-        </SwiperSlide>
+        </SwiperSlide> */}
         {stations.length &&
           stations.map((station) => {
             return (

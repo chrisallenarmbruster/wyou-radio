@@ -1,9 +1,8 @@
 import React from "react"
-import { Routes, Route, Navigate } from "react-router-dom"
 import Button from "react-bootstrap/Button"
 import { Link } from "react-router-dom"
 
-const Home = () => {
+export function Home(props) {
   return (
     <>
       <div>Home</div>

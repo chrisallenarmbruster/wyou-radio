@@ -26,6 +26,14 @@ export function DiscJockeys(props) {
     }
   }, [])
 
+  useEffect(() => {
+    setTimeout(() => {
+      // sliderRef.current.swiper.slideTo(0)
+    }, 100)
+  }, [])
+
+  const sliderRef = useRef()
+
   function handleDjAudioGreeting(dj) {
     console.log("dj", dj)
     djAudioGreeting.src =
@@ -39,10 +47,13 @@ export function DiscJockeys(props) {
         <h1 className="h3 mt-3">Select Disc Jockey</h1>
       </div>
       <Swiper
+        ref={sliderRef}
         spaceBetween={30}
         autoHeight={true}
+        slidesPerView={1}
+        // initialSlide={0}
         effect={"fade"}
-        grabCursor={true}
+        // grabCursor={true}
         centeredSlides={true}
         navigation={true}
         loop={true}
@@ -54,11 +65,15 @@ export function DiscJockeys(props) {
       >
         {props.djs.map((dj, idx) => (
           <SwiperSlide key={`dj-${idx}`} className="bg-dark text-light">
-            <Row className="g-5 bg-dark text-light">
+            <Row className=" bg-dark text-light">
               <Col sm={12} md={6} className="px-5">
                 <Image src={dj.details?.image} />
               </Col>
-              <Col sm={12} md={6} className="px-5 text-start bg-dark">
+              <Col
+                sm={12}
+                md={6}
+                className="px-5 text-start bg-dark mt-sm-3 mt-md-0"
+              >
                 <h2 className="h3 ">
                   {dj.djName}
                   <Button

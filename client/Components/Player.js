@@ -27,14 +27,6 @@ const Player = (props) => {
             </p>
           </Col>
         </Row>
-        <div>
-          <Button
-            className="mt-3"
-            onClick={() => props.playContext({ uri: props.station.uri })}
-          >
-            Play
-          </Button>
-        </div>
       </Container>
     </>
   )
