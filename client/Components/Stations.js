@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { setCurrentStation } from "../store/stationsSlice"
 import { clearCurrentTrack } from "../store/playerSlice"
+import { useNavigate } from "react-router-dom"
 
 // Import Swiper styles
 import "swiper/css"
@@ -28,6 +29,8 @@ export function Stations(props) {
       // sliderRef.current.swiper.slideTo(1)
     }, 100)
   }, [])
+
+  const navigate = useNavigate()
 
   const sliderRef = useRef()
 
@@ -75,7 +78,8 @@ export function Stations(props) {
                     // pauseSpotify()
                     clearCurrentTrack()
                     setCurrentStation(station)
-                    // playContext({ uri: station.uri })
+                    playContext({ uri: station.uri })
+                    navigate("/radio/player")
                   }}
                 />
               </SwiperSlide>

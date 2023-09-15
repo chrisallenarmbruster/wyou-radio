@@ -9,7 +9,11 @@ import Container from "react-bootstrap/Container"
 import DiscJockeys from "./DiscJockeys"
 import Player from "./Player"
 import Stations from "./Stations"
-import { fetchStations, fetchUserStations } from "../store/stationsSlice"
+import {
+  fetchStations,
+  fetchUserStations,
+  setCurrentStationByUri,
+} from "../store/stationsSlice"
 import { fetchDjs } from "../store/djsSlice"
 import { setCurrentTrack } from "../store/playerSlice"
 import { Routes, Route } from "react-router-dom"
@@ -48,7 +52,6 @@ export class Radio extends Component {
     this.increaseSpotifyVolume = this.increaseSpotifyVolume.bind(this)
     this.decreaseSpotifyVolume = this.decreaseSpotifyVolume.bind(this)
     this.toggleMuteAll = this.toggleMuteAll.bind(this)
-    this.getUsersPlaylists = this.getUsersPlaylists.bind(this)
     this.playTrack = this.playTrack.bind(this)
     this.addTrack = this.addTrack.bind(this)
     this.playContext = this.playContext.bind(this)
@@ -62,17 +65,6 @@ export class Radio extends Component {
 
     this.audio.addEventListener("play", this.audioPlayHandler)
     this.audio.addEventListener("ended", this.audioEndedHandler)
-
-    // this.props.fetchDjs()
-    // this.props.fetchStations([
-    //   "37i9dQZF1DWXRqgorJj26U",
-    //   "37i9dQZF1DXaJXCbmtHVHV",
-    //   "37i9dQZF1DX2sQHbtx0sdt",
-    //   "37i9dQZF1DXbcP8BbYEQaO",
-    //   "37i9dQZF1DWUajed02NzWR",
-    // ])
-
-    // this.props.fetchUserStations()
   }
 
   componentWillUnmount = () => {
@@ -85,7 +77,7 @@ export class Radio extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     if (prevState.deviceId !== this.state.deviceId) {
-      console.log("Device ID updated")
+      console.log("Device ID updated", this.state.deviceId)
       if (this.state.deviceId) this.setDevice()
     }
   }
@@ -137,7 +129,7 @@ export class Radio extends Component {
           artist: trackState.next_tracks[0].artists[0].name,
         }
       }
-      console.log("Payload:", payload)
+
       let dataUri
       //uncomment following line when ready to test with backend
       // dataUri = await axios.post("/api/content/next-content", payload);
@@ -180,9 +172,9 @@ export class Radio extends Component {
   }
 
   getPlayer = async (playerInstance) => {
-    console.log("Got player instance:", playerInstance)
+    console.log("Got player instance:", await playerInstance)
     this.player = { player: await playerInstance }
-    this.player?.player?.setName("WYOU Radio")
+    await this.player?.player?.setName("WYOU Radio")
   }
 
   spotifyEventHandler = async (state) => {
@@ -190,6 +182,16 @@ export class Radio extends Component {
 
     if (state.type === "status_update") {
       this.setState({ deviceId: state.currentDeviceId })
+      // if (state.status === "READY") {
+      //   this.spotifyApi.setAccessToken(this.props.accessToken)
+
+      //   setTimeout(async () => {
+      //     const lastUri = (
+      //       await this.spotifyApi.getMyCurrentPlaybackState()
+      //     ).body.context.uri.split(":")[2]
+      //     if (lastUri) this.props.setCurrentStationByUri(lastUri)
+      //   }, 1000)
+      // }
     }
 
     if (state.type === "track_update") {
@@ -343,22 +345,6 @@ export class Radio extends Component {
     })
   }
 
-  async getUsersPlaylists() {
-    this.spotifyApi.setAccessToken(this.props.accessToken)
-    let data = await this.spotifyApi.getUserPlaylists()
-    console.log("User's Playlists: ", data.body.items)
-    data = await this.spotifyApi.getFeaturedPlaylists({
-      limit: 5,
-      offset: 0,
-      country: "US",
-    })
-    console.log("Featured Playlists: ", data.body.playlists.items)
-    data = await this.spotifyApi.searchPlaylists("classic rock")
-    console.log("Search Classic Rock Playlists: ", data.body.playlists.items)
-    data = await spotifyApiImports.getQueue(this.props.accessToken)
-    console.log("Queue: ", data)
-  }
-
   async playTrack(track) {
     this.spotifyApi.setAccessToken(this.props.accessToken)
     setTimeout(async () => {
@@ -386,7 +372,7 @@ export class Radio extends Component {
       await this.spotifyApi.play({
         context_uri: context.uri,
       })
-    }, 1000)
+    }, 500)
   }
 
   async showQueue() {
@@ -417,25 +403,33 @@ export class Radio extends Component {
       <Container className="bg-dark d-flex flex-column py-3 ">
         <div className="d-flex flex-column ">
           <div className="text-center">
-            <Link to="djs" className="text-light text-decoration-none mx-3">
-              Disc Jockey
-            </Link>
-            <Link
-              to="stations"
-              className="text-light text-decoration-none mx-3"
-            >
-              Station
-            </Link>
-            <Link
-              to="player"
-              className={`text-light text-decoration-none mx-3 ${
+            <div
+              className={`${
                 this.props.currentDj && this.props.currentStation
-                  ? ""
-                  : "pe-none"
+                  ? "visible"
+                  : "invisible"
               }`}
             >
-              Player
-            </Link>
+              <Link to="djs" className="text-light text-decoration-none mx-3">
+                Disc Jockey
+              </Link>
+              <Link
+                to="stations"
+                className="text-light text-decoration-none mx-3"
+              >
+                Station
+              </Link>
+              <Link
+                to="player"
+                className={`text-light text-decoration-none mx-3 ${
+                  this.props.currentDj && this.props.currentStation
+                    ? ""
+                    : "pe-none"
+                }`}
+              >
+                Broadcast
+              </Link>
+            </div>
             <Routes>
               <Route
                 index
@@ -462,22 +456,25 @@ export class Radio extends Component {
               />
             </Routes>
           </div>
-          <div className="text-center">
+          <div
+            className={`text-center ${
+              !this.props.currentDj?.djName || !this.props.currentStation?.name
+                ? "d-none"
+                : ""
+            }`}
+          >
             <Button onClick={this.toggleShowDevTools} className="mt-3 m-1">
               Dev Tools
             </Button>
-            <Button
+            {/* <Button
               className="m-1 mt-3"
               onClick={() =>
                 this.playContext({ uri: this.props.currentStation.uri })
               }
-              disabled={
-                !this.props.currentDj?.djName ||
-                !this.props.currentStation?.name
-              }
+
             >
               Load
-            </Button>
+            </Button> */}
             <Button
               className="m-1 mt-3"
               onClick={() => this.player?.player?.togglePlay()}
@@ -515,19 +512,7 @@ export class Radio extends Component {
           <div className={this.state.showDevTools ? "" : "d-none"}>
             <>
               <hr />
-              <Container className="">
-                <Button
-                  className={`m-1 ${
-                    this.state.isAllMuted ? "btn-danger" : "btn-primary"
-                  }`}
-                  onClick={this.toggleMuteAll}
-                >
-                  Toggle Mute All
-                </Button>
-                <Button className="m-1" onClick={this.getUsersPlaylists}>
-                  Log Playlists
-                </Button>
-              </Container>
+              <Container className=""></Container>
               <Container className="">
                 <Button className="m-1" onClick={() => this.audio?.play()}>
                   Play DJ Track
@@ -588,11 +573,11 @@ export class Radio extends Component {
             <SpotifyPlayer
               getPlayer={this.getPlayer}
               token={this.props?.accessToken}
-              uris={[this.props.currentStation?.uri] || []}
-              showSaveIcon
+              // uris={[this.props.currentStation?.uri] || []}
+              offset={0}
               callback={this.spotifyEventHandler}
               play={this.state.playSpotify}
-              // play={false}
+              // play={true}
               initialVolume={0.5}
               styles={{
                 activeColor: "#fff",
@@ -622,6 +607,7 @@ const mapStateToProps = (reduxState) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchStations: (stationIds) => dispatch(fetchStations(stationIds)),
   fetchUserStations: () => dispatch(fetchUserStations()),
+  setCurrentStationByUri: (uri) => dispatch(setCurrentStationByUri(uri)),
   fetchDjs: () => dispatch(fetchDjs()),
   setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
 })

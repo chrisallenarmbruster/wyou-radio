@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
 import Image from "react-bootstrap/Image"
 import Button from "react-bootstrap/Button"
+import { useNavigate } from "react-router-dom"
 
 import "swiper/css"
 import "swiper/css/effect-fade"
@@ -32,6 +33,8 @@ export function DiscJockeys(props) {
     }, 100)
   }, [])
 
+  const navigate = useNavigate()
+
   const sliderRef = useRef()
 
   function handleDjAudioGreeting(dj) {
@@ -41,6 +44,16 @@ export function DiscJockeys(props) {
       "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
     djAudioGreeting.play()
   }
+
+  function handleSelectDj(dj) {
+    props.setCurrentDj(dj)
+    if (props.currentStation) {
+      navigate(`/radio/player`)
+    } else {
+      navigate(`/radio/stations`)
+    }
+  }
+
   return (
     <>
       <div className="text-light">
@@ -86,7 +99,7 @@ export function DiscJockeys(props) {
                   <Button
                     className="mx-3"
                     size="sm"
-                    onClick={() => props.setCurrentDj(dj)}
+                    onClick={() => handleSelectDj(dj)}
                   >
                     Select
                   </Button>
@@ -104,6 +117,7 @@ export function DiscJockeys(props) {
 const mapStateToProps = (state) => {
   return {
     djs: state.djs.allDjs,
+    currentStation: state.stations.currentStation,
   }
 }
 

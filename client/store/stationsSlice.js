@@ -16,7 +16,11 @@ const stationsSlice = createSlice({
   initialState,
   reducers: {
     addStation: (state, action) => {
-      state.allStations.push(action.payload)
+      if (
+        !state.allStations.find((station) => station.id === action.payload.id)
+      ) {
+        state.allStations.push(action.payload)
+      }
     },
     addStations: (state, action) => {
       state.allStations = [...state.allStations, ...action.payload]
@@ -69,6 +73,36 @@ export const fetchStations = (uriArray) => async (dispatch, getState) => {
     )
 
     dispatch(addStations(stationArray))
+  } catch (error) {
+    dispatch(setStationsError(error))
+  } finally {
+    dispatch(setStationsLoading(false))
+  }
+}
+
+export const fetchStation = (uri) => async (dispatch, getState) => {
+  try {
+    if (!getState().user.details.accessToken) return
+    dispatch(setStationsLoading(true))
+
+    spotifyApi.setAccessToken(getState().user.details.accessToken)
+    const res = await spotifyApi.getPlaylist(uri)
+    dispatch(addStation(res.body))
+  } catch (error) {
+    dispatch(setStationsError(error))
+  } finally {
+    dispatch(setStationsLoading(false))
+  }
+}
+
+export const setCurrentStationByUri = (uri) => async (dispatch, getState) => {
+  try {
+    if (!getState().user.details.accessToken) return
+    dispatch(setStationsLoading(true))
+
+    spotifyApi.setAccessToken(getState().user.details.accessToken)
+    const res = await spotifyApi.getPlaylist(uri)
+    dispatch(setCurrentStation(res.body))
   } catch (error) {
     dispatch(setStationsError(error))
   } finally {
