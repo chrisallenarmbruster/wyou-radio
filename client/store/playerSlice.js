@@ -14,6 +14,9 @@ const playerSlice = createSlice({
     setCurrentTrack: (state, action) => {
       state.currentTrack = action.payload
     },
+    clearCurrentTrack: (state) => {
+      state.currentTrack = null
+    },
     setPlayerLoading: (state, action) => {
       state.loading = action.payload
     },
@@ -23,7 +26,11 @@ const playerSlice = createSlice({
   },
 })
 
-export const { setCurrentTrack, setPlayerLoading, setPlayerError } =
-  playerSlice.actions
+export const {
+  setCurrentTrack,
+  setPlayerLoading,
+  setPlayerError,
+  clearCurrentTrack,
+} = playerSlice.actions
 
 export default playerSlice.reducer

@@ -1,51 +1,65 @@
 import { useState, useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setUser } from "../store/userSlice"
 import { setJamSessionId } from "../store/jamSessionSlice"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 
 export default function useAuth(code) {
   const [accessToken, setAccessToken] = useState()
   const [refreshToken, setRefreshToken] = useState()
   const [expiresIn, setExpiresIn] = useState()
+  const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    axios
-      .post("/api/spotify/login", {
-        code,
-      })
-      .then((res) => {
-        dispatch(setUser(res.data))
+    const fetchSpotifyAuthData = async () => {
+      try {
+        const response = await axios.post("/api/spotify/login", {
+          code,
+        })
+
+        dispatch(setUser(response.data))
         dispatch(setJamSessionId())
-        setAccessToken(res.data.accessToken)
-        setRefreshToken(res.data.refreshToken)
-        setExpiresIn(res.data.expiresIn)
+        setAccessToken(response.data.accessToken)
+        setRefreshToken(response.data.refreshToken)
+        setExpiresIn(response.data.expiresIn)
+
         window.history.pushState({}, null, "/")
-      })
-      .catch(() => {
+        // navigate("/home")
+      } catch (error) {
         window.location = "/"
-      })
-  }, [code])
+      }
+    }
+
+    if (code) {
+      fetchSpotifyAuthData()
+    }
+  }, [!!(code || user?.details?.accessToken)])
 
   useEffect(() => {
-    if (!refreshToken || !expiresIn) return
-    const interval = setInterval(() => {
-      axios
-        .post("/api/spotify/refresh", {
-          refreshToken,
-        })
-        .then((res) => {
-          dispatch(setUser(res.data))
-          setAccessToken(res.data.accessToken)
-          setExpiresIn(res.data.expiresIn)
-        })
-        .catch(() => {
-          window.location = "/"
-        })
-    }, (expiresIn - 60) * 1000)
+    const refreshSpotifyToken = async () => {
+      if (!refreshToken || !expiresIn) return
 
-    return () => clearInterval(interval)
+      const interval = setInterval(async () => {
+        try {
+          const response = await axios.post("/api/spotify/refresh", {
+            refreshToken,
+          })
+
+          dispatch(setUser(response.data))
+          setAccessToken(response.data.accessToken)
+          setExpiresIn(response.data.expiresIn)
+        } catch (error) {
+          window.location = "/"
+        }
+      }, (expiresIn - 60) * 1000)
+
+      return () => clearInterval(interval)
+    }
+
+    refreshSpotifyToken()
   }, [refreshToken, expiresIn])
 
   return accessToken

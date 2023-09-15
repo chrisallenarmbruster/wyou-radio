@@ -1,10 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const { convertFileToDataURI } = require("./utl/convertMP3FileToDataURI");
-const projectRoot = path.resolve(__dirname, "../");
+const fs = require("fs")
+const path = require("path")
+const { convertFileToDataURI } = require("./utl/convertMP3FileToDataURI")
+const projectRoot = path.resolve(__dirname, "../")
 async function djCharacters(djId) {
-  const djRoster = {
-    1: {
+  const djRoster = [
+    {
+      id: 1,
       djName: "Rusty",
       details: {
         voiceID: "krnShwoOTYlrQktZt9g7",
@@ -40,13 +41,13 @@ async function djCharacters(djId) {
         ),
       },
     },
-  };
+  ]
 
   if (djId) {
-    return djRoster[djId];
+    return djRoster.filter((dj) => dj.id === djId)
   } else {
-    return JSON.stringify(djRoster);
+    return djRoster
   }
 }
 
-module.exports = { djCharacters };
+module.exports = { djCharacters }

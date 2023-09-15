@@ -1,24 +1,46 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useEffect } from "react"
 import { connect } from "react-redux"
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
+import { setCurrentStation } from "../store/stationsSlice"
+import { clearCurrentTrack } from "../store/playerSlice"
+import { useNavigate } from "react-router-dom"
 
 // Import Swiper styles
 import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/navigation"
 
-import "./tunerStyles.css"
+import "./stationsStyle.css"
 
 // import required modules
 import { EffectCoverflow, Navigation } from "swiper/modules"
 
-export function TunerCarousel(props) {
-  const { stations, playContext } = props
+export function Stations(props) {
+  const {
+    stations,
+    playContext,
+    setCurrentStation,
+    pauseSpotify,
+    clearCurrentTrack,
+  } = props
+
+  useEffect(() => {
+    setTimeout(() => {
+      // sliderRef.current.swiper.slideTo(1)
+    }, 100)
+  }, [])
+
+  const navigate = useNavigate()
+
+  const sliderRef = useRef()
 
   return (
-    <div className="swiper">
+    <>
+      <div className="text-light">
+        <h1 className="h3 mt-3">Select Your Music</h1>
+      </div>
       <Swiper
+        ref={sliderRef}
         effect={"coverflow"}
         autoHeight={true}
         grabCursor={true}
@@ -43,29 +65,42 @@ export function TunerCarousel(props) {
           console.log({ activeIndex, snapIndex, previousIndex, realIndex })
         }}
       >
-        <SwiperSlide>
+        {/* <SwiperSlide>
           <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-        </SwiperSlide>
+        </SwiperSlide> */}
         {stations.length &&
           stations.map((station) => {
             return (
               <SwiperSlide key={station.id}>
                 <img
                   src={station.images[0].url}
-                  onClick={() => playContext({ uri: station.uri })}
+                  onClick={() => {
+                    // pauseSpotify()
+                    clearCurrentTrack()
+                    setCurrentStation(station)
+                    playContext({ uri: station.uri })
+                    navigate("/radio/player")
+                  }}
                 />
               </SwiperSlide>
             )
           })}
       </Swiper>
-    </div>
+    </>
   )
 }
 
 const mapStateToProps = (state) => {
   return {
-    stations: state.tuner.stations,
+    stations: state.stations.allStations,
   }
 }
 
-export default connect(mapStateToProps)(TunerCarousel)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentStation: (station) => dispatch(setCurrentStation(station)),
+    clearCurrentTrack: () => dispatch(clearCurrentTrack()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Stations)
