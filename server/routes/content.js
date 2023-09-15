@@ -9,13 +9,7 @@ const { reset } = require("../services/rundown/rundownUtlities/dbUtilities");
 router.post("/next-content", async (req, res) => {
   const userEmail = req.session.email;
   //TODO: Update to use djId from req.body
-  const { curTrack, nextTrack, jamSessionId } = req.body;
-  let djId = 1;
-  let station = {
-    description:
-      "The perfect classical tunes for pruning, planting, and putting your feet up.",
-    name: "Classical Garden",
-  };
+  const { curTrack, nextTrack, jamSessionId, djId, station } = req.body;
 
   const user = await User.findOne({
     where: {
