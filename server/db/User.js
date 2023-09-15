@@ -24,6 +24,6 @@ const User = conn.define("user", {
     type: BOOLEAN,
     defaultValue: false,
   },
-})
+});
 
 module.exports = User

@@ -3,8 +3,9 @@ const path = require("path");
 const { convertFileToDataURI } = require("./utl/convertMP3FileToDataURI");
 const projectRoot = path.resolve(__dirname, "../");
 async function djCharacters(djId) {
-  const djRoster = {
-    1: {
+  const djRoster = [
+    {
+      id: 1,
       djName: "Rusty",
       details: {
         voiceID: "krnShwoOTYlrQktZt9g7",
@@ -40,13 +41,12 @@ async function djCharacters(djId) {
         ),
       },
     },
-  };
-
+  ];
   if (djId) {
-    return djRoster[djId];
+    const temp = djRoster.filter((dj) => dj.id === parseInt(djId));
+    return temp[0];
   } else {
-    return JSON.stringify(djRoster);
+    return djRoster;
   }
 }
-
 module.exports = { djCharacters };

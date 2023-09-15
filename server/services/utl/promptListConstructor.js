@@ -2,10 +2,12 @@ const { djCharacters } = require("../djCharacters");
 const { getRandomElement } = require("./randomElement");
 //TODO: Make another list that is dynamic basic on a websearch for todays headllines
 
-function constructPromptListWithCounts(details) {
-  let djName = details.djName;
-  let djStyle = djCharacters("djName").details.djStyle;
-  let context = djCharacters("djName").details.context;
+async function constructPromptListWithCounts(details) {
+  let djId = details.djId;
+  let djProfile = await djCharacters(djId);
+  let djName = djProfile.djName;
+  let djStyle = djProfile.details.djStyle;
+  let context = djProfile.details.context;
   let djCoreInstructions = `Create a script with no titles, headings, annotations, or reference to the speaker followed by a colon. Keep in mind what you have said previously. Be creative and do not repeat yourself. The script should reflects verbatim what a disk jockey would say to tee up the ${details.songName} by ${details.bandName} . Do not refer to yourself in the third person. Do not introduce yourself more than once during the show.`;
   let djChannel = `The Station is called ${details.radioStation}. The showName is ${details.showName}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
   let brevity = [
@@ -15,10 +17,6 @@ function constructPromptListWithCounts(details) {
   ];
   let personalization = [
     `Refer to ${details.name} as though they are your only listener.`,
-    "",
-    "",
-    "",
-    "",
   ];
 
   const djTopics = [
@@ -78,22 +76,22 @@ function constructPromptListWithCounts(details) {
 
   return {
     type1: {
-      prompt: `${djStyle} Consider the provided context to inform the DJ's Style. ${djCoreInstructions} ${djChannel} ${getRandomElement(
+      prompt: `${djStyle} ${djCoreInstructions} ${djChannel} ${getRandomElement(
         djTopics
       )}`,
       frequency: 0,
     },
     type2: {
-      prompt: `${djStyle} Consider the provided context to inform the DJ's Style. ${djCoreInstructions} ${getRandomElement(
+      prompt: `${djStyle} ${djCoreInstructions} ${getRandomElement(
         djTopics
       )} CONTEXT: Name: ${djName} Background: ${context}`,
-      frequency: 2,
+      frequency: 0,
     },
     type3: {
-      prompt: `${djStyle} Consider the provided context to inform the DJ's Style. ${djCoreInstructions} ${getRandomElement(
+      prompt: `${djStyle} ${djCoreInstructions} ${getRandomElement(
         personalization
-      )} ${brevity[0]} CONTEXT: Name: ${djName} Background: ${context}`,
-      frequency: 5,
+      )} ${brevity[0]}`,
+      frequency: 1,
     },
   };
 }

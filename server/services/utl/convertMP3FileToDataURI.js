@@ -1,13 +1,12 @@
 const fs = require("fs");
 
-async function convertFileToDataURI(filePath, fileType = "mp3") {
+async function convertFileToDataURI(filePath, fileType) {
   try {
     const fileData = await fs.promises.readFile(filePath);
     const base64Data = fileData.toString("base64");
     let mimeType;
 
     switch (fileType) {
-      case "png":
       case "png":
         mimeType = "image/png";
         break;
