@@ -15,7 +15,7 @@ async function constructPromptListWithCounts(details) {
     "Limit your script to 4-6 sentences.",
     "Limit your script to 4-6 sentences.",
   ];
-  let songInto = `Craft a script that reflects verbatim what a you would say to tee up the song ${details.songName} by ${details.bandName}. Respond following the provided INSTRUCTIONS. Create you answer so they are thematically consistent with the provided CONTEXT.`;
+  let songInto = `Craft a script that reflects verbatim what a you would say to tee up the song ${details.songName} by ${details.bandName}. Respond following the provided INSTRUCTIONS. Create your response so that it is thematically consistent with the provided CONTEXT.`;
 
   let djCoreInstructions = `1. Avoid repetition in your dialogue.\n2. Ensure your dialogue flows naturally, building from previous statements.\n3. Do not use the descriptors provided by the user to describe yourself.\n4.Only introduce yourself once.\n5. State your name only once.\n6. Always speak in the first person.\n7. Format your response as a continuous script without speaker annotations or special characters.\n8. ${getRandomElement(
     brevity

@@ -31,7 +31,7 @@ async function createContent(
     const chat = new ChatOpenAI({
       openAIApiKey: process.env.OPENAI_API_KEY,
       modelName: "gpt-4",
-      temperature: 1.3,
+      temperature: 1,
     });
 
     const template = `The following is a transcript of everything said by you, a disk jockey. The Human is prompting you on what to say and how.`;
