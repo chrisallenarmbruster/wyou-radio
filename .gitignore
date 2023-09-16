@@ -3,7 +3,6 @@ dist
 .env
 docker-compose.yml
 package-lock.json
-debug/debugTracker.json
 public/main.js
 public/main.js.map
 .DS_Store
