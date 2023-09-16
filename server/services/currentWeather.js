@@ -130,7 +130,7 @@ async function currenWeather() {
     )} miles.
   Winds are coming from the ${windDirectionCardinal} at ${wind_speed.toFixed(
       0
-    )} mph, gusting up to ${wind_gust.toFixed(0)} mph.
+    )} miles per hour, gusting up to ${wind_gust.toFixed(0)}.
   `.trim();
   }
 

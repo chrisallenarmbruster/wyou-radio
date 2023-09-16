@@ -82,7 +82,7 @@ async function createContent(
 
     saveDebugTrackerToFile(debugTracker);
     const timestamp = Date.now();
-
+//TODO: maybe clean up the response taking out special characters before sending to the API
     const response = await fetchSpeech(
       voiceID,
       result.response,

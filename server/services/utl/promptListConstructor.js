@@ -22,6 +22,7 @@ async function constructPromptListWithCounts(details) {
   )}`;
   let djChannel = `The Station is called ${details.station.name}. The showName is ${details.showName}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
   let personalization = [`Address ${details.name} as your primary listener.`];
+  let signaturePhrases = `Use this phrase ${getRandomElement(djProfile.details.signaturePhrases)}`;
 
   const djTopics = [
     "Reference something you said earlier in the conversation as a joke.",
@@ -82,7 +83,7 @@ async function constructPromptListWithCounts(details) {
     type1: {
       prompt: `${djStyle} ${songInto} ${getRandomElement(
         djTopics
-      )}\n\n INSTRUCTIONS:\n${djCoreInstructions}\n\nCONTEXT:\nDJ Name: ${djName}\n${djChannel}`,
+      )}\n\n INSTRUCTIONS:\n${djCoreInstructions} ${signaturePhrases}\n\nCONTEXT:\nDJ Name: ${djName}\n${djChannel}`,
       frequency: 1,
     },
     type2: {
