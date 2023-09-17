@@ -52,9 +52,9 @@ export const fetchDjs = () => async (dispatch, getState) => {
 
     const response = await axios.get("api/content/dj-characters")
 
-    response.data.push({ id: 100, djName: "Snoop Cat" })
-    response.data.push({ id: 200, djName: "Martha Kwinn" })
-    response.data.push({ id: 300, djName: "Mr. Rojers" })
+    // response.data.push({ id: 100, djName: "Snoop Cat" })
+    // response.data.push({ id: 200, djName: "Martha Kwinn" })
+    // response.data.push({ id: 300, djName: "Mr. Rojers" })
 
     dispatch(addDjs(response.data))
   } catch (error) {

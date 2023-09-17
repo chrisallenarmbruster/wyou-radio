@@ -46,7 +46,7 @@ export function DiscJockeys(props) {
   }
 
   function handleSelectDj(dj) {
-    props.setCurrentDj(dj)
+    props.selectDj(dj)
     if (props.currentStation) {
       navigate(`/radio/player`)
     } else {
@@ -71,42 +71,56 @@ export function DiscJockeys(props) {
         navigation={true}
         loop={true}
         modules={[EffectFade, Navigation]}
-        className="mySwiper"
+        className="mySwiper "
         onSlideChange={() => {
           djAudioGreeting.pause()
         }}
       >
         {props.djs.map((dj, idx) => (
-          <SwiperSlide key={`dj-${idx}`} className="bg-dark text-light">
-            <Row className=" bg-dark text-light">
-              <Col sm={12} md={6} className="px-5">
-                <Image src={dj.details?.image} />
-              </Col>
-              <Col
-                sm={12}
-                md={6}
-                className="px-5 text-start bg-dark mt-sm-3 mt-md-0"
-              >
-                <h2 className="h3 ">
-                  {dj.djName}
-                  <Button
-                    className="ms-3"
-                    size="sm"
-                    onClick={() => handleDjAudioGreeting(dj)}
-                  >
-                    Greeting
-                  </Button>
-                  <Button
-                    className="mx-3"
-                    size="sm"
-                    onClick={() => handleSelectDj(dj)}
-                  >
-                    Select
-                  </Button>
-                </h2>
-                <p>{dj.details?.context}</p>
-              </Col>
-            </Row>
+          <SwiperSlide
+            key={`dj-${idx}`}
+            className="bg-dark text-light "
+            style={{ width: "100%", height: "100%" }}
+          >
+            <div
+              className="bg-dark "
+              style={{
+                height: "100%",
+                width: "100%",
+                overflowX: "hidden",
+                overflowY: "auto",
+              }}
+            >
+              <Row className=" bg-dark text-light">
+                <Col sm={12} md={6} className="px-5">
+                  <Image src={dj.details?.image} />
+                </Col>
+                <Col
+                  sm={12}
+                  md={6}
+                  className="px-5 text-start bg-dark mt-3 mt-md-0"
+                >
+                  <h2 className="h3">
+                    {dj.djName}
+                    <Button
+                      className="ms-3"
+                      size="sm"
+                      onClick={() => handleDjAudioGreeting(dj)}
+                    >
+                      Greeting
+                    </Button>
+                    <Button
+                      className="mx-3"
+                      size="sm"
+                      onClick={() => handleSelectDj(dj)}
+                    >
+                      Select
+                    </Button>
+                  </h2>
+                  <p>{dj.details?.context}</p>
+                </Col>
+              </Row>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
