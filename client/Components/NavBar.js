@@ -12,13 +12,13 @@ export class NavBar extends Component {
 
         {this.props.user && (
           <>
-            <span className="text-light mx-3">{this.props.user?.email}</span>
+            {/* <span className="text-light mx-3">{this.props.user?.email}</span>
             <span className="text-light mx-3">
               DJ: {this.props.currentDj?.djName}
             </span>
             <span className="text-light mx-3">
               Station: {this.props.currentStation?.name}
-            </span>
+            </span> */}
           </>
         )}
       </Navbar>

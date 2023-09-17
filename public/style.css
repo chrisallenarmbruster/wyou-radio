@@ -21,3 +21,19 @@ body,
 html {
   background-color: #212529;
 }
+
+.blink {
+  animation: blink 1.5s steps(1, end) infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
