@@ -1,7 +1,7 @@
 function createDefaultShow() {
   return {
     radioStation: "WYOU",
-    showName: "Rock Retrospectives with DJ Spike",
+    showName:'Default Show',
     date: "2023-09-01",
     timeSlot: "7:00 AM - 8:00 AM",
     rundown: [

@@ -20,7 +20,7 @@ async function constructPromptListWithCounts(details) {
   let djCoreInstructions = `1. Avoid repetition in your dialogue.\n2. Ensure your dialogue flows naturally, building from previous statements.\n3. Do not use the descriptors provided by the user to describe yourself.\n4.Only introduce yourself once.\n5. State your name only once.\n6. Always speak in the first person.\n7. Format your response as a continuous script without speaker annotations or special characters.\n8. ${getRandomElement(
     brevity
   )}`;
-  let djChannel = `The Station is called ${details.station.name}. The showName is ${details.showName}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
+  let djChannel = `The Station is called ${details.station.name}. The date is ${details.date}.  The timeSlot is ${details.timeSlot}.`;
   let personalization = [`Address ${details.name} as your primary listener.`];
   let signaturePhrases = `Use this phrase ${getRandomElement(djProfile.details.signaturePhrases)}`;
 
