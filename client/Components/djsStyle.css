@@ -17,3 +17,89 @@
 .swiper-wrapper {
   height: 100%;
 }
+
+.rounded-image {
+  border-radius: 12px; /* Adjust the radius as needed */
+}
+
+.mySwiper {
+  padding-left: 50px; /* Adjust space for left arrow */
+  padding-right: 50px; /* Adjust space for right arrow */
+}
+
+/* If you want to further adjust the Select button appearance */
+.rounded-pill {
+  border-radius: 25px !important;
+  padding: 0.25rem 0.75rem !important; /* Adjust for smaller size */
+}
+
+.microphone-icon {
+  margin-left: 5px;
+  cursor: pointer;
+  color: orange;
+}
+@keyframes blinking {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.microphone-icon.playing {
+  color: orange;
+  animation: blinking 1s infinite;
+}
+
+.microphone-icon.paused {
+  color: orange;
+  opacity: 0.5;
+}
+
+.select-button {
+  background-color: transparent;
+  border: 1px solid white;
+  border-radius: 20px; /* Create a "pill" shape */
+  color: white;
+  font-size: 8px;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.select-button:hover {
+  background-color: orange;
+  color: white;
+}
+
+.h5 {
+  display: flex;
+  align-items: center; /* Aligns child items vertically in the center */
+  gap: 10px; /* Creates some space between the flex items */
+}
+
+.align-middle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dj-name-container {
+  display: flex;
+  align-items: flex-end; /* Aligns items to the top */
+  gap: 0px;
+}
+
+.dj-name {
+  align-self: flex-end; /* Aligns the DJ name to the bottom */
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 2px; /* Bump it up by 5px */
+}

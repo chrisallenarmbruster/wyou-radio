@@ -28,6 +28,7 @@
     "passport": "^0.6.0",
     "pg": "^8.11.3",
     "play-sound": "^1.1.6",
+    "react-icons": "^4.11.0",
     "react-redux": "^8.1.2",
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
