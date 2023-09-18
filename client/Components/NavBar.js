@@ -1,29 +1,56 @@
 import React, { Component } from "react"
 import Navbar from "react-bootstrap/Navbar"
 import { connect } from "react-redux"
+import { clearUser, showProfile } from "../store/userSlice"
+import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import NavDropdown from "react-bootstrap/NavDropdown"
 
-export class NavBar extends Component {
-  render() {
-    return (
-      <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="#/radio/djs" className="ms-3">
-          WYOU Radio
-        </Navbar.Brand>
+const NavBar = (props) => {
+  const navigate = useNavigate()
 
-        {this.props.user && (
-          <>
-            {/* <span className="text-light mx-3">{this.props.user?.email}</span>
-            <span className="text-light mx-3">
-              DJ: {this.props.currentDj?.djName}
-            </span>
-            <span className="text-light mx-3">
-              Station: {this.props.currentStation?.name}
-            </span> */}
-          </>
-        )}
-      </Navbar>
-    )
-  }
+  return (
+    <Navbar bg="dark" variant="dark">
+      <Navbar.Brand className="ms-3">WYOU Radio</Navbar.Brand>
+
+      {props.user && (
+        <>
+          <span title="Account">
+            <NavDropdown
+              title={
+                <span className="text-light" title="Account">
+                  <i className="bi bi-person-circle"></i>
+                </span>
+              }
+              id="basic-nav-dropdown"
+            >
+              <span title="User ID">
+                <NavDropdown.Item className="noselect disabled text-dark">
+                  {props.user?.email}
+                </NavDropdown.Item>
+              </span>
+              <NavDropdown.Divider />
+              <span title="Log Out">
+                <NavDropdown.Item
+                  href="/"
+                  onClick={() => {
+                    props.logout()
+                  }}
+                >
+                  Log Out
+                </NavDropdown.Item>
+              </span>
+              <span title="App Settings">
+                <NavDropdown.Item onClick={() => props.showProfile()}>
+                  Settings
+                </NavDropdown.Item>
+              </span>
+            </NavDropdown>
+          </span>
+        </>
+      )}
+    </Navbar>
+  )
 }
 
 const mapStateToProps = (state) => ({
@@ -32,4 +59,9 @@ const mapStateToProps = (state) => ({
   currentDj: state.djs.currentDj,
 })
 
-export default connect(mapStateToProps)(NavBar)
+const mapDispatchToProps = {
+  logout: () => clearUser(),
+  showProfile: () => showProfile(),
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar)

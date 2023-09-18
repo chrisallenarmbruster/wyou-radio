@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setUser } from "../store/userSlice"
+import { fetchProfile } from "../store/userSlice"
 import { setJamSessionId } from "../store/jamSessionSlice"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -21,6 +22,7 @@ export default function useAuth(code) {
         })
 
         dispatch(setUser(response.data))
+        dispatch(fetchProfile())
         dispatch(setJamSessionId())
         setAccessToken(response.data.accessToken)
         setRefreshToken(response.data.refreshToken)
