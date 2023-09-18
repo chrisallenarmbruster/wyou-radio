@@ -48,8 +48,8 @@ async function showRunner(
       nextTrackURI,
       tempSongName,
       tempBandName,
-      content.audioURI,
-      content.transcript
+      audioURI,
+      content.text
     );
 
     return audioURI;
@@ -80,8 +80,8 @@ async function showRunner(
       nextTrackURI,
       tempSongName,
       tempBandName,
-      content.audioURI,
-      content.transcript
+      audioURI,
+      content.text
     );
 
     return audioURI;
