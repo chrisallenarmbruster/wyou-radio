@@ -1,6 +1,6 @@
 const router = require("express").Router()
 const SpotifyWebApi = require("spotify-web-api-node")
-const { User } = require("../db")
+const { User, Profile } = require("../db")
 
 router.post("/refresh", (req, res) => {
   const refreshToken = req.body.refreshToken
@@ -65,12 +65,17 @@ router.post("/login", (req, res) => {
           req.session.refreshToken = body.refresh_token
           req.session.expiresIn = body.expires_in
           console.log(`${req.session.email} logged in successfully!`)
-          res.json({
-            email: req.session.email,
-            displayName: req.session.displayName,
-            accessToken: req.session.accessToken,
-            refreshToken: req.session.refreshToken,
-            expiresIn: req.session.expiresIn,
+          Profile.findOrCreate({
+            where: { userEmail: req.session.email },
+          }).then(([profile, created]) => {
+            res.json({
+              email: req.session.email,
+              displayName: req.session.displayName,
+              accessToken: req.session.accessToken,
+              refreshToken: req.session.refreshToken,
+              expiresIn: req.session.expiresIn,
+              profile,
+            })
           })
         })
     })

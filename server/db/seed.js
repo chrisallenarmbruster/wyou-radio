@@ -1,5 +1,6 @@
 const conn = require("./conn")
 const User = require("./User")
+const Profile = require("./Profile")
 
 const syncAndSeed = async () => {
   await conn.sync({ force: false })

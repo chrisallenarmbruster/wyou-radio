@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { connect } from "react-redux"
 import { fetchStations, fetchUserStations } from "../store/stationsSlice"
 import { fetchDjs } from "../store/djsSlice"
@@ -6,11 +6,14 @@ import useAuth from "./useAuth"
 import Radio from "./Radio"
 import Home from "./Home"
 import { Routes, Route } from "react-router-dom"
-import { Link } from "react-router-dom"
+import UserProfile from "./UserProfile"
+import { showProfile } from "../store/userSlice"
 
 const AppAuthWrapper = (props) => {
   const accessToken = useAuth(props.code)
+
   useEffect(() => {
+    console.log("AppAuthWrapper useEffect", accessToken)
     props.fetchDjs()
     if (accessToken) {
       props.fetchStations([
@@ -26,6 +29,7 @@ const AppAuthWrapper = (props) => {
 
   return (
     <>
+      <UserProfile />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="radio/*" element={<Radio />} />
@@ -36,12 +40,14 @@ const AppAuthWrapper = (props) => {
 
 const mapStateToProps = (state) => ({
   accessToken: state.user?.accessToken,
+  profile: state.user?.profile,
 })
 
 const mapDispatchToProps = (dispatch) => ({
   fetchStations: (stationIds) => dispatch(fetchStations(stationIds)),
   fetchUserStations: () => dispatch(fetchUserStations()),
   fetchDjs: () => dispatch(fetchDjs()),
+  showProfile: () => dispatch(showProfile()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppAuthWrapper)

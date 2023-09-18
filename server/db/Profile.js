@@ -1,5 +1,5 @@
-const conn = require("./conn");
-const { STRING, INTEGER, FLOAT } = conn.Sequelize;
+const conn = require("./conn")
+const { STRING, INTEGER, FLOAT } = conn.Sequelize
 
 const Profile = conn.define("profile", {
   userEmail: {
@@ -9,6 +9,10 @@ const Profile = conn.define("profile", {
       key: "email",
     },
     allowNull: false,
+  },
+  name: {
+    type: STRING,
+    allowNull: true,
   },
   zip: {
     type: INTEGER,
@@ -22,6 +26,6 @@ const Profile = conn.define("profile", {
     type: FLOAT,
     allowNull: true,
   },
-});
+})
 
-module.exports = Profile;
+module.exports = Profile
