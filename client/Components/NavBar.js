@@ -40,9 +40,9 @@ const NavBar = (props) => {
                   Log Out
                 </NavDropdown.Item>
               </span>
-              <span title="App Settings">
+              <span title="Profile">
                 <NavDropdown.Item onClick={() => props.showProfile()}>
-                  Settings
+                  Profile
                 </NavDropdown.Item>
               </span>
             </NavDropdown>
