@@ -61,13 +61,32 @@ export function DiscJockeys(props) {
     navigate(props.currentStation ? `/radio/player` : `/radio/stations`);
   }
 
+  // Inside your component
+  const [imageHeight, setImageHeight] = useState(null);
+  const imageRef = useRef(null);
+
+  useEffect(() => {
+    function handleResize() {
+      if (imageRef.current) {
+        setImageHeight(imageRef.current.clientHeight);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [imageRef]);
+
   return (
     <>
-      <div className="text-light">
-        <h1 className="h4 mt-3">Select Your Disc Jockey</h1>
+      <div className="title">
+        <h1>Select Your Disc Jockey</h1>
       </div>
       <Swiper
         ref={sliderRef}
+        style={{ height: imageHeight }}
         spaceBetween={20}
         slidesPerView={1}
         effect="fade"
@@ -75,31 +94,36 @@ export function DiscJockeys(props) {
         navigation
         loop
         modules={[EffectFade, Navigation]}
-        className="mySwiper"
         onSlideChange={() => {
           djAudioGreeting.pause();
         }}
       >
         {props.djs.map((dj, idx) => (
-          <SwiperSlide key={`dj-${idx}`} className="bg-dark text-light">
-            <Row className="bg-dark text-light p-3">
-              <Col sm={12} md={6} className="pl-5">
+          <SwiperSlide
+            key={`dj-${idx}`}
+            className="bg-dark text-light"
+            style={{ height: imageHeight }}
+          >
+            <Row style={{ height: imageHeight }}>
+              <Col xs={12} md={6} style={{ height: imageHeight }}>
                 <Image
+                  ref={imageRef}
                   src={dj.details?.image}
-                  fluid
                   className="rounded-image"
                 />
               </Col>
               <Col
-                sm={12}
+                xs={12}
                 md={6}
-                className="pr-5 text-start bg-dark mt-2 mt-md-0"
+                className="content-column"
+                style={{ height: imageHeight }}
               >
-                <h2 className="h5 dj-name-container">
-                  <span className="dj-name">{dj.djName}</span>
-                  <div className="buttons-container">
+                <Row className="content-row-header" style={{ height: 25 }}>
+                  <Col className="dj-name-container">
+                    <span className="dj-name">{dj.djName}</span>
+                  </Col>
+                  <Col className="buttons-container">
                     <FaMicrophone
-                      size={15}
                       className={`microphone-icon ${
                         isPlaying === true
                           ? "playing"
@@ -110,15 +134,16 @@ export function DiscJockeys(props) {
                       onClick={() => handleDjAudioGreeting(dj)}
                     />
                     <button
-                      className="select-button"
                       onClick={() => handleSelectDj(dj)}
+                      className="select-button"
                     >
                       Select
                     </button>
-                  </div>
-                </h2>
-
-                <p style={{ textAlign: "justify" }}>{dj.details?.context}</p>
+                  </Col>
+                </Row>
+                <Row className="content-container">
+                  <p>{dj.details?.context}</p>
+                </Row>
               </Col>
             </Row>
           </SwiperSlide>
