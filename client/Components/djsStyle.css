@@ -1,9 +1,255 @@
+@media (max-width: 375px) {
+  .title {
+    color: white;
+    font-size: 16px; /* smaller font-size for iPhone display */
+    font-weight: bold;
+  }
+
+  .mySwiper {
+    min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
+    overflow-y: auto;
+  }
+
+  .swiper-slide {
+    z-index: 1;
+  }
+
+  .image-container,
+  .content-container {
+    color: white;
+    margin: 3px; /* reduce margin for smaller display */
+    flex: 1;
+    text-align: justify;
+    overflow: auto;
+    z-index: 2;
+    background-color: #212529;
+  }
+
+  .content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    height: auto !important; /* reduce gap for smaller display */
+  }
+
+  .rounded-image {
+    border-radius: 8px; /* slight adjustment */
+  }
+
+  .content-row-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 3px; /* reduce margin for smaller display */
+    overflow: auto;
+    height: 25px;
+    background-color: #212529;
+  }
+
+  .dj-name-container {
+    display: flex;
+    max-width: fit-content;
+    margin: 0; /* reduce margin for smaller display */
+  }
+
+  .dj-name {
+    color: white;
+    font-size: 16px; /* smaller font-size for iPhone display */
+    font-style: bold;
+    min-width: fit-content;
+    margin: 0; /* reduce margin for smaller display */
+  }
+
+  /* BUTTON */
+  .buttons-container {
+    display: flex;
+    margin: 0; /* reduce margin for smaller display */
+    padding-left: 0;
+    align-items: center;
+  }
+
+  .select-button {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 15px; /* adjust radius */
+    color: white;
+    font-size: 10px; /* smaller font-size for iPhone display */
+    padding: 1px 3px;
+    cursor: pointer;
+    align-items: center;
+  }
+
+  .select-button:hover {
+    background-color: orange;
+    color: white;
+  }
+
+  /* MICROPHONE */
+  .microphone-icon {
+    margin: 0; /* reduce margin for smaller display */
+    cursor: pointer;
+    color: white;
+    size: 16px; /* smaller size for iPhone display */
+    align-items: center;
+  }
+
+  .microphone-icon:hover {
+    color: orange;
+  }
+
+  @keyframes blinking {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .microphone-icon.playing {
+    color: orange;
+    animation: blinking 1s infinite;
+  }
+
+  .microphone-icon.paused {
+    color: orange;
+    opacity: 0.5;
+  }
+}
+
+/* For small devices */
+@media (min-width: 375px) and (max-width: 767px) {
+  .title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .mySwiper {
+    min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
+    overflow-y: auto; /* Allow vertical scrolling if the content overflows */
+  }
+
+  .image-container,
+  .content-container {
+    color: white;
+    margin: 5px;
+    flex: 1;
+    text-align: justify;
+    overflow: auto;
+    background-color: #212529;
+  }
+
+  .content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  /* .image-container img {
+    min-height: 368px;
+    min-width: 368px;
+  } */
+
+  .rounded-image {
+    border-radius: 12px;
+  }
+
+  .content-row-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 5px;
+    background-color: #212529;
+  }
+
+  .dj-name-container {
+    display: flex;
+    max-width: fit-content;
+    margin: 0 0 0 0px;
+    padding-right: 0px;
+  }
+
+  .dj-name {
+    color: white;
+    font-size: 20px;
+    font-style: bold;
+    min-width: fit-content;
+    margin: 0 0 0 0px;
+  }
+
+  /* BUTTON */
+  .buttons-container {
+    display: flex;
+    margin: 0 0 0 0;
+    padding-left: 0px;
+    align-items: center;
+  }
+
+  .select-button {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    padding: 1px 3px;
+    cursor: pointer;
+    align-items: center;
+  }
+
+  .select-button:hover {
+    background-color: orange;
+    color: white;
+  }
+
+  /* MICROOHONE */
+  .microphone-icon {
+    margin: 0 0 0 0px;
+    cursor: pointer;
+    color: white;
+    size: 18px;
+    align-items: center;
+  }
+
+  .microphone-icon:hover {
+    color: orange;
+  }
+
+  @keyframes blinking {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .microphone-icon.playing {
+    color: orange;
+    animation: blinking 1s infinite;
+  }
+
+  .microphone-icon.paused {
+    color: orange;
+    opacity: 0.5;
+  }
+}
+
 /* For medium devices */
 @media (min-width: 768px) {
   .title {
     color: white;
     font-size: 20px;
     font-weight: bold;
+  }
+
+  .mySwiper {
+    min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
+    overflow-y: auto; /* Allow vertical scrolling if the content overflows */
   }
 
   .image-container,

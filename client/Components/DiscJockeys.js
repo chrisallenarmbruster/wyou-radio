@@ -97,14 +97,17 @@ export function DiscJockeys(props) {
         onSlideChange={() => {
           djAudioGreeting.pause();
         }}
+        className="mySwiper"
       >
         {props.djs.map((dj, idx) => (
           <SwiperSlide
             key={`dj-${idx}`}
-            className="bg-dark text-light"
+            className="bg-dark text-light swiper-slide"
             style={{ height: imageHeight }}
           >
-            <Row style={{ height: imageHeight }}>
+            <Row
+              style={{ height: imageHeight, display: "flex", flexWrap: "wrap" }}
+            >
               <Col xs={12} md={6} style={{ height: imageHeight }}>
                 <Image
                   ref={imageRef}
@@ -118,7 +121,7 @@ export function DiscJockeys(props) {
                 className="content-column"
                 style={{ height: imageHeight }}
               >
-                <Row className="content-row-header" style={{ height: 25 }}>
+                <Row className="content-row-header">
                   <Col className="dj-name-container">
                     <span className="dj-name">{dj.djName}</span>
                   </Col>
@@ -142,7 +145,7 @@ export function DiscJockeys(props) {
                   </Col>
                 </Row>
                 <Row className="content-container">
-                  <p>{dj.details?.context}</p>
+                  <p className="content">{dj.details?.context}</p>
                 </Row>
               </Col>
             </Row>
