@@ -6,12 +6,8 @@
   }
 
   .mySwiper {
-    min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
+    min-height: 100vh;
     overflow-y: auto;
-  }
-
-  .swiper-slide {
-    z-index: 1;
   }
 
   .image-container,
@@ -20,16 +16,21 @@
     margin: 3px; /* reduce margin for smaller display */
     flex: 1;
     text-align: justify;
-    overflow: auto;
-    z-index: 2;
+    overflow-y: auto;
     background-color: #212529;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    top: 10%; /* Adjust this value to position the buttons where you want them */
+    bottom: auto; /* This will ensure the buttons aren't positioned based on the bottom value */
   }
 
   .content-column {
     display: flex;
     flex-direction: column;
     gap: 3px;
-    height: auto !important; /* reduce gap for smaller display */
+    height: 812 !important; /* reduce gap for smaller display */
   }
 
   .rounded-image {
@@ -127,6 +128,7 @@
     font-size: 20px;
     font-weight: bold;
   }
+
   .mySwiper {
     min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
     overflow-y: auto; /* Allow vertical scrolling if the content overflows */

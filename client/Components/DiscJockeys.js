@@ -65,13 +65,13 @@ export function DiscJockeys(props) {
   const [imageHeight, setImageHeight] = useState(null);
   const imageRef = useRef(null);
 
-  useEffect(() => {
-    function handleResize() {
-      if (imageRef.current) {
-        setImageHeight(imageRef.current.clientHeight);
-      }
+  function handleResize() {
+    if (imageRef.current) {
+      setImageHeight(imageRef.current.clientHeight);
     }
+  }
 
+  useEffect(() => {
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -108,7 +108,12 @@ export function DiscJockeys(props) {
             <Row
               style={{ height: imageHeight, display: "flex", flexWrap: "wrap" }}
             >
-              <Col xs={12} md={6} style={{ height: imageHeight }}>
+              <Col
+                xs={12}
+                md={6}
+                style={{ height: imageHeight }}
+                className="image-container"
+              >
                 <Image
                   ref={imageRef}
                   src={dj.details?.image}
