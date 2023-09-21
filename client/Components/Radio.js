@@ -23,7 +23,7 @@ import { setCurrentDj } from "../store/djsSlice";
 import { showProfile } from "../store/userSlice";
 import { BsPause } from "react-icons/bs";
 import { BsPlay } from "react-icons/bs";
-import { RxTrackNext } from "react-icons/rx";
+import { BsFastForward } from "react-icons/bs";
 import { BsMicMute } from "react-icons/bs";
 import { BsMic } from "react-icons/bs";
 import { GoTools } from "react-icons/go";
@@ -163,7 +163,7 @@ export class Radio extends Component {
 
       let dataUri;
       //uncomment following line when ready to test with backend
-      dataUri = await axios.post("/api/content/next-content", payload);
+      //dataUri = await axios.post("/api/content/next-content", payload);
 
       const metadataLoadedPromise = new Promise((resolve) => {
         this.audio.addEventListener("loadedmetadata", () => {
@@ -467,27 +467,32 @@ export class Radio extends Component {
           <GoTools className="controlButton" onClick={this.toggleShowDevTools}>
             Dev Tools
           </GoTools>
-          <BsPlay
-            className={`controlButton ${
-              this.state.pauseButton ? "pauseIcon" : "playIcon"
-            }`}
-            onClick={() => this.player?.player?.togglePlay()}
-            style={{ color: "white", fontSize: "3em" }}
-            data-text={this.state.pauseButton ? "Pause" : "Play"}
-          />
-          <RxTrackNext
+          <div>
+            {(console.log("audio play ", this.audio?.paused))}
+            {this.audio?.paused ? (
+              <BsPlay
+                className="controlButton"
+                onClick={() => this.player?.player?.togglePlay()}
+              />
+            ) : (
+              <BsPause
+                className="controlButton"
+                onClick={() => this.player?.player?.togglePlay()}
+              />
+            )}
+          </div>
+          <BsFastForward
             className="controlButton"
             onClick={() => this.player?.player?.nextTrack()}
           >
             Next
-          </RxTrackNext>
-          <BsMicMute
-            className={`controlButton ${
-              this.state.isAllMuted ? "muteIcon" : "micIcon"
-            }`}
-            onClick={this.toggleMuteAll}
-          />
-
+          </BsFastForward>
+          {console.log("mic status ", this.state.isAllMuted)}
+          {this.state.isAllMuted ? (
+            <BsMicMute className="controlButton" onClick={this.toggleMuteAll} />
+          ) : (
+            <BsMic className="controlButton" onClick={this.toggleMuteAll} />
+          )}
           <Form.Range
             title="Master Volume"
             min={0}
@@ -498,7 +503,6 @@ export class Radio extends Component {
             style={{ width: "100px" }}
             onChange={(e) => this.masterVolumeHandler(e)}
           />
-
           {/* </span> */}
         </div>
         <div

@@ -2,24 +2,6 @@
   color: white;
   font-size: 16px; /* smaller font-size for iPhone display */
   font-weight: bold;
-}
-
-.playIcon:before {
-  color: white;
-  content: "\f04b";
-}
-
-.pauseIcon:before {
-  color: white;
-  content: "\f04c";
-}
-
-.micIcon::before {
-  color: white;
-  content: "\f131";
-}
-
-.muteIcon:before {
-  color: white;
-  content: "\f130";
+  width: 1.5em;
+  height: 1.5em;
 }
