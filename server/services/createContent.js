@@ -1,13 +1,5 @@
 const { fetchSpeech } = require("./audioService");
-const { ConversationChain } = require("langchain/chains");
-const { ChatOpenAI } = require("langchain/chat_models/openai");
-const {
-  ChatPromptTemplate,
-  HumanMessagePromptTemplate,
-  SystemMessagePromptTemplate,
-  MessagesPlaceholder,
-} = require("langchain/prompts");
-const { BufferMemory } = require("langchain/memory");
+
 const { saveDebugTrackerToFile } = require("./utl/debugTracker");
 const { songPrompts } = require("./utl/promptConstructor");
 const { djCharacters } = require("./djCharacters");
@@ -22,42 +14,17 @@ async function createContent(
   name,
   djId,
   station,
+  chain,
   weather
 ) {
   try {
     const { details } = await djCharacters(djId);
     const { voiceID } = details;
 
-    const chat = new ChatOpenAI({
-      openAIApiKey: process.env.OPENAI_API_KEY,
-      modelName: "gpt-4",
-      temperature: 1,
-    });
-
-    const template = `The following is a transcript of everything said by you, a disk jockey. The Human is prompting you on what to say and how.`;
-
-    const chatPrompt = ChatPromptTemplate.fromPromptMessages([
-      SystemMessagePromptTemplate.fromTemplate(template),
-      new MessagesPlaceholder("history"),
-      HumanMessagePromptTemplate.fromTemplate("{input}"),
-    ]);
-    const memory = new BufferMemory({
-      returnMessages: true,
-      memoryKey: "history",
-    });
-
-    const chain = new ConversationChain({
-      memory: memory,
-      prompt: chatPrompt,
-      llm: chat,
-      verbose: true,
-    });
-
     const debugTracker = [];
 
     //TODO: Need to set this up to create Weather, News, etc. Also need to construct chat history.
 
-    debugTracker.push({ memory: await memory.chatHistory.getMessages() });
     let result;
     if (weather) {
       result = await chain.call({
@@ -82,7 +49,7 @@ async function createContent(
 
     saveDebugTrackerToFile(debugTracker);
     const timestamp = Date.now();
-//TODO: maybe clean up the response taking out special characters before sending to the API
+    //TODO: maybe clean up the response taking out special characters before sending to the API
     const response = await fetchSpeech(
       voiceID,
       result.response,
