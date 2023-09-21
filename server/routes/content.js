@@ -5,11 +5,19 @@ const { User } = require("../db/index.js");
 const { djCharacters } = require("../services/djCharacters");
 const { showRunner } = require("../services/rundown/showRunner");
 const { reset } = require("../services/rundown/rundownUtlities/dbUtilities");
+const establishChat = require("../services/establishChat");
+let flag = false;
+let chain;
 
 router.post("/next-content", async (req, res) => {
+  const { curTrack, nextTrack, jamSessionId, djId, station } = req.body;
+  if (!flag) {
+    chain = await establishChat(jamSessionId);
+    flag = true;
+  }
+
   const userEmail = req.session.email;
   //TODO: Update to use djId from req.body
-  const { curTrack, nextTrack, jamSessionId, djId, station } = req.body;
 
   const user = await User.findOne({
     where: {
@@ -46,7 +54,8 @@ router.post("/next-content", async (req, res) => {
     jamSessionId,
     user.display_name,
     djId,
-    station
+    station,
+    chain
   );
   res.json(content);
 });

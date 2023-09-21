@@ -15,7 +15,8 @@ async function showRunner(
   jamSessionId,
   display_name,
   djId,
-  station
+  station,
+  chain
 ) {
   let content = {};
   let { show, nextTrackURI, tempSongName, tempBandName } =
@@ -36,7 +37,8 @@ async function showRunner(
       show.timeSlot,
       display_name,
       djId,
-      station
+      station,
+      chain
     );
 
     let audioURI = await convertFileToDataURI(content.fileName, "mp3");
@@ -69,6 +71,7 @@ async function showRunner(
       display_name,
       djId,
       station,
+      chain,
       `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`
     );
 
