@@ -5,3 +5,11 @@
   width: 1.5em;
   height: 1.5em;
 }
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
+  .order-row {
+    order: 2;
+  }
+  .order-controls {
+    order: 1;
+  }
+}

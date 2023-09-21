@@ -5,7 +5,7 @@ import SpotifyPlayer from "react-spotify-web-playback";
 import { spotifyApi as spotifyApiImports } from "react-spotify-web-playback";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
+import { Container, Row, Col } from "react-bootstrap";
 import DiscJockeys from "./DiscJockeys";
 import Player from "./Player";
 import Stations from "./Stations";
@@ -391,9 +391,10 @@ export class Radio extends Component {
 
     if (!this.props?.accessToken) return null;
     return (
-      <Container className="bg-dark d-flex flex-column py-3 ">
-        <div className="text-center">
-          <div
+      <Container className="bg-dark d-flex flex-column py-3">
+        <Row className="justify-content-center order-1">
+          <Col
+            xs="auto"
             className={`${
               this.props.currentDj && this.props.currentStation
                 ? "visible"
@@ -419,8 +420,11 @@ export class Radio extends Component {
             >
               Stream
             </Link>
-          </div>
-          <div style={{ height: "600px" }}>
+          </Col>
+        </Row>
+
+        <Row className="justify-content-center order-2">
+          <Col xs={12} style={{ height: "600px" }}>
             <div className="radio-panel-container">
               <div className="radio-panel">
                 <Routes>
@@ -453,10 +457,11 @@ export class Radio extends Component {
                 </Routes>
               </div>
             </div>
-          </div>
-        </div>
-        <div
-          className={`d-flex justify-content-center align-items-center flex-wrap ${
+          </Col>
+        </Row>
+
+        <Row
+          className={`justify-content-center align-items-center flex-wrap order-3 ${
             this.state.djOnAir ||
             !this.props.currentDj?.djName ||
             !this.props.currentStation?.name
@@ -464,11 +469,15 @@ export class Radio extends Component {
               : ""
           }`}
         >
-          <GoTools className="controlButton" onClick={this.toggleShowDevTools}>
-            Dev Tools
-          </GoTools>
-          <div>
-            {(console.log("audio play ", this.audio?.paused))}
+          <Col xs="auto">
+            <GoTools
+              className="controlButton"
+              onClick={this.toggleShowDevTools}
+            >
+              Dev Tools
+            </GoTools>
+          </Col>
+          <Col xs="auto">
             {this.audio?.paused ? (
               <BsPlay
                 className="controlButton"
@@ -480,44 +489,54 @@ export class Radio extends Component {
                 onClick={() => this.player?.player?.togglePlay()}
               />
             )}
-          </div>
-          <BsFastForward
-            className="controlButton"
-            onClick={() => this.player?.player?.nextTrack()}
-          >
-            Next
-          </BsFastForward>
-          {console.log("mic status ", this.state.isAllMuted)}
-          {this.state.isAllMuted ? (
-            <BsMicMute className="controlButton" onClick={this.toggleMuteAll} />
-          ) : (
-            <BsMic className="controlButton" onClick={this.toggleMuteAll} />
-          )}
-          <Form.Range
-            title="Master Volume"
-            min={0}
-            max={1}
-            step={0.1}
-            className="mx-3"
-            value={this.state.masterVolumeSetting}
-            style={{ width: "100px" }}
-            onChange={(e) => this.masterVolumeHandler(e)}
-          />
-          {/* </span> */}
-        </div>
-        <div
-          className={`d-flex justify-content-center align-items-center flex-wrap blink ${
+          </Col>
+          <Col xs="auto">
+            <BsFastForward
+              className="controlButton"
+              onClick={() => this.player?.player?.nextTrack()}
+            >
+              Next
+            </BsFastForward>
+          </Col>
+          <Col xs="auto">
+            {this.state.isAllMuted ? (
+              <BsMicMute
+                className="controlButton"
+                onClick={this.toggleMuteAll}
+              />
+            ) : (
+              <BsMic className="controlButton" onClick={this.toggleMuteAll} />
+            )}
+          </Col>
+          <Col xs="auto">
+            <Form.Range
+              title="Master Volume"
+              min={0}
+              max={1}
+              step={0.1}
+              className="mx-3"
+              value={this.state.masterVolumeSetting}
+              style={{ width: "100px" }}
+              onChange={(e) => this.masterVolumeHandler(e)}
+            />
+          </Col>
+        </Row>
+
+        <Row
+          className={`justify-content-center align-items-center flex-wrap blink order-4 ${
             this.state.djOnAir ? "" : "d-none"
           }`}
         >
-          <span className="text-danger h3">
-            &lt;&lt;&lt; DJ {this.props.currentDj?.djName} is On Air
-            &gt;&gt;&gt;
-          </span>
-        </div>
+          <Col xs="auto">
+            <span className="text-danger h3">
+              &lt;&lt;&lt; DJ {this.props.currentDj?.djName} is On Air
+              &gt;&gt;&gt;
+            </span>
+          </Col>
+        </Row>
 
-        <div className={this.state.showDevTools ? "" : "d-none"}>
-          <>
+        <Row className="justify-content-center order-5">
+          <Col xs={12} className={this.state.showDevTools ? "" : "d-none"}>
             <Container className="text-center mt-5">
               <Button className="m-1" onClick={() => this.audio?.play()}>
                 Play DJ Track
@@ -525,7 +544,6 @@ export class Radio extends Component {
               <Button className="m-1" onClick={() => this.audio?.pause()}>
                 Pause DJ Track
               </Button>
-
               <Button className="m-1" onClick={() => this.showQueue()}>
                 Queue
               </Button>
@@ -560,28 +578,25 @@ export class Radio extends Component {
                 Next
               </Button>
             </Container>
-          </>
-
-          <SpotifyPlayer
-            getPlayer={this.getPlayer}
-            token={this.props?.accessToken}
-            // uris={[this.props.currentStation?.uri] || []}
-            offset={0}
-            callback={this.spotifyEventHandler}
-            play={this.state.playSpotify}
-            // play={true}
-            initialVolume={0.5}
-            styles={{
-              activeColor: "#fff",
-              bgColor: "#333",
-              color: "#fff",
-              loaderColor: "#fff",
-              sliderColor: "#1cb954",
-              trackArtistColor: "#ccc",
-              trackNameColor: "#fff",
-            }}
-          />
-        </div>
+            <SpotifyPlayer
+              getPlayer={this.getPlayer}
+              token={this.props?.accessToken}
+              offset={0}
+              callback={this.spotifyEventHandler}
+              play={this.state.playSpotify}
+              initialVolume={0.5}
+              styles={{
+                activeColor: "#fff",
+                bgColor: "#333",
+                color: "#fff",
+                loaderColor: "#fff",
+                sliderColor: "#1cb954",
+                trackArtistColor: "#ccc",
+                trackNameColor: "#fff",
+              }}
+            />
+          </Col>
+        </Row>
       </Container>
     );
   }
