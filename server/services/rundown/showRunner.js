@@ -7,6 +7,7 @@ const {
 } = require("./rundownUtlities/rundownIndex");
 const { saveToDb, reset } = require("../rundown/rundownUtlities/dbUtilities");
 const currentWeather = require("../currentWeather");
+const historySegment = require("../historySegment");
 const { convertFileToDataURI } = require("../utl/convertMP3FileToDataURI");
 const { createContent } = require("../createContent");
 
@@ -72,7 +73,47 @@ async function showRunner(
       djId,
       station,
       chain,
-      `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`
+      `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`,
+      null
+    );
+
+    let audioURI = await convertFileToDataURI(content.fileName, "mp3");
+
+    await saveToDb(
+      jamSessionId,
+      currentRundownIndex + 2,
+      nextTrackURI,
+      tempSongName,
+      tempBandName,
+      audioURI,
+      content.text
+    );
+
+    return audioURI;
+  } else if (show.rundown[currentRundownIndex + 1].type === "history") {
+    let songAfterHistory = show.rundown[currentRundownIndex + 2];
+
+    await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2);
+
+    let history = await historySegment(
+      display_name,
+      songAfterHistory.songName,
+      songAfterHistory.bandName
+    );
+
+    content = await createContent(
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      display_name,
+      djId,
+      station,
+      chain,
+      null,
+      history
     );
 
     let audioURI = await convertFileToDataURI(content.fileName, "mp3");
