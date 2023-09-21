@@ -21,7 +21,13 @@ import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { setCurrentDj } from "../store/djsSlice";
 import { showProfile } from "../store/userSlice";
-
+import { BsPause } from "react-icons/bs";
+import { BsPlay } from "react-icons/bs";
+import { RxTrackNext } from "react-icons/rx";
+import { BsMicMute } from "react-icons/bs";
+import { BsMic } from "react-icons/bs";
+import { GoTools } from "react-icons/go";
+import "./radioStyle.css";
 export class Radio extends Component {
   constructor(props) {
     super(props);
@@ -458,29 +464,29 @@ export class Radio extends Component {
               : ""
           }`}
         >
-          <Button onClick={this.toggleShowDevTools} className="m-1">
+          <GoTools className="controlButton" onClick={this.toggleShowDevTools}>
             Dev Tools
-          </Button>
-          <Button
-            className="m-1 "
+          </GoTools>
+          <BsPlay
+            className={`controlButton ${
+              this.state.pauseButton ? "pauseIcon" : "playIcon"
+            }`}
             onClick={() => this.player?.player?.togglePlay()}
-          >
-            {this.state.pauseButton ? "Pause" : "Play"}
-          </Button>
-          <Button
-            className="m-1 "
+            style={{ color: "white", fontSize: "3em" }}
+            data-text={this.state.pauseButton ? "Pause" : "Play"}
+          />
+          <RxTrackNext
+            className="controlButton"
             onClick={() => this.player?.player?.nextTrack()}
           >
             Next
-          </Button>
-          <Button
-            className={`m-1  ${
-              this.state.isAllMuted ? "btn-danger" : "btn-primary"
+          </RxTrackNext>
+          <BsMicMute
+            className={`controlButton ${
+              this.state.isAllMuted ? "muteIcon" : "micIcon"
             }`}
             onClick={this.toggleMuteAll}
-          >
-            Mute
-          </Button>
+          />
 
           <Form.Range
             title="Master Volume"
