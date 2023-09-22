@@ -24,7 +24,7 @@
 }
 
 /* Change order for larger screens */
-@media (min-width: 376px) {
+@media (min-width: 369px) {
   .order-row-1 {
     order: 1;
   }
