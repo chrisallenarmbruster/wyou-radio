@@ -82,10 +82,13 @@ export function DiscJockeys(props) {
       <Row className="text-light title">
         <h1 className="h3 mt-3">Select Your Disc Jockey</h1>
       </Row>
-      <Row>
+      <Row
+        style={{ minHeight: '300px', maxHeight: '500px', overflow: 'hidden' }}
+      >
         <Swiper
           ref={sliderRef}
-          style={{ height: imageHeight, maxWidth: '100vw' }}
+          style={{ height: imageHeight }}
+          autoHeight={true}
           spaceBetween={20}
           slidesPerView={1}
           effect="fade"
@@ -102,7 +105,7 @@ export function DiscJockeys(props) {
             <SwiperSlide
               key={`dj-${idx}`}
               className="bg-dark text-light swiper-slide"
-              style={{ height: imageHeight, maxWidth: '100vw' }}
+              style={{ height: imageHeight }}
             >
               <Row
                 style={{

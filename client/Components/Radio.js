@@ -24,8 +24,8 @@ import { showProfile } from '../store/userSlice'
 import { BsPause } from 'react-icons/bs'
 import { BsPlay } from 'react-icons/bs'
 import { BsFastForward } from 'react-icons/bs'
-import { BsMicMute } from 'react-icons/bs'
-import { BsMic } from 'react-icons/bs'
+import { HiOutlineSpeakerXMark } from 'react-icons/hi2'
+import { HiOutlineSpeakerWave } from 'react-icons/hi2'
 import { GoTools } from 'react-icons/go'
 import './radioStyle.css'
 export class Radio extends Component {
@@ -393,9 +393,11 @@ export class Radio extends Component {
     return (
       <Col
         style={{
-          maxWidth: '100vw',
+          // maxWidth: '95vw',
+          // maxHeight: `${window.innerHeight}px`,
           display: 'flex',
           flexDirection: 'column',
+          maxHeight: '100vh',
         }}
       >
         <Row className="order-row order-row-1 justify-content-center">
@@ -427,11 +429,7 @@ export class Radio extends Component {
         </Row>
 
         <Row className="order-row order-row-2 justify-content-center">
-          <Col
-            className="radio-panel-container"
-            xs={12}
-            style={{ height: '600px' }}
-          >
+          <Col className="radio-panel-container" xs={12}>
             <Row className="radio-panel">
               <Routes>
                 <Route
@@ -478,6 +476,7 @@ export class Radio extends Component {
             <GoTools
               className="controlButton"
               onClick={this.toggleShowDevTools}
+              style={{ height: '20px' }}
             >
               Dev Tools
             </GoTools>
@@ -487,11 +486,13 @@ export class Radio extends Component {
               <BsPlay
                 className="controlButton"
                 onClick={() => this.player?.player?.togglePlay()}
+                style={{ height: '20px' }}
               />
             ) : (
               <BsPause
                 className="controlButton"
                 onClick={() => this.player?.player?.togglePlay()}
+                style={{ height: '20px' }}
               />
             )}
           </Col>
@@ -499,18 +500,24 @@ export class Radio extends Component {
             <BsFastForward
               className="controlButton"
               onClick={() => this.player?.player?.nextTrack()}
+              style={{ height: '20px' }}
             >
               Next
             </BsFastForward>
           </Col>
           <Col xs="auto">
             {this.state.isAllMuted ? (
-              <BsMicMute
+              <HiOutlineSpeakerXMark
                 className="controlButton"
                 onClick={this.toggleMuteAll}
+                style={{ height: '20px' }}
               />
             ) : (
-              <BsMic className="controlButton" onClick={this.toggleMuteAll} />
+              <HiOutlineSpeakerWave
+                className="controlButton"
+                onClick={this.toggleMuteAll}
+                style={{ height: '20px' }}
+              />
             )}
           </Col>
           <Col xs="auto">
@@ -521,7 +528,7 @@ export class Radio extends Component {
               step={0.1}
               className="mx-3"
               value={this.state.masterVolumeSetting}
-              style={{ width: '100px' }}
+              style={{ width: '100px', height: '20px' }}
               onChange={(e) => this.masterVolumeHandler(e)}
             />
           </Col>
@@ -531,6 +538,7 @@ export class Radio extends Component {
           className={`order-row order-row-4 justify-content-center align-items-center blink${
             this.state.djOnAir ? '' : 'd-none'
           }`}
+          style={{ paddingTop: '10px' }}
         >
           <Col xs="auto">
             <span className="text-danger h3">

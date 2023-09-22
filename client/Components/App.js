@@ -1,20 +1,22 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import SpotifyLogin from "./SpotifyLogin";
-import { Container, Col, Row } from "react-bootstrap";
-import NavBar from "./NavBar";
-import AppAuthWrapper from "./AppAuthWrapper";
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import SpotifyLogin from './SpotifyLogin'
+import { Container, Col, Row } from 'react-bootstrap'
+import NavBar from './NavBar'
+import AppAuthWrapper from './AppAuthWrapper'
 
 export class App extends Component {
   render() {
-    const code = new URLSearchParams(window.location.search).get("code");
+    const code = new URLSearchParams(window.location.search).get('code')
     return (
-      <Container style={{ display: "flex", maxWidth: "100vw" }}>
+      <Container
+        style={{ display: 'flex', maxWidth: '95vw', maxHeight: '95vw' }}
+      >
         <Col
           style={{
-            maxWidth: "100vw",
-            display: "flex",
-            flexDirection: "column",
+            maxWidth: '95vw',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <Row>
@@ -29,12 +31,12 @@ export class App extends Component {
           </Row>
         </Col>
       </Container>
-    );
+    )
   }
 }
 
 const mapStateToProps = (state) => ({
   user: state.user,
-});
+})
 
-export default App;
+export default App

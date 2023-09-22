@@ -17,7 +17,12 @@ const Player = (props) => {
           <Row>
             <Image
               src={props.dj.details?.image}
-              style={{ maxWidth: '100%', width: '100%' }}
+              style={{
+                maxHeight: '700px',
+                maxWidth: '100%',
+                width: '100%',
+                objectFit: 'contain',
+              }}
             />
           </Row>
           <Row style={{ textAlign: 'center' }}>
@@ -31,7 +36,12 @@ const Player = (props) => {
           <Row>
             <Image
               src={props.track?.image}
-              style={{ maxWidth: '100%', width: '100%' }}
+              style={{
+                maxHeight: '700px',
+                maxWidth: '100%',
+                width: '100%',
+                objectFit: 'contain',
+              }}
             />
           </Row>
           <Row style={{ textAlign: 'center' }}>

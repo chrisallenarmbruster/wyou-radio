@@ -47,12 +47,14 @@ export function Stations(props) {
   return (
     <Col>
       <Row className="text-light title">
-          <h1 className="h3 mt-3">Select Your Music</h1>
+        <h1 className="h3 mt-3">Select Your Music</h1>
       </Row>
       <Row>
-        <div onWheel={handleMouseScroll}>
+        <div
+          style={{ minHeight: '300px', maxHeight: '500px', overflow: 'hidden' }}
+          onWheel={handleMouseScroll}
+        >
           <Swiper
-            style={{ display: 'flex', maxWidth: '100vw' }}
             ref={sliderRef}
             effect={'coverflow'}
             autoHeight={true}
