@@ -15,7 +15,8 @@ async function createContent(
   djId,
   station,
   chain,
-  weather
+  weather,
+  history
 ) {
   try {
     const { details } = await djCharacters(djId);
@@ -29,6 +30,10 @@ async function createContent(
     if (weather) {
       result = await chain.call({
         input: weather,
+      });
+    } else if (history) {
+      result = await chain.call({
+        input: history,
       });
     } else {
       let input = await songPrompts(
