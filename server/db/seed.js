@@ -1,13 +1,13 @@
-const conn = require("./conn")
-const User = require("./User")
-const Profile = require("./Profile")
+const conn = require('./conn')
+const User = require('./User')
+const Profile = require('./Profile')
 
 const syncAndSeed = async () => {
-  await conn.sync({ force: false })
+  await conn.sync({ force: false, alter: true })
   try {
     // put seed operations here
   } catch (err) {
-    console.log("error seeding db")
+    console.log('error seeding db')
   }
 }
 
