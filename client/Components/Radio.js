@@ -392,13 +392,13 @@ export class Radio extends Component {
     if (!this.props?.accessToken) return null
     return (
       <Col
-        style={{
-          // maxWidth: '95vw',
-          // maxHeight: `${window.innerHeight}px`,
-          display: 'flex',
-          flexDirection: 'column',
-          maxHeight: '100vh',
-        }}
+      // style={{
+      //   // maxWidth: '95vw',
+      //   // maxHeight: `${window.innerHeight}px`,
+      //   display: 'flex',
+      //   flexDirection: 'column',
+      //   maxHeight: '100vh',
+      // }}
       >
         <Row className="order-row order-row-1 justify-content-center">
           <Col
@@ -427,7 +427,6 @@ export class Radio extends Component {
             </Link>
           </Col>
         </Row>
-
         <Row className="order-row order-row-2 justify-content-center">
           <Col className="radio-panel-container" xs={12}>
             <Row className="radio-panel">
@@ -462,7 +461,6 @@ export class Radio extends Component {
             </Row>
           </Col>
         </Row>
-
         <Row
           className={`order-row order-row-3 justify-content-center align-items-center ${
             this.state.djOnAir ||
@@ -482,7 +480,7 @@ export class Radio extends Component {
             </GoTools>
           </Col>
           <Col xs="auto">
-            {this.audio?.paused ? (
+            {this.state?.pauseButton ? (
               <BsPlay
                 className="controlButton"
                 onClick={() => this.player?.player?.togglePlay()}
@@ -528,26 +526,22 @@ export class Radio extends Component {
               step={0.1}
               className="mx-3"
               value={this.state.masterVolumeSetting}
-              style={{ width: '100px', height: '20px' }}
+              style={{ width: '100px', height: '10px' }}
               onChange={(e) => this.masterVolumeHandler(e)}
             />
           </Col>
         </Row>
-
-        <Row
-          className={`order-row order-row-4 justify-content-center align-items-center blink${
-            this.state.djOnAir ? '' : 'd-none'
-          }`}
-          style={{ paddingTop: '10px' }}
-        >
-          <Col xs="auto">
-            <span className="text-danger h3">
-              &lt;&lt;&lt; DJ {this.props.currentDj?.djName} is On Air
-              &gt;&gt;&gt;
-            </span>
-          </Col>
-        </Row>
-
+        {/* {(this.state.djOnAir = true)} */}
+        {this.state.djOnAir && (
+          <Row
+            className="order-row order-row-4 justify-content-center align-items-center blink"
+            style={{ paddingTop: '10px' }}
+          >
+            <Col xs="auto">
+              <img src="/live.png" alt="Live" style={{ maxWidth: '100px' }} />
+            </Col>
+          </Row>
+        )}
         <Row className="order-row order-row-5 justify-content-center">
           <Col xs={12} className={this.state.showDevTools ? '' : 'd-none'}>
             <Container className="text-center mt-5">
