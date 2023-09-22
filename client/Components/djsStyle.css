@@ -1,8 +1,10 @@
+
 @media (max-width: 375px) {
   .title {
     color: white;
     font-size: 16px; /* smaller font-size for iPhone display */
     font-weight: bold;
+    text-align: center;
   }
 
   .mySwiper {
@@ -126,8 +128,9 @@
 @media (min-width: 375px) and (max-width: 767px) {
   .title {
     color: white;
-    font-size: 20px;
+    font-size: 20px; /* smaller font-size for iPhone display */
     font-weight: bold;
+    text-align: center;
   }
 
   .mySwiper {
@@ -246,10 +249,10 @@
 @media (min-width: 768px) {
   .title {
     color: white;
-    font-size: 20px;
+    font-size: 20px; /* smaller font-size for iPhone display */
     font-weight: bold;
+    text-align: center;
   }
-
   .mySwiper {
     min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
     overflow-y: auto; /* Allow vertical scrolling if the content overflows */

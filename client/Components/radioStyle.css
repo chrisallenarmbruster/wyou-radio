@@ -3,7 +3,18 @@
   font-size: 16px; /* smaller font-size for iPhone display */
   font-weight: bold;
   width: 1.5em;
-  height: 1.5em;
+  height: 20em;
+}
+/* .nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5em;
+  padding: 0.5em;
+  height: 5em;
+} */
+.link {
+  margin-right: 25px;
 }
 
 /* Default order for mobile views */
