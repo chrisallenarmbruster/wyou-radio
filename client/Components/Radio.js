@@ -391,8 +391,14 @@ export class Radio extends Component {
 
     if (!this.props?.accessToken) return null;
     return (
-      <Container className="bg-dark d-flex flex-column py-3">
-        <Row className="justify-content-center order-1">
+      <Col
+        style={{
+          maxWidth: "100vw",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Row className="order-row order-row-1 justify-content-center">
           <Col
             xs="auto"
             className={`${
@@ -401,18 +407,15 @@ export class Radio extends Component {
                 : "invisible"
             }`}
           >
-            <Link to="djs" className="text-light text-decoration-none mx-3">
+            <Link to="djs" className="text-light">
               Disc Jockey
             </Link>
-            <Link
-              to="stations"
-              className="text-light text-decoration-none mx-3"
-            >
+            <Link to="stations" className="text-light">
               Station
             </Link>
             <Link
               to="player"
-              className={`text-light text-decoration-none mx-3 ${
+              className={`text-light ${
                 this.props.currentDj && this.props.currentStation
                   ? ""
                   : "pe-none"
@@ -423,7 +426,7 @@ export class Radio extends Component {
           </Col>
         </Row>
 
-        <Row className="justify-content-center order-2">
+        <Row className="order-row order-row-2 justify-content-center">
           <Col xs={12} style={{ height: "600px" }}>
             <div className="radio-panel-container">
               <div className="radio-panel">
@@ -461,13 +464,13 @@ export class Radio extends Component {
         </Row>
 
         <Row
-          className={`justify-content-center align-items-center flex-wrap order-3 ${
+          className={`order-row order-row-3 justify-content-center align-items-center ${
             this.state.djOnAir ||
             !this.props.currentDj?.djName ||
             !this.props.currentStation?.name
               ? "d-none"
               : ""
-          }`}
+          } `}
         >
           <Col xs="auto">
             <GoTools
@@ -523,7 +526,7 @@ export class Radio extends Component {
         </Row>
 
         <Row
-          className={`justify-content-center align-items-center flex-wrap blink order-4 ${
+          className={`order-row order-row-4 justify-content-center align-items-center blink${
             this.state.djOnAir ? "" : "d-none"
           }`}
         >
@@ -535,7 +538,7 @@ export class Radio extends Component {
           </Col>
         </Row>
 
-        <Row className="justify-content-center order-5">
+        <Row className="order-row order-row-5 justify-content-center">
           <Col xs={12} className={this.state.showDevTools ? "" : "d-none"}>
             <Container className="text-center mt-5">
               <Button className="m-1" onClick={() => this.audio?.play()}>
@@ -597,7 +600,7 @@ export class Radio extends Component {
             />
           </Col>
         </Row>
-      </Container>
+      </Col>
     );
   }
 }

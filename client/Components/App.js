@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import SpotifyLogin from "./SpotifyLogin";
-import Container from "react-bootstrap/Container";
+import { Container, Col, Row } from "react-bootstrap";
 import NavBar from "./NavBar";
 import AppAuthWrapper from "./AppAuthWrapper";
 
@@ -9,19 +9,26 @@ export class App extends Component {
   render() {
     const code = new URLSearchParams(window.location.search).get("code");
     return (
-      <>
-        <Container
-          class="container"
-          style={{ maxWidth: "1116px", width: "100%" }}
+      <Container style={{ display: "flex", maxWidth: "100vw" }}>
+        <Col
+          style={{
+            maxWidth: "100vw",
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
-          <NavBar />
-          {code || this.props.user?.details?.accessToken ? (
-            <AppAuthWrapper code={code || null} />
-          ) : (
-            <SpotifyLogin />
-          )}
-        </Container>
-      </>
+          <Row>
+            <NavBar />
+          </Row>
+          <Row>
+            {code || this.props.user?.details?.accessToken ? (
+              <AppAuthWrapper code={code || null} />
+            ) : (
+              <SpotifyLogin />
+            )}
+          </Row>
+        </Col>
+      </Container>
     );
   }
 }

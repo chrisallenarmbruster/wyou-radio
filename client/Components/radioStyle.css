@@ -5,11 +5,39 @@
   width: 1.5em;
   height: 1.5em;
 }
-@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
-  .order-row {
-    order: 2;
-  }
-  .order-controls {
+
+/* Default order for mobile views */
+.order-row-1 {
+  order: 2;
+}
+.order-row-2 {
+  order: 3;
+}
+.order-row-3 {
+  order: 1;
+}
+.order-row-4 {
+  order: 4;
+}
+.order-row-5 {
+  order: 5;
+}
+
+/* Change order for larger screens */
+@media (min-width: 376px) {
+  .order-row-1 {
     order: 1;
+  }
+  .order-row-2 {
+    order: 2;
+  } /* Example of changing the order */
+  .order-row-3 {
+    order: 3;
+  } /* Example of changing the order */
+  .order-row-4 {
+    order: 4;
+  }
+  .order-row-5 {
+    order: 5;
   }
 }

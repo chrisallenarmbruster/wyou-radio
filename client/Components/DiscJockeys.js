@@ -2,10 +2,9 @@ import React, { useRef, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { setCurrentDj } from "../store/djsSlice";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Col, Row, Image, Button } from "react-bootstrap";
+import { Container, Col, Row, Image, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaMicrophone } from "react-icons/fa";
-
 
 import "swiper/css";
 import "swiper/css/effect-fade";
@@ -80,84 +79,94 @@ export function DiscJockeys(props) {
   }, [imageRef]);
 
   return (
-    <>
-      <div className="title">
-        <h1>Select Your Disc Jockey</h1>
-      </div>
-      <Swiper
-        ref={sliderRef}
-        style={{ height: imageHeight }}
-        spaceBetween={20}
-        slidesPerView={1}
-        effect="fade"
-        centeredSlides
-        navigation
-        loop
-        modules={[EffectFade, Navigation]}
-        onSlideChange={() => {
-          djAudioGreeting.pause();
-        }}
-        className="mySwiper"
-      >
-        {props.djs.map((dj, idx) => (
-          <SwiperSlide
-            key={`dj-${idx}`}
-            className="bg-dark text-light swiper-slide"
-            style={{ height: imageHeight }}
+    <Container style={{ display: "flex", maxWidth: "100vw" }}>
+      <Col>
+        <Row>
+          <div className="title">
+            <h1>Select Your Disc Jockey</h1>
+          </div>
+        </Row>
+        <Row>
+          <Swiper
+            ref={sliderRef}
+            style={{ height: imageHeight, maxWidth: "100vw" }}
+            spaceBetween={20}
+            slidesPerView={1}
+            effect="fade"
+            centeredSlides
+            navigation
+            loop
+            modules={[EffectFade, Navigation]}
+            onSlideChange={() => {
+              djAudioGreeting.pause();
+            }}
+            className="mySwiper"
           >
-            <Row
-              style={{ height: imageHeight, display: "flex", flexWrap: "wrap" }}
-            >
-              <Col
-                xs={12}
-                md={6}
-                style={{ height: imageHeight }}
-                className="image-container"
+            {props.djs.map((dj, idx) => (
+              <SwiperSlide
+                key={`dj-${idx}`}
+                className="bg-dark text-light swiper-slide"
+                style={{ height: imageHeight, maxWidth: "100vw" }}
               >
-                <Image
-                  ref={imageRef}
-                  src={dj.details?.image}
-                  className="rounded-image"
-                />
-              </Col>
-              <Col
-                xs={12}
-                md={6}
-                className="content-column"
-                style={{ height: imageHeight }}
-              >
-                <Row className="content-row-header">
-                  <Col className="dj-name-container">
-                    <span className="dj-name">{dj.djName}</span>
-                  </Col>
-                  <Col className="buttons-container">
-                    <FaMicrophone
-                      className={`microphone-icon ${
-                        isPlaying === true
-                          ? "playing"
-                          : isPlaying === "paused"
-                          ? "paused"
-                          : ""
-                      }`}
-                      onClick={() => handleDjAudioGreeting(dj)}
+                <Row
+                  style={{
+                    height: imageHeight,
+                    display: "flex",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Col
+                    xs={12}
+                    md={6}
+                    style={{ height: imageHeight }}
+                    className="image-container"
+                  >
+                    <Image
+                      ref={imageRef}
+                      src={dj.details?.image}
+                      className="rounded-image"
                     />
-                    <button
-                      onClick={() => handleSelectDj(dj)}
-                      className="select-button"
-                    >
-                      Select
-                    </button>
+                  </Col>
+                  <Col
+                    xs={12}
+                    md={6}
+                    className="content-column"
+                    style={{ height: imageHeight }}
+                  >
+                    <Row className="content-row-header">
+                      <Col className="dj-name-container">
+                        <span className="dj-name">{dj.djName}</span>
+                      </Col>
+                      <Col className="buttons-container">
+                        <FaMicrophone
+                          className={`microphone-icon ${
+                            isPlaying === true
+                              ? "playing"
+                              : isPlaying === "paused"
+                              ? "paused"
+                              : ""
+                          }`}
+                          onClick={() => handleDjAudioGreeting(dj)}
+                        />
+                        <button
+                          onClick={() => handleSelectDj(dj)}
+                          className="select-button"
+                        >
+                          Select
+                        </button>
+                      </Col>
+                    </Row>
+                    <Row className="content-container">
+                      <p className="content">{dj.details?.context}</p>
+                    </Row>
                   </Col>
                 </Row>
-                <Row className="content-container">
-                  <p className="content">{dj.details?.context}</p>
-                </Row>
-              </Col>
-            </Row>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </Row>
+      </Col>
+    </Container>
   );
 }
 
