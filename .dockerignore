@@ -5,6 +5,7 @@
  .git
  .gitignore
  .dockerignore
+ dockerBuild.js
  Dockerfile
  Dockerfile_bu
  docker-compose.yml

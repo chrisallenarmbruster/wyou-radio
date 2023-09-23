@@ -1,11 +1,16 @@
-const router = require("express").Router()
-const SpotifyWebApi = require("spotify-web-api-node")
-const { User, Profile } = require("../db")
+const router = require('express').Router()
+const SpotifyWebApi = require('spotify-web-api-node')
+const { User, Profile } = require('../db')
 
-router.post("/refresh", (req, res) => {
+const spotifyRedirect =
+  process.env.NODE_ENV === 'production'
+    ? process.env.SPOTIFY_REDIRECT_URI_PROD
+    : process.env.SPOTIFY_REDIRECT_URI_DEV
+
+router.post('/refresh', (req, res) => {
   const refreshToken = req.body.refreshToken
   const spotifyApi = new SpotifyWebApi({
-    redirectUri: process.env.SPOTIFY_REDIRECT_URI,
+    redirectUri: spotifyRedirect,
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     refreshToken,
@@ -30,10 +35,11 @@ router.post("/refresh", (req, res) => {
     })
 })
 
-router.post("/login", (req, res) => {
+router.post('/login', (req, res) => {
+  console.log(process.env.NODE_ENV, spotifyRedirect)
   const code = req.body.code
   const spotifyApi = new SpotifyWebApi({
-    redirectUri: process.env.SPOTIFY_REDIRECT_URI,
+    redirectUri: spotifyRedirect,
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   })
@@ -57,7 +63,7 @@ router.post("/login", (req, res) => {
             req.session.displayName = body.display_name
           },
           function (err) {
-            console.log("Something went wrong!", err)
+            console.log('Something went wrong!', err)
           }
         )
         .then(() => {
