@@ -6,15 +6,14 @@ import { EffectCoverflow, Pagination } from 'swiper/modules'
 import { setCurrentStation } from '../store/stationsSlice'
 import { clearCurrentTrack } from '../store/playerSlice'
 import { useNavigate } from 'react-router-dom'
-import { Container, Col, Row, Image, Button } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/effect-coverflow'
 import 'swiper/css/pagination'
-import './stationsStyle.css'
 import 'swiper/swiper-bundle.css'
 
-// SwiperCore.use([EffectCoverflow, Pagination])
+import './stationsStyle.css'
 
 export function Stations(props) {
   const {
@@ -24,22 +23,6 @@ export function Stations(props) {
     pauseSpotify,
     clearCurrentTrack,
   } = props
-
-  const [swiperHeight, setSwiperHeight] = useState(400)
-  const wrapperRef = useRef()
-
-  useEffect(() => {
-    setTimeout(() => {
-      // sliderRef.current.swiper.slideTo(1)
-    }, 100)
-  }, [])
-
-  // useEffect(() => {
-  //   // Calculate the height of the wrapper div and set it to state
-  //   if (wrapperRef.current) {
-  //     setSwiperHeight(wrapperRef.current.clientHeight)
-  //   }
-  // }, [])
 
   const navigate = useNavigate()
 
@@ -55,91 +38,78 @@ export function Stations(props) {
   }
 
   return (
-    <Col>
-      <Row className="text-light title">
+    <Col className="text-center">
+      <Row className="text-light title2 justify-content-center">
         <h1 className="h3 mt-3">Select Your Music</h1>
       </Row>
-      <Row
-      // style={{
-      //   maxHeight: '400px',
-      //   maxWidth: '100%',
-      //   width: '100%',
-      //   objectFit: 'contain',
-      // }}
-      >
+      <Row>
         <Col
           onWheel={handleMouseScroll}
           style={{
             overflow: 'hidden',
-            maxHeight: '550px',
             objectFit: 'contain',
-            justifyContent: 'center',
           }}
         >
-          <Row style={{ maxHeight: ' 400px' }}>
-            <Swiper
-              ref={sliderRef}
-              className="mySwiper2"
-              modules={[EffectCoverflow, Pagination]}
-              effect={'coverflow'}
-              autoHeight={true}
-              grabCursor={true}
-              centeredSlides={true}
-              slidesPerView={4}
-              speed={600}
-              coverflowEffect={{
-                rotate: 20, //50
-                stretch: -10, //-75
-                depth: 300, //300
-                modifier: 1.5, //1
-                slideShadows: true,
-              }}
-              loop={true}
-              loopedSlides={2}
-              pagination={{
-                type: 'bullets',
-                clickable: true,
-              }}
-              // scrollbar={{ draggable: true }}
-              // onSlideChange={(swiperCore) => {
-              //   const { activeIndex, snapIndex, previousIndex, realIndex } =
-              //     swiperCore
-              //   console.log({
-              //     activeIndex,
-              //     snapIndex,
-              //     previousIndex,
-              //     realIndex,
-              //   })
-              // }}
-              style={{ maxHeight: '400px' }}
-            >
-              {/* <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-        </SwiperSlide> */}
-              {stations.length > 0 ? (
-                stations.map((station) => (
-                  <SwiperSlide key={station.id}>
-                    <img
-                      src={station.images[0].url}
-                      onClick={() => {
-                        // pauseSpotify()
-                        clearCurrentTrack()
-                        setCurrentStation(station)
-                        playContext({ uri: station.uri })
-                        navigate('/radio/player')
-                      }}
-                      style={{
-                        maxHeight: '400px',
-                        maxWidth: '400px',
-                      }}
-                    />
-                  </SwiperSlide>
-                ))
-              ) : (
-                <div>No stations available</div>
-              )}
-            </Swiper>
-          </Row>
+          <Swiper
+            ref={sliderRef}
+            className="mySwiper2"
+            modules={[EffectCoverflow, Pagination]}
+            effect={'coverflow'}
+            autoHeight={true}
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView={4}
+            speed={600}
+            coverflowEffect={{
+              rotate: 20, //50
+              stretch: -10, //-75
+              depth: 300, //300
+              modifier: 1.5, //1
+              slideShadows: true,
+            }}
+            loop={true}
+            loopedSlides={2}
+            pagination={{
+              type: 'bullets',
+              clickable: true,
+            }}
+            breakpoints={{
+              337: {
+                slidesPerView: 1,
+              },
+              768: {
+                slidesPerView: 3,
+              },
+              977: {
+                slidesPerView: 4,
+              },
+            }}
+          >
+            {stations.length > 0 ? (
+              stations.map((station) => (
+                <SwiperSlide key={station.id}>
+                  <img
+                    src={station.images[0].url}
+                    onClick={() => {
+                      // pauseSpotify()
+                      clearCurrentTrack()
+                      setCurrentStation(station)
+                      playContext({ uri: station.uri })
+                      navigate('/radio/player')
+                    }}
+                    style={{
+                      float: 'left',
+                      width: '100%',
+                      // height: '100%',
+                      imageFit: 'cover',
+                    }}
+                  />
+                </SwiperSlide>
+              ))
+            ) : (
+              <div>No stations available</div>
+            )}
+          </Swiper>
         </Col>
       </Row>
     </Col>

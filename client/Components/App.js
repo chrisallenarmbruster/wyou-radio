@@ -14,7 +14,7 @@ export class App extends Component {
       >
         <Col
           style={{
-            maxWidth: '95vw',
+            maxWidth: '100%',
             display: 'flex',
             flexDirection: 'column',
           }}

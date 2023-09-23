@@ -15,10 +15,9 @@ const Player = (props) => {
       <Row
         className="g-5 bg-dark text-light"
         style={{
-          maxHeight: '500px',
-          maxWidth: '100%',
-          width: '100%',
+          overflow: 'hidden',
           objectFit: 'contain',
+          justifyContent: 'center',
         }}
       >
         <Col sm={12} md={6} className="px-5">

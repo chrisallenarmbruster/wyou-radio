@@ -1,13 +1,24 @@
 .controlButton {
   color: white;
-  font-size: 16px; /* smaller font-size for iPhone display */
+  font-size: 12px; /* smaller font-size for iPhone display */
   font-weight: bold;
   width: 1.5em;
-  height: 20em;
+  height: 16em;
 }
 
 .link {
   margin-right: 25px;
+}
+
+.volumn-slider {
+  width: 50px;
+  height: 1px;
+}
+.volumn-slider::-webkit-slider-thumb {
+  background-color: rgb(126, 48, 48);
+}
+.volumn-slider::-webkit-slider-runnable-track {
+  height: 3px;
 }
 
 /* Default order for mobile views */
@@ -31,6 +42,17 @@
 
 /* Change order for larger screens */
 @media (min-width: 767px) {
+  .volumn-slider {
+    width: 100px;
+    height: 2px;
+  }
+  .volumn-slider::-webkit-slider-thumb {
+    background-color: rgb(126, 48, 48);
+  }
+  .volumn-slider::-webkit-slider-runnable-track {
+    height: 5px;
+  }
+
   .order-row-1 {
     order: 1;
   }

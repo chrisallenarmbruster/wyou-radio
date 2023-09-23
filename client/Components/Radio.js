@@ -395,8 +395,8 @@ export class Radio extends Component {
         style={{
           // maxWidth: '95vw',
           maxHeight: `${window.innerHeight}px`,
-          // display: 'flex',
-          // flexDirection: 'column',
+          display: 'flex',
+          flexDirection: 'column',
           // maxHeight: '100vh',
         }}
       >
@@ -524,9 +524,9 @@ export class Radio extends Component {
               min={0}
               max={1}
               step={0.1}
-              className="mx-3"
+              className="mx-3 volumn-slider"
               value={this.state.masterVolumeSetting}
-              style={{ width: '100px', height: '10px' }}
+              // style={{ width: '100px', height: '10px' }}
               onChange={(e) => this.masterVolumeHandler(e)}
             />
           </Col>

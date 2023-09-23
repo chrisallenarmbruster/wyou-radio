@@ -275,57 +275,74 @@
   }
 }
 
-/* For medium devices */
+/* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+/* For large devices */
 @media (min-width: 977px) {
   .title {
     color: white;
-    font-size: 20px; /* smaller font-size for iPhone display */
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
   }
-  .mySwiper {
-    min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
-    overflow-y: auto; /* Allow vertical scrolling if the content overflows */
-  }
-
-  /* .swiper-container {
-    max-height: 500px;
-    object-fit: contain;
-    align-items: center;
-  } */
-
-  .swiper-wrapper {
-    padding-bottom: 50px; /* adjust this value to create space for the pagination element */
-  }
-
-  .swiper-container {
-    height: 400px; /* adjust this value to set the height of the Swiper coverflow */
-  }
-
-  .swiper-coverflow {
-    height: 400px !important; /* adjust this value to set the height of the Swiper coverflow */
-  }
-
-
-
+  /* This is the Parant Row for ALL Content (image and text) */
   .content-row {
     justify-content: center;
+    height: 500px;
+  }
+  /* Right hand side of content row */
+  .text-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 474px;
+    width: 474px;
+  }
+  
+
+  .text-row-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 5px;
+    width: 474px;
+    height: 20px;
+    background-color: #212529;
   }
 
-  .content-container {
+  .text-container {
     color: white;
     margin: 5px;
     flex: 1;
     text-align: justify;
-    overflow-y: scroll;
+    overflow-y: auto;
     justify-content: flex-start;
+    height: 454px;
   }
 
-  .content-column {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  .text-container::-webkit-scrollbar {
+    width: 3px;
   }
+
+  .text-container::-webkit-scrollbar-track {
+    background: #212529;
+  }
+
+  .text-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 3px;
+    border: 0px solid #212529;
+    opacity: 0.5;
+  }
+
+  /* .text-container {
+    scrollbar-color: black #212529;
+    scrollbar-width: none;
+  } */
+
+  .text {
+    background-color: #212529;
+  }
+  /* Left hand side of content row */
   .image-container {
     justify-content: right;
     height: 474px;
@@ -341,23 +358,15 @@
   .rounded-image {
     border-radius: 12px;
     height: 474px;
-    width: 474px;
-    object-fit: contain;
     float: right !important;
-  }
-
-  .content-row-header {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-left: 5px;
   }
 
   .dj-name-container {
     display: flex;
     max-width: fit-content;
-    margin: 0 0 0 0px;
+    margin: 0 2px 0 0px;
     padding-right: 0px;
+    align-items: top;
   }
 
   .dj-name {
@@ -394,7 +403,7 @@
 
   /* MICROOHONE */
   .microphone-icon {
-    margin: 0 0 0 0px;
+    margin: 0 2px 0 0px;
     cursor: pointer;
     color: white;
     size: 18px;
