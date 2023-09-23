@@ -1,5 +1,4 @@
-
-@media (max-width: 375px) {
+@media (max-width: 336px) {
   .title {
     color: white;
     font-size: 16px; /* smaller font-size for iPhone display */
@@ -13,7 +12,12 @@
     max-width: 100vw;
   }
 
-  .image-container,
+  .swiper-container {
+    overflow-y: scroll;
+    max-height: 1000px;
+    object-fit: contain;
+  }
+
   .content-container {
     color: white;
     margin: 3px; /* reduce margin for smaller display */
@@ -21,23 +25,27 @@
     text-align: justify;
     overflow-y: auto;
     background-color: #212529;
-  }
-
-  .swiper-button-next,
-  .swiper-button-prev {
-    top: 10%; /* Adjust this value to position the buttons where you want them */
-    bottom: auto; /* This will ensure the buttons aren't positioned based on the bottom value */
+    justify-content: flex-start;
   }
 
   .content-column {
     display: flex;
     flex-direction: column;
     gap: 3px;
-    height: 812 !important; /* reduce gap for smaller display */
+    height: 812 !important;
+    align-items: center; /* reduce gap for smaller display */
+  }
+
+  .image-container img {
+    height: 368px;
+    width: 368px;
   }
 
   .rounded-image {
-    border-radius: 8px; /* slight adjustment */
+    border-radius: 12px;
+    height: 368px;
+    width: 368px;
+    object-fit: contain;
   }
 
   .content-row-header {
@@ -122,30 +130,42 @@
     color: orange;
     opacity: 0.5;
   }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    top: 10%; /* Adjust this value to position the buttons where you want them */
+    bottom: auto; /* This will ensure the buttons aren't positioned based on the bottom value */
+  }
 }
 
-/* For small devices */
-@media (min-width: 375px) and (max-width: 767px) {
+@media (min-width: 337px) and (max-width: 976px) {
   .title {
     color: white;
     font-size: 20px; /* smaller font-size for iPhone display */
     font-weight: bold;
     text-align: center;
   }
-
   .mySwiper {
     min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
     overflow-y: auto; /* Allow vertical scrolling if the content overflows */
   }
 
-  .image-container,
+  .swiper-container {
+    max-height: 500px;
+    object-fit: contain;
+  }
+
+  .content-row {
+    justify-content: center;
+  }
+
   .content-container {
     color: white;
     margin: 5px;
     flex: 1;
     text-align: justify;
-    overflow: auto;
-    background-color: #212529;
+    overflow-y: scroll;
+    justify-content: flex-start;
   }
 
   .content-column {
@@ -153,13 +173,24 @@
     flex-direction: column;
     gap: 5px;
   }
-  /* .image-container img {
-    min-height: 368px;
-    min-width: 368px;
-  } */
+  .image-container {
+    justify-content: right;
+    height: 474px;
+    width: 474px;
+  }
+
+  .image-container img {
+    height: 474px;
+    width: 474px;
+    /* position: absolute; */
+  }
 
   .rounded-image {
     border-radius: 12px;
+    height: 474px;
+    width: 474px;
+    object-fit: contain;
+    float: right !important;
   }
 
   .content-row-header {
@@ -167,7 +198,6 @@
     justify-content: flex-start;
     align-items: center;
     margin-left: 5px;
-    background-color: #212529;
   }
 
   .dj-name-container {
@@ -246,7 +276,7 @@
 }
 
 /* For medium devices */
-@media (min-width: 768px) {
+@media (min-width: 977px) {
   .title {
     color: white;
     font-size: 20px; /* smaller font-size for iPhone display */
@@ -258,13 +288,37 @@
     overflow-y: auto; /* Allow vertical scrolling if the content overflows */
   }
 
-  .image-container,
+  /* .swiper-container {
+    max-height: 500px;
+    object-fit: contain;
+    align-items: center;
+  } */
+
+  .swiper-wrapper {
+    padding-bottom: 50px; /* adjust this value to create space for the pagination element */
+  }
+
+  .swiper-container {
+    height: 400px; /* adjust this value to set the height of the Swiper coverflow */
+  }
+
+  .swiper-coverflow {
+    height: 400px !important; /* adjust this value to set the height of the Swiper coverflow */
+  }
+
+
+
+  .content-row {
+    justify-content: center;
+  }
+
   .content-container {
     color: white;
     margin: 5px;
     flex: 1;
     text-align: justify;
-    overflow: auto;
+    overflow-y: scroll;
+    justify-content: flex-start;
   }
 
   .content-column {
@@ -272,13 +326,24 @@
     flex-direction: column;
     gap: 5px;
   }
-  /* .image-container img {
-    min-height: 368px;
-    min-width: 368px;
-  } */
+  .image-container {
+    justify-content: right;
+    height: 474px;
+    width: 474px;
+  }
+
+  .image-container img {
+    height: 474px;
+    width: 474px;
+    /* position: absolute; */
+  }
 
   .rounded-image {
     border-radius: 12px;
+    height: 474px;
+    width: 474px;
+    object-fit: contain;
+    float: right !important;
   }
 
   .content-row-header {

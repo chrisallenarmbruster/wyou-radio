@@ -12,13 +12,21 @@ const Player = (props) => {
       <Row className="text-light title">
         <h1 className="h3 mt-3">Now Playing</h1>
       </Row>
-      <Row className="g-5 bg-dark text-light ">
+      <Row
+        className="g-5 bg-dark text-light"
+        style={{
+          maxHeight: '500px',
+          maxWidth: '100%',
+          width: '100%',
+          objectFit: 'contain',
+        }}
+      >
         <Col sm={12} md={6} className="px-5">
           <Row>
             <Image
               src={props.dj.details?.image}
               style={{
-                maxHeight: '700px',
+                maxHeight: '500px',
                 maxWidth: '100%',
                 width: '100%',
                 objectFit: 'contain',
@@ -37,7 +45,7 @@ const Player = (props) => {
             <Image
               src={props.track?.image}
               style={{
-                maxHeight: '700px',
+                maxHeight: '500px',
                 maxWidth: '100%',
                 width: '100%',
                 objectFit: 'contain',

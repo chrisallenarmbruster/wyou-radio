@@ -77,92 +77,122 @@ export function DiscJockeys(props) {
     }
   }, [imageRef])
 
+  // const sliderRef = useRef()
+  const handleMouseScroll = (e) => {
+    const swiper = sliderRef.current.swiper
+
+    if (e.deltaX > 0 || e.deltaY > 0) {
+      swiper.slideNext()
+    } else if (
+      e.deltaX < 0 ||
+      (e.deltaY < 0 && Math.abs(e.deltaY) > Math.abs(e.deltaX))
+    ) {
+      swiper.slidePrev()
+    }
+  }
+
   return (
     <Col>
       <Row className="text-light title">
         <h1 className="h3 mt-3">Select Your Disc Jockey</h1>
       </Row>
-      <Row
-        style={{ minHeight: '300px', maxHeight: '500px', overflow: 'hidden' }}
-      >
-        <Swiper
-          ref={sliderRef}
-          style={{ height: imageHeight }}
-          autoHeight={true}
-          spaceBetween={20}
-          slidesPerView={1}
-          effect="fade"
-          centeredSlides
-          navigation
-          loop
-          modules={[EffectFade, Navigation]}
-          onSlideChange={() => {
-            djAudioGreeting.pause()
-          }}
-          className="mySwiper"
+      <Row>
+        <div
+          className="swiper-container"
+          // onWheel={handleMouseScroll}
         >
-          {props.djs.map((dj, idx) => (
-            <SwiperSlide
-              key={`dj-${idx}`}
-              className="bg-dark text-light swiper-slide"
-              style={{ height: imageHeight }}
-            >
-              <Row
-                style={{
-                  height: imageHeight,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                }}
+          <Swiper
+            ref={sliderRef}
+            // style={{ height: imageHeight }}
+            autoHeight={true}
+            spaceBetween={20}
+            slidesPerView={1}
+            effect="fade"
+            centeredSlides
+            navigation
+            loop
+            modules={[EffectFade, Navigation]}
+            onSlideChange={() => {
+              djAudioGreeting.pause()
+            }}
+            className="mySwiper"
+          >
+            {props.djs.map((dj, idx) => (
+              <SwiperSlide
+                key={`dj-${idx}`}
+                className="bg-dark text-light swiper-slide"
+                style={{ height: imageHeight }}
               >
-                <Col
-                  xs={12}
-                  md={6}
-                  style={{ height: imageHeight }}
-                  className="image-container"
-                >
-                  <Image
-                    ref={imageRef}
-                    src={dj.details?.image}
-                    className="rounded-image"
-                  />
-                </Col>
-                <Col
-                  xs={12}
-                  md={6}
-                  className="content-column"
-                  style={{ height: imageHeight }}
-                >
-                  <Row className="content-row-header">
-                    <Col className="dj-name-container">
-                      <span className="dj-name">{dj.djName}</span>
-                    </Col>
-                    <Col className="buttons-container">
-                      <FaMicrophone
-                        className={`microphone-icon ${
-                          isPlaying === true
-                            ? 'playing'
-                            : isPlaying === 'paused'
-                            ? 'paused'
-                            : ''
-                        }`}
-                        onClick={() => handleDjAudioGreeting(dj)}
-                      />
-                      <button
-                        onClick={() => handleSelectDj(dj)}
-                        className="select-button"
+                <Row className="content-row">
+                  <Col xs={12} md={6} lg={6} className="image-container">
+                    <Image
+                      ref={imageRef}
+                      src={dj.details?.image}
+                      className="rounded-image"
+                      onLoad={() => {
+                        setImageHeight(imageRef.current.clientHeight)
+                      }}
+                    />
+                  </Col>
+
+                  <Col
+                    xs={12}
+                    md={6}
+                    lg={6}
+                    className="content-column"
+                    style={{
+                      height: imageHeight,
+                      width: imageHeight,
+                      // textAlign: 'top',
+                      // justifyContent: 'flex-start',
+                    }}
+                  >
+                    <Row
+                      className="content-row-header"
+                      style={{
+                        width: imageHeight,
+                        backgroundColor: '#212529',
+                      }}
+                    >
+                      <Col className="dj-name-container">
+                        <span className="dj-name">{dj.djName}</span>
+                      </Col>
+                      <Col className="buttons-container">
+                        <FaMicrophone
+                          className={`microphone-icon ${
+                            isPlaying === true
+                              ? 'playing'
+                              : isPlaying === 'paused'
+                              ? 'paused'
+                              : ''
+                          }`}
+                          onClick={() => handleDjAudioGreeting(dj)}
+                        />
+                        <button
+                          onClick={() => handleSelectDj(dj)}
+                          className="select-button"
+                        >
+                          Select
+                        </button>
+                      </Col>
+                    </Row>
+                    <Row className="content-container">
+                      <p
+                        className="content"
+                        style={{
+                          width: imageHeight,
+                          backgroundColor: '#212529',
+                        }}
                       >
-                        Select
-                      </button>
-                    </Col>
-                  </Row>
-                  <Row className="content-container">
-                    <p className="content">{dj.details?.context}</p>
-                  </Row>
-                </Col>
-              </Row>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+                        {dj.details?.context}
+                      </p>
+                    </Row>
+                  </Col>
+                </Row>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </Row>
     </Col>
   )

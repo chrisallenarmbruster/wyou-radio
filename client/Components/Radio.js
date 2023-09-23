@@ -392,13 +392,13 @@ export class Radio extends Component {
     if (!this.props?.accessToken) return null
     return (
       <Col
-      // style={{
-      //   // maxWidth: '95vw',
-      //   // maxHeight: `${window.innerHeight}px`,
-      //   display: 'flex',
-      //   flexDirection: 'column',
-      //   maxHeight: '100vh',
-      // }}
+        style={{
+          // maxWidth: '95vw',
+          maxHeight: `${window.innerHeight}px`,
+          // display: 'flex',
+          // flexDirection: 'column',
+          // maxHeight: '100vh',
+        }}
       >
         <Row className="order-row order-row-1 justify-content-center">
           <Col
