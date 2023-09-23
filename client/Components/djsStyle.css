@@ -1,91 +1,116 @@
-@media (max-width: 336px) {
+@media (min-width: 320px) and (max-width: 480px) {
   .title {
     color: white;
-    font-size: 16px; /* smaller font-size for iPhone display */
+    font-size: 12px;
     font-weight: bold;
     text-align: center;
   }
-
-  .mySwiper {
-    min-height: 100vh;
-    overflow-y: auto;
-    max-width: 100vw;
+  /* This is the Parant Row for ALL Content (image and text) */
+  .content-row {
+    justify-content: center;
+    height: 1000px;
   }
-
-  .swiper-container {
-    overflow-y: scroll;
-    max-height: 1000px;
-    object-fit: contain;
-  }
-
-  .content-container {
-    color: white;
-    margin: 3px; /* reduce margin for smaller display */
-    flex: 1;
-    text-align: justify;
-    overflow-y: auto;
-    background-color: #212529;
-    justify-content: flex-start;
-  }
-
-  .content-column {
+  /* Right hand side of content row */
+  .text-column {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    height: 812 !important;
-    align-items: center; /* reduce gap for smaller display */
+    gap: 5px;
+    height: 375px;
+    width: 375px;
   }
 
-  .image-container img {
-    height: 368px;
-    width: 368px;
-  }
-
-  .rounded-image {
-    border-radius: 12px;
-    height: 368px;
-    width: 368px;
-    object-fit: contain;
-  }
-
-  .content-row-header {
+  .text-row-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-left: 3px; /* reduce margin for smaller display */
-    overflow: auto;
-    height: 25px;
+    margin-left: 5px;
+    width: 375px;
+    height: 16px;
     background-color: #212529;
+  }
+
+  .text-container {
+    color: white;
+    margin: 5px;
+    flex: 1;
+    text-align: justify;
+    overflow-y: auto;
+    justify-content: flex-start;
+    height: 1000px;
+  }
+
+  .text-container::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .text-container::-webkit-scrollbar-track {
+    background: #212529;
+  }
+
+  .text-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 3px;
+    border: 0px solid #212529;
+    opacity: 0.5;
+  }
+
+  /* .text-container {
+    scrollbar-color: black #212529;
+    scrollbar-width: none;
+  } */
+
+  .text {
+    background-color: #212529;
+  }
+  /* Left hand side of content row */
+  .image-container {
+    justify-content: right;
+    height: 375px;
+    width: 375px;
+  }
+
+  .image-container img {
+    height: 375px;
+    width: 375px;
+    /* position: absolute; */
+  }
+
+  .rounded-image {
+    /* border-radius: 8px; */
+    height: 375px;
+    /* float: right !important; */
   }
 
   .dj-name-container {
     display: flex;
     max-width: fit-content;
-    margin: 0; /* reduce margin for smaller display */
+    margin: 0 2px 0 0px;
+    padding-right: 0px;
+    align-items: top;
   }
 
   .dj-name {
     color: white;
-    font-size: 16px; /* smaller font-size for iPhone display */
+    font-size: 20px;
     font-style: bold;
     min-width: fit-content;
-    margin: 0; /* reduce margin for smaller display */
+    margin: 0 0 0 0px;
   }
 
   /* BUTTON */
   .buttons-container {
     display: flex;
-    margin: 0; /* reduce margin for smaller display */
-    padding-left: 0;
+    margin: 0 0 0 0;
+    padding-left: 0px;
     align-items: center;
   }
 
   .select-button {
     background-color: transparent;
     border: 1px solid white;
-    border-radius: 15px; /* adjust radius */
+    border-radius: 20px;
     color: white;
-    font-size: 10px; /* smaller font-size for iPhone display */
+    font-size: 8px;
     padding: 1px 3px;
     cursor: pointer;
     align-items: center;
@@ -96,12 +121,12 @@
     color: white;
   }
 
-  /* MICROPHONE */
+  /* MICROOHONE */
   .microphone-icon {
-    margin: 0; /* reduce margin for smaller display */
+    margin: 0 2px 0 0px;
     cursor: pointer;
     color: white;
-    size: 16px; /* smaller size for iPhone display */
+    size: 18px;
     align-items: center;
   }
 
@@ -130,49 +155,73 @@
     color: orange;
     opacity: 0.5;
   }
-
-  .swiper-button-next,
-  .swiper-button-prev {
-    top: 10%; /* Adjust this value to position the buttons where you want them */
-    bottom: auto; /* This will ensure the buttons aren't positioned based on the bottom value */
-  }
 }
 
-@media (min-width: 337px) and (max-width: 976px) {
+@media (min-width: 481px) and (max-width: 1024px) {
   .title {
     color: white;
-    font-size: 20px; /* smaller font-size for iPhone display */
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
   }
-  .mySwiper {
-    min-height: 100vh; /* This will ensure the container takes up at least the full viewport height */
-    overflow-y: auto; /* Allow vertical scrolling if the content overflows */
-  }
-
-  .swiper-container {
-    max-height: 500px;
-    object-fit: contain;
-  }
-
+  /* This is the Parant Row for ALL Content (image and text) */
   .content-row {
     justify-content: center;
+    height: 1000px;
+  }
+  /* Right hand side of content row */
+  .text-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 474px;
+    width: 474px;
   }
 
-  .content-container {
+  .text-row-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 5px;
+    width: 474px;
+    height: 20px;
+    background-color: #212529;
+  }
+
+  .text-container {
     color: white;
     margin: 5px;
     flex: 1;
     text-align: justify;
-    overflow-y: scroll;
+    overflow-y: auto;
     justify-content: flex-start;
+    height: 454px;
   }
 
-  .content-column {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  .text-container::-webkit-scrollbar {
+    width: 3px;
   }
+
+  .text-container::-webkit-scrollbar-track {
+    background: #212529;
+  }
+
+  .text-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 3px;
+    border: 0px solid #212529;
+    opacity: 0.5;
+  }
+
+  /* .text-container {
+    scrollbar-color: black #212529;
+    scrollbar-width: none;
+  } */
+
+  .text {
+    background-color: #212529;
+  }
+  /* Left hand side of content row */
   .image-container {
     justify-content: right;
     height: 474px;
@@ -188,23 +237,15 @@
   .rounded-image {
     border-radius: 12px;
     height: 474px;
-    width: 474px;
-    object-fit: contain;
     float: right !important;
-  }
-
-  .content-row-header {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-left: 5px;
   }
 
   .dj-name-container {
     display: flex;
     max-width: fit-content;
-    margin: 0 0 0 0px;
+    margin: 0 2px 0 0px;
     padding-right: 0px;
+    align-items: top;
   }
 
   .dj-name {
@@ -241,7 +282,7 @@
 
   /* MICROOHONE */
   .microphone-icon {
-    margin: 0 0 0 0px;
+    margin: 0 2px 0 0px;
     cursor: pointer;
     color: white;
     size: 18px;
@@ -277,7 +318,7 @@
 
 /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
 /* For large devices */
-@media (min-width: 977px) {
+@media (min-width: 1025px) {
   .title {
     color: white;
     font-size: 20px;
@@ -297,7 +338,6 @@
     height: 474px;
     width: 474px;
   }
-  
 
   .text-row-header {
     display: flex;
