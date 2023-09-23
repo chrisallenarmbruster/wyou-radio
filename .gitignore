@@ -2,6 +2,7 @@ node_modules
 dist
 .env
 docker-compose.yml
+dockerBuild.js
 package-lock.json
 public/main.js
 public/main.js.map
