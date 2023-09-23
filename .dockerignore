@@ -1,7 +1,12 @@
+ client
  node_modules
  npm-debug.log
  .env
  .git
  .gitignore
+ .dockerignore
  Dockerfile
+ Dockerfile_bu
  docker-compose.yml
+ .prettierrc
+ webpack.config.js
