@@ -14,10 +14,12 @@ export class App extends Component {
       >
         <Col
           style={{
-            maxWidth: '75%',
+            maxWidth: '100%',
+            maxHeight: '90vh',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            // alignContent: 'center',
           }}
         >
           <Row>
