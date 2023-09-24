@@ -55,7 +55,7 @@ const Player = (props) => {
                 ref={image1Ref} // Attach ref to first image
                 src={props.dj.details?.image}
                 style={{
-                  // maxHeight: '500px',
+                  maxHeight: '600px',
                   maxWidth: '100%',
                   width: '100%',
                   objectFit: 'contain',

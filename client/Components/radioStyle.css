@@ -67,10 +67,12 @@
   }
   .order-row-2 {
     order: 2;
+    height:700px;
+    object-fit: contain;
   }
   .order-row-3 {
     order: 3;
-    position: fixed;
+    position: relative;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
