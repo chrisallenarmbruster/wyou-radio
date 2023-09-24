@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-import axios from "axios"
+import { createSlice } from '@reduxjs/toolkit'
+import axios from 'axios'
 
 const initialState = {
   allDjs: [],
@@ -9,7 +9,7 @@ const initialState = {
 }
 
 const djsSlice = createSlice({
-  name: "djs",
+  name: 'djs',
   initialState,
   reducers: {
     addDj: (state, action) => {
@@ -17,6 +17,9 @@ const djsSlice = createSlice({
     },
     addDjs: (state, action) => {
       state.allDjs = [...state.allDjs, ...action.payload]
+    },
+    setDjs: (state, action) => {
+      state.allDjs = action.payload
     },
     removeDj: (state, action) => {
       state.allDjs = state.allDjs.filter((dj) => dj.id !== action.payload.id)
@@ -42,6 +45,7 @@ export const {
   removeDj,
   clearDjs,
   setCurrentDj,
+  setDjs,
   setDjLoading,
   setDjError,
 } = djsSlice.actions
@@ -50,13 +54,9 @@ export const fetchDjs = () => async (dispatch, getState) => {
   try {
     dispatch(setDjLoading(true))
 
-    const response = await axios.get("api/content/dj-characters")
+    const response = await axios.get('api/content/dj-characters')
 
-    // response.data.push({ id: 100, djName: "Snoop Cat" })
-    // response.data.push({ id: 200, djName: "Martha Kwinn" })
-    // response.data.push({ id: 300, djName: "Mr. Rojers" })
-
-    dispatch(addDjs(response.data))
+    dispatch(setDjs(response.data))
   } catch (error) {
     dispatch(setDjError(error.message))
   } finally {

@@ -19,10 +19,23 @@ const AppAuthWrapper = (props) => {
     if (accessToken) {
       props.fetchStations([
         '37i9dQZF1DWXRqgorJj26U',
+        '37i9dQZF1DXcF6B6QPhFDv',
+        '37i9dQZF1DX6xOPeSOGone',
+        '37i9dQZF1DWXs1L3AC0Xio',
         '37i9dQZF1DXaJXCbmtHVHV',
+        '37i9dQZF1DXdgnLr18vPvu',
+        '37i9dQZF1DWTkxQvqMy4WW',
+        '37i9dQZF1DWZBCPUIUs2iR',
         '37i9dQZF1DX2sQHbtx0sdt',
+        '37i9dQZF1DWUFmyho2wkQU',
+        '37i9dQZF1DX5qmTk3PVatJ',
         '37i9dQZF1DXbcP8BbYEQaO',
+        '37i9dQZF1DWTwnEm1IYyoj',
+        '37i9dQZF1DWWnzeQw5ZMfu',
         '37i9dQZF1DWUajed02NzWR',
+        '37i9dQZF1DWWEJlAGA9gs0',
+        '37i9dQZF1DWXjj6kdiviS0',
+        '37i9dQZF1DWYhr4P5Boce5',
       ])
       props.fetchUserStations()
     }

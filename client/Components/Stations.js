@@ -12,7 +12,7 @@ import 'swiper/css'
 import 'swiper/css/effect-coverflow'
 import 'swiper/css/pagination'
 import 'swiper/swiper-bundle.css'
-
+import { setJamSessionId } from '../store/jamSessionSlice'
 import './stationsStyle.css'
 
 export function Stations(props) {
@@ -22,6 +22,7 @@ export function Stations(props) {
     setCurrentStation,
     pauseSpotify,
     clearCurrentTrack,
+    setJamSessionId,
   } = props
 
   const navigate = useNavigate()
@@ -94,6 +95,7 @@ export function Stations(props) {
                       // pauseSpotify()
                       clearCurrentTrack()
                       setCurrentStation(station)
+                      setJamSessionId()
                       playContext({ uri: station.uri })
                       navigate('/radio/player')
                     }}
@@ -126,6 +128,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentStation: (station) => dispatch(setCurrentStation(station)),
     clearCurrentTrack: () => dispatch(clearCurrentTrack()),
+    setJamSessionId: (id) => dispatch(setJamSessionId(id)),
   }
 }
 
