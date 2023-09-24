@@ -397,7 +397,9 @@ export class Radio extends Component {
           maxHeight: `${window.innerHeight}px`,
           display: 'flex',
           flexDirection: 'column',
-          // maxHeight: '100vh',
+          objectFit: 'contain',
+
+          maxHeight: '100vh',
         }}
       >
         <Row className="order-row order-row-1 justify-content-center">
@@ -427,7 +429,7 @@ export class Radio extends Component {
             </Link>
           </Col>
         </Row>
-        <Row className="order-row order-row-2 justify-content-center">
+        <Row className="order-row order-row-2 justify-content-center player-container">
           <Col className="radio-panel-container" xs={12}>
             <Row className="radio-panel">
               <Routes>
@@ -462,13 +464,14 @@ export class Radio extends Component {
           </Col>
         </Row>
         <Row
-          className={`order-row order-row-3 justify-content-center align-items-center ${
+          className={`order-row order-row-3 justify-content-center align-items-center align-items-top ${
             this.state.djOnAir ||
             !this.props.currentDj?.djName ||
             !this.props.currentStation?.name
               ? 'd-none'
               : ''
           } `}
+          style={{ height: '20px' }}
         >
           <Col xs="auto">
             <GoTools
@@ -537,7 +540,7 @@ export class Radio extends Component {
             className="order-row order-row-4 justify-content-center align-items-center blink"
             style={{ paddingTop: '10px' }}
           >
-            <Col xs="auto">
+            <Col>
               <img src="/live.png" alt="Live" style={{ maxWidth: '100px' }} />
             </Col>
           </Row>
