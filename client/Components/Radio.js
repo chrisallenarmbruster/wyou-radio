@@ -462,7 +462,7 @@ export class Radio extends Component {
           </Col>
         </Row>
         <Row
-          className={`order-row order-row-3 justify-content-center align-items-center ${
+          className={`order-row order-row-3 justify-content-center align-items-top ${
             this.state.djOnAir ||
             !this.props.currentDj?.djName ||
             !this.props.currentStation?.name
