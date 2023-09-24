@@ -462,13 +462,14 @@ export class Radio extends Component {
           </Col>
         </Row>
         <Row
-          className={`order-row order-row-3 justify-content-center align-items-center ${
+          className={`order-row order-row-3 justify-content-center align-items-top ${
             this.state.djOnAir ||
             !this.props.currentDj?.djName ||
             !this.props.currentStation?.name
               ? 'd-none'
               : ''
           } `}
+          style={{ height: '20px' }}
         >
           <Col xs="auto">
             <GoTools
@@ -526,7 +527,7 @@ export class Radio extends Component {
               step={0.1}
               className="mx-3 volumn-slider"
               value={this.state.masterVolumeSetting}
-              // style={{ width: '100px', height: '10px' }}
+              style={{ width: '100px', height: '10px' }}
               onChange={(e) => this.masterVolumeHandler(e)}
             />
           </Col>
@@ -537,7 +538,7 @@ export class Radio extends Component {
             className="order-row order-row-4 justify-content-center align-items-center blink"
             style={{ paddingTop: '10px' }}
           >
-            <Col xs="auto">
+            <Col >
               <img src="/live.png" alt="Live" style={{ maxWidth: '100px' }} />
             </Col>
           </Row>

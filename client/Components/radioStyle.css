@@ -6,6 +6,7 @@
   height: 16em;
 }
 
+
 .link {
   margin-right: 25px;
 }
@@ -61,11 +62,11 @@
   }
   .order-row-3 {
     order: 3;
-    position: fixed;
-    top: 80%;
+    position: absolute;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    margin-top: 20px;
+    margin-top: 10px;
   }
   .order-row-4 {
     order: 4;
