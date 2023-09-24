@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
@@ -7,6 +7,17 @@ import Row from 'react-bootstrap/Row'
 import Image from 'react-bootstrap/Image'
 
 const Player = (props) => {
+  const image1Ref = useRef(null)
+  const image2Ref = useRef(null)
+
+  useEffect(() => {
+    // When component mounts, set the height of the second image to be the same as the first image
+    if (image1Ref.current && image2Ref.current) {
+      const height1 = image1Ref.current.clientHeight
+      image2Ref.current.style.maxHeight = `${height1}px`
+    }
+  }, []) // Empty dependency array means this effect runs once on mount
+
   return (
     <Col>
       <Row className="text-light title">
@@ -18,7 +29,6 @@ const Player = (props) => {
           overflow: 'hidden',
           objectFit: 'contain',
           justifyContent: 'center',
-          flex:1,
         }}
       >
         <Col
@@ -29,6 +39,7 @@ const Player = (props) => {
           <div style={{ textAlign: 'center' }}>
             <div>
               <Image
+                ref={image1Ref} // Attach ref to first image
                 src={props.dj.details?.image}
                 style={{
                   // maxHeight: '500px',
@@ -50,6 +61,7 @@ const Player = (props) => {
           <div style={{ textAlign: 'center' }}>
             <div>
               <Image
+                ref={image2Ref}
                 src={props.track?.image}
                 style={{
                   // maxHeight: '500px',

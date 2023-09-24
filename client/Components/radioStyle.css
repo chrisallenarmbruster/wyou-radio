@@ -6,7 +6,6 @@
   height: 16em;
 }
 
-
 .link {
   margin-right: 25px;
 }
@@ -67,6 +66,7 @@
     left: 50%;
     transform: translateX(-50%);
     margin-top: 10px;
+    height: 20px;
   }
   .order-row-4 {
     order: 4;
