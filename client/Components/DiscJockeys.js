@@ -1,22 +1,17 @@
-import React, { useRef, useState, useEffect } from "react"
-import { connect } from "react-redux"
-import { setCurrentDj } from "../store/djsSlice"
-import { Swiper, SwiperSlide } from "swiper/react"
-import Container from "react-bootstrap/Container"
-import Col from "react-bootstrap/Col"
-import Row from "react-bootstrap/Row"
-import Image from "react-bootstrap/Image"
-import Button from "react-bootstrap/Button"
-import { useNavigate } from "react-router-dom"
+import React, { useRef, useEffect, useState } from 'react'
+import { connect } from 'react-redux'
+import { setCurrentDj } from '../store/djsSlice'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { EffectFade, Pagination } from 'swiper/modules'
+import { Container, Col, Row, Image, Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import { FaMicrophone } from 'react-icons/fa'
 
-import "swiper/css"
-import "swiper/css/effect-fade"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
+import 'swiper/css'
+import 'swiper/css/effect-fade'
+import 'swiper/css/pagination'
 
-import "./djsStyle.css"
-
-import { EffectFade, Navigation, Pagination } from "swiper/modules"
+import './djsStyle.css'
 
 let djAudioGreeting = new Audio()
 
@@ -27,104 +22,152 @@ export function DiscJockeys(props) {
     }
   }, [])
 
-  useEffect(() => {
-    setTimeout(() => {
-      // sliderRef.current.swiper.slideTo(0)
-    }, 100)
-  }, [])
-
   const navigate = useNavigate()
-
   const sliderRef = useRef()
 
+  const [isPlaying, setIsPlaying] = useState(false)
+
   function handleDjAudioGreeting(dj) {
-    console.log("dj", dj)
-    djAudioGreeting.src =
-      dj.details?.audio ||
-      "audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3"
-    djAudioGreeting.play()
+    if (
+      djAudioGreeting.src !==
+      (dj.details?.audio ||
+        window.location.origin + '/audio/default_audio_path.mp3')
+    ) {
+      djAudioGreeting.src = dj.details?.audio || '/audio/default_audio_path.mp3'
+    }
+
+    djAudioGreeting.onplay = () => setIsPlaying(true)
+    djAudioGreeting.onended = () => setIsPlaying(false)
+    djAudioGreeting.onpause = () => setIsPlaying('paused')
+
+    if (djAudioGreeting.paused) {
+      if (isPlaying === 'paused') {
+        djAudioGreeting.play()
+      } else {
+        djAudioGreeting.currentTime = 0
+        djAudioGreeting.play()
+      }
+    } else {
+      djAudioGreeting.pause()
+    }
   }
 
   function handleSelectDj(dj) {
     props.selectDj(dj)
-    if (props.currentStation) {
-      navigate(`/radio/player`)
-    } else {
-      navigate(`/radio/stations`)
+    navigate(props.currentStation ? `/radio/player` : `/radio/stations`)
+  }
+
+  // Inside your component
+  const [imageHeight, setImageHeight] = useState(null)
+  const imageRef = useRef(null)
+
+  function handleResize() {
+    if (imageRef.current) {
+      setImageHeight(imageRef.current.clientHeight)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [imageRef])
+
+  // const sliderRef = useRef()
+  const handleMouseScroll2 = (e) => {
+    const swiper = sliderRef.current.swiper
+
+    if (e.deltaX > 0) {
+      swiper.slideNext()
+    } else if (e.deltaX < 0) {
+      swiper.slidePrev()
     }
   }
 
   return (
-    <>
-      <div className="text-light">
-        <h1 className="h3 mt-3">Select Disc Jockey</h1>
-      </div>
-      <Swiper
-        ref={sliderRef}
-        spaceBetween={30}
-        autoHeight={true}
-        slidesPerView={1}
-        // initialSlide={0}
-        effect={"fade"}
-        // grabCursor={true}
-        centeredSlides={true}
-        navigation={true}
-        loop={true}
-        modules={[EffectFade, Navigation]}
-        className="mySwiper "
-        onSlideChange={() => {
-          djAudioGreeting.pause()
-        }}
-      >
-        {props.djs.map((dj, idx) => (
-          <SwiperSlide
-            key={`dj-${idx}`}
-            className="bg-dark text-light "
-            style={{ width: "100%", height: "100%" }}
-          >
-            <div
-              className="bg-dark "
-              style={{
-                height: "100%",
-                width: "100%",
-                overflowX: "hidden",
-                overflowY: "auto",
+    <Col>
+      <Row className="text-light title">
+        <h1 className="h3 mt-3">Select Your Disc Jockey</h1>
+      </Row>
+      <Row>
+        <Col
+          onWheel={handleMouseScroll2}
+          style={{
+            overflow: 'hidden',
+            objectFit: 'contain',
+            justifyContent: 'center',
+          }}
+        >
+          <Row>
+            <Swiper
+              ref={sliderRef}
+              modules={[EffectFade, Pagination]}
+              effect="fade"
+              autoHeight={true}
+              spaceBetween={20}
+              slidesPerView={1}
+              centeredSlides
+              pagination={{
+                type: 'bullets',
+                clickable: true,
+              }}
+              loop
+              onSlideChange={() => {
+                djAudioGreeting.pause()
               }}
             >
-              <Row className=" bg-dark text-light">
-                <Col sm={12} md={6} className="px-5">
-                  <Image src={dj.details?.image} />
-                </Col>
-                <Col
-                  sm={12}
-                  md={6}
-                  className="px-5 text-start bg-dark mt-3 mt-md-0"
+              {props.djs.map((dj, idx) => (
+                <SwiperSlide
+                  key={`dj-${idx}`}
+                  className="bg-dark text-light swiper-slide"
                 >
-                  <h2 className="h3">
-                    {dj.djName}
-                    <Button
-                      className="ms-3"
-                      size="sm"
-                      onClick={() => handleDjAudioGreeting(dj)}
-                    >
-                      Greeting
-                    </Button>
-                    <Button
-                      className="mx-3"
-                      size="sm"
-                      onClick={() => handleSelectDj(dj)}
-                    >
-                      Select
-                    </Button>
-                  </h2>
-                  <p>{dj.details?.context}</p>
-                </Col>
-              </Row>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </>
+                  <Row className="content-row">
+                    <Col xs={12} md={6} lg={6} className="image-container">
+                      <Image
+                        ref={imageRef}
+                        src={dj.details?.image}
+                        className="rounded-image"
+                      />
+                    </Col>
+
+                    <Col xs={12} md={6} lg={6} className="text-column">
+                      <Row className="text-row-header">
+                        <Col className="dj-name-container">
+                          <span className="dj-name">{dj.djName}</span>
+                        </Col>
+                        <Col className="buttons-container">
+                          <FaMicrophone
+                            className={`microphone-icon ${
+                              isPlaying === true
+                                ? 'playing'
+                                : isPlaying === 'paused'
+                                ? 'paused'
+                                : ''
+                            }`}
+                            onClick={() => handleDjAudioGreeting(dj)}
+                          />
+                          <button
+                            onClick={() => handleSelectDj(dj)}
+                            className="select-button"
+                          >
+                            Select
+                          </button>
+                        </Col>
+                      </Row>
+                      <Row className="text-container">
+                        <p className="text">{dj.details?.context}</p>
+                      </Row>
+                    </Col>
+                  </Row>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Row>
+        </Col>
+      </Row>
+    </Col>
   )
 }
 

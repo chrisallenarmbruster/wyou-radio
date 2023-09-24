@@ -1,0 +1,80 @@
+.controlButton {
+  color: white;
+  font-size: 12px; /* smaller font-size for iPhone display */
+  font-weight: bold;
+  width: 1.5em;
+  height: 16em;
+}
+
+.link {
+  margin-right: 25px;
+}
+
+.volumn-slider {
+  width: 50px;
+  height: 1px;
+}
+.volumn-slider::-webkit-slider-thumb {
+  background-color: rgb(126, 48, 48);
+}
+.volumn-slider::-webkit-slider-runnable-track {
+  height: 3px;
+}
+
+/* Default order for mobile views */
+.order-row-1 {
+  order: 2;
+}
+.order-row-2 {
+  order: 3;
+}
+.order-row-3 {
+  order: 1;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.order-row-4 {
+  order: 4;
+}
+.order-row-5 {
+  order: 5;
+}
+
+/* Change order for larger screens */
+@media (min-width: 767px) {
+  .volumn-slider {
+    width: 100px;
+    height: 2px;
+  }
+  .volumn-slider::-webkit-slider-thumb {
+    background-color: rgb(126, 48, 48);
+  }
+  .volumn-slider::-webkit-slider-runnable-track {
+    height: 5px;
+  }
+
+  .order-row-1 {
+    order: 1;
+  }
+  .order-row-2 {
+    order: 2;
+  }
+  .order-row-3 {
+    order: 3;
+    position: fixed;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 20px;
+  }
+  .order-row-4 {
+    order: 4;
+    position: fixed;
+    top: 75%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .order-row-5 {
+    order: 5;
+  }
+}

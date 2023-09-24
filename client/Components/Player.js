@@ -1,40 +1,67 @@
-import React from "react"
-import { connect } from "react-redux"
-import Button from "react-bootstrap/Button"
-import Container from "react-bootstrap/Container"
-import Col from "react-bootstrap/Col"
-import Row from "react-bootstrap/Row"
-import Image from "react-bootstrap/Image"
+import React from 'react'
+import { connect } from 'react-redux'
+import Button from 'react-bootstrap/Button'
+import Container from 'react-bootstrap/Container'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import Image from 'react-bootstrap/Image'
 
 const Player = (props) => {
   return (
-    <>
-      <div className="text-light">
-        <h1 className="h3 mt-3 mb-4">Now Playing</h1>
-      </div>
-      <Container className="text-light">
-        <Row className="g-5 bg-dark text-light ">
-          <Col sm={12} md={6} className="px-5">
+    <Col>
+      <Row className="text-light title">
+        <h1 className="h3 mt-3">Now Playing</h1>
+      </Row>
+      <Row
+        className="g-5 bg-dark text-light"
+        style={{
+          overflow: 'hidden',
+          objectFit: 'contain',
+          justifyContent: 'center',
+        }}
+      >
+        <Col sm={12} md={6} className="px-5">
+          <Row>
             <Image
               src={props.dj.details?.image}
-              style={{ maxWidth: "100%", width: "100%" }}
+              style={{
+                maxHeight: '500px',
+                maxWidth: '100%',
+                width: '100%',
+                objectFit: 'contain',
+              }}
             />
+          </Row>
+          <Row style={{ textAlign: 'center' }}>
             <h4 className="h5 mt-2 mb-0">DJ {props.dj?.djName}</h4>
+          </Row>
+          <Row style={{ textAlign: 'center' }}>
             <p>{props.station?.name}</p>
-          </Col>
-          <Col sm={12} md={6} className="px-5">
+          </Row>
+        </Col>
+        <Col sm={12} md={6} className="px-5">
+          <Row>
             <Image
               src={props.track?.image}
-              style={{ maxWidth: "100%", width: "100%" }}
+              style={{
+                maxHeight: '500px',
+                maxWidth: '100%',
+                width: '100%',
+                objectFit: 'contain',
+              }}
             />
+          </Row>
+          <Row style={{ textAlign: 'center' }}>
             <h4 className="h5 mt-2 mb-0">{props.track?.name}</h4>
+          </Row>
+          <Row style={{ textAlign: 'center' }}>
             <p>
-              {props.track?.artists.map((artist) => artist.name).join(", ")}
+              {props.track?.artists.map((artist) => artist.name).join(', ')}
             </p>
-          </Col>
-        </Row>
-      </Container>
-    </>
+          </Row>
+        </Col>
+      </Row>
+    </Col>
   )
 }
 

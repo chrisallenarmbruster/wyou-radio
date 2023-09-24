@@ -1,19 +1,478 @@
-.swiper {
-  width: 100%;
-  height: 500px;
-  /* overflow-y: auto; */
+@media (min-width: 320px) and (max-width: 480px) {
+  .title {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+  }
+  /* This is the Parant Row for ALL Content (image and text) */
+  .content-row {
+    justify-content: center;
+    height: 1000px;
+  }
+  /* Right hand side of content row */
+  .text-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 375px;
+    width: 375px;
+  }
+
+  .text-row-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 5px;
+    width: 375px;
+    height: 16px;
+    background-color: #212529;
+  }
+
+  .text-container {
+    color: white;
+    margin: 5px;
+    flex: 1;
+    text-align: justify;
+    overflow-y: auto;
+    justify-content: flex-start;
+    height: 1000px;
+  }
+
+  .text-container::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .text-container::-webkit-scrollbar-track {
+    background: #212529;
+  }
+
+  .text-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 3px;
+    border: 0px solid #212529;
+    opacity: 0.5;
+  }
+
+  /* .text-container {
+    scrollbar-color: black #212529;
+    scrollbar-width: none;
+  } */
+
+  .text {
+    background-color: #212529;
+  }
+  /* Left hand side of content row */
+  .image-container {
+    justify-content: right;
+    height: 375px;
+    width: 375px;
+  }
+
+  .image-container img {
+    height: 375px;
+    width: 375px;
+    /* position: absolute; */
+  }
+
+  .rounded-image {
+    /* border-radius: 8px; */
+    height: 375px;
+    /* float: right !important; */
+  }
+
+  .dj-name-container {
+    display: flex;
+    max-width: fit-content;
+    margin: 0 2px 0 0px;
+    padding-right: 0px;
+    align-items: top;
+  }
+
+  .dj-name {
+    color: white;
+    font-size: 20px;
+    font-style: bold;
+    min-width: fit-content;
+    margin: 0 0 0 0px;
+  }
+
+  /* BUTTON */
+  .buttons-container {
+    display: flex;
+    margin: 0 0 0 0;
+    padding-left: 0px;
+    align-items: center;
+  }
+
+  .select-button {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 20px;
+    color: white;
+    font-size: 8px;
+    padding: 1px 3px;
+    cursor: pointer;
+    align-items: center;
+  }
+
+  .select-button:hover {
+    background-color: orange;
+    color: white;
+  }
+
+  /* MICROOHONE */
+  .microphone-icon {
+    margin: 0 2px 0 0px;
+    cursor: pointer;
+    color: white;
+    size: 18px;
+    align-items: center;
+  }
+
+  .microphone-icon:hover {
+    color: orange;
+  }
+
+  @keyframes blinking {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .microphone-icon.playing {
+    color: orange;
+    animation: blinking 1s infinite;
+  }
+
+  .microphone-icon.paused {
+    color: orange;
+    opacity: 0.5;
+  }
 }
 
-.swiper-slide {
-  background-position: center;
-  background-size: cover;
+@media (min-width: 481px) and (max-width: 1024px) {
+  .title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+  /* This is the Parant Row for ALL Content (image and text) */
+  .content-row {
+    justify-content: center;
+    height: 1000px;
+  }
+  /* Right hand side of content row */
+  .text-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 474px;
+    width: 474px;
+  }
+
+  .text-row-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 5px;
+    width: 474px;
+    height: 20px;
+    background-color: #212529;
+  }
+
+  .text-container {
+    color: white;
+    margin: 5px;
+    flex: 1;
+    text-align: justify;
+    overflow-y: auto;
+    justify-content: flex-start;
+    height: 454px;
+  }
+
+  .text-container::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .text-container::-webkit-scrollbar-track {
+    background: #212529;
+  }
+
+  .text-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 3px;
+    border: 0px solid #212529;
+    opacity: 0.5;
+  }
+
+  /* .text-container {
+    scrollbar-color: black #212529;
+    scrollbar-width: none;
+  } */
+
+  .text {
+    background-color: #212529;
+  }
+  /* Left hand side of content row */
+  .image-container {
+    justify-content: right;
+    height: 474px;
+    width: 474px;
+  }
+
+  .image-container img {
+    height: 474px;
+    width: 474px;
+    /* position: absolute; */
+  }
+
+  .rounded-image {
+    border-radius: 12px;
+    height: 474px;
+    float: right !important;
+  }
+
+  .dj-name-container {
+    display: flex;
+    max-width: fit-content;
+    margin: 0 2px 0 0px;
+    padding-right: 0px;
+    align-items: top;
+  }
+
+  .dj-name {
+    color: white;
+    font-size: 20px;
+    font-style: bold;
+    min-width: fit-content;
+    margin: 0 0 0 0px;
+  }
+
+  /* BUTTON */
+  .buttons-container {
+    display: flex;
+    margin: 0 0 0 0;
+    padding-left: 0px;
+    align-items: center;
+  }
+
+  .select-button {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    padding: 1px 3px;
+    cursor: pointer;
+    align-items: center;
+  }
+
+  .select-button:hover {
+    background-color: orange;
+    color: white;
+  }
+
+  /* MICROOHONE */
+  .microphone-icon {
+    margin: 0 2px 0 0px;
+    cursor: pointer;
+    color: white;
+    size: 18px;
+    align-items: center;
+  }
+
+  .microphone-icon:hover {
+    color: orange;
+  }
+
+  @keyframes blinking {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .microphone-icon.playing {
+    color: orange;
+    animation: blinking 1s infinite;
+  }
+
+  .microphone-icon.paused {
+    color: orange;
+    opacity: 0.5;
+  }
 }
 
-.swiper-slide img {
-  display: block;
-  width: 100%;
-}
+/* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+/* For large devices */
+@media (min-width: 1025px) {
+  .title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+  /* This is the Parant Row for ALL Content (image and text) */
+  .content-row {
+    justify-content: center;
+    height: 500px;
+  }
+  /* Right hand side of content row */
+  .text-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 474px;
+    width: 474px;
+  }
 
-.swiper-wrapper {
-  height: 100%;
+  .text-row-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 5px;
+    width: 474px;
+    height: 20px;
+    background-color: #212529;
+  }
+
+  .text-container {
+    color: white;
+    margin: 5px;
+    flex: 1;
+    text-align: justify;
+    overflow-y: auto;
+    justify-content: flex-start;
+    height: 454px;
+  }
+
+  .text-container::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .text-container::-webkit-scrollbar-track {
+    background: #212529;
+  }
+
+  .text-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 3px;
+    border: 0px solid #212529;
+    opacity: 0.5;
+  }
+
+  /* .text-container {
+    scrollbar-color: black #212529;
+    scrollbar-width: none;
+  } */
+
+  .text {
+    background-color: #212529;
+  }
+  /* Left hand side of content row */
+  .image-container {
+    justify-content: right;
+    height: 474px;
+    width: 474px;
+  }
+
+  .image-container img {
+    height: 474px;
+    width: 474px;
+    /* position: absolute; */
+  }
+
+  .rounded-image {
+    border-radius: 12px;
+    height: 474px;
+    float: right !important;
+  }
+
+  .dj-name-container {
+    display: flex;
+    max-width: fit-content;
+    margin: 0 2px 0 0px;
+    padding-right: 0px;
+    align-items: top;
+  }
+
+  .dj-name {
+    color: white;
+    font-size: 20px;
+    font-style: bold;
+    min-width: fit-content;
+    margin: 0 0 0 0px;
+  }
+
+  /* BUTTON */
+  .buttons-container {
+    display: flex;
+    margin: 0 0 0 0;
+    padding-left: 0px;
+    align-items: center;
+  }
+
+  .select-button {
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    padding: 1px 3px;
+    cursor: pointer;
+    align-items: center;
+  }
+
+  .select-button:hover {
+    background-color: orange;
+    color: white;
+  }
+
+  /* MICROOHONE */
+  .microphone-icon {
+    margin: 0 2px 0 0px;
+    cursor: pointer;
+    color: white;
+    size: 18px;
+    align-items: center;
+  }
+
+  .microphone-icon:hover {
+    color: orange;
+  }
+
+  @keyframes blinking {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .microphone-icon.playing {
+    color: orange;
+    animation: blinking 1s infinite;
+  }
+
+  .microphone-icon.paused {
+    color: orange;
+    opacity: 0.5;
+  }
 }
