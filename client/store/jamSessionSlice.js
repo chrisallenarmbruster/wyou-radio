@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { nanoid } from "nanoid"
+import { createSlice } from '@reduxjs/toolkit'
+import { nanoid } from 'nanoid'
 
 const initialState = {
   id: null,
@@ -7,7 +7,7 @@ const initialState = {
 }
 
 const jamSessionSlice = createSlice({
-  name: "jamSession",
+  name: 'jamSession',
   initialState,
   reducers: {
     setJamSessionId: (state, action) => {

@@ -14,7 +14,7 @@ import {
   fetchUserStations,
   setCurrentStationByUri,
 } from '../store/stationsSlice'
-import { fetchDjs } from '../store/djsSlice'
+// import { fetchDjs } from '../store/djsSlice'
 import { setCurrentTrack } from '../store/playerSlice'
 import { Routes, Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
@@ -622,7 +622,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchStations: (stationIds) => dispatch(fetchStations(stationIds)),
   fetchUserStations: () => dispatch(fetchUserStations()),
   setCurrentStationByUri: (uri) => dispatch(setCurrentStationByUri(uri)),
-  fetchDjs: () => dispatch(fetchDjs()),
+  // fetchDjs: () => dispatch(fetchDjs()),
   setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
   setCurrentDj: (dj) => dispatch(setCurrentDj(dj)),
   showProfile: () => dispatch(showProfile()),
