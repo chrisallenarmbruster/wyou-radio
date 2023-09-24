@@ -29,7 +29,7 @@ const AppAuthWrapper = (props) => {
   }, [accessToken])
 
   return (
-    <Col >
+    <Col>
       <Row>
         <UserProfile />
         <Routes>

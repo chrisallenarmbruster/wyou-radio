@@ -394,10 +394,9 @@ export class Radio extends Component {
       <Col
         style={{
           // maxWidth: '95vw',
-          maxHeight: '100%',
+          maxHeight: `${window.innerHeight}px`,
           display: 'flex',
           flexDirection: 'column',
-          objectFit: 'contain',
           // maxHeight: '100vh',
         }}
       >
@@ -430,7 +429,7 @@ export class Radio extends Component {
         </Row>
         <Row
           className="order-row order-row-2 justify-content-center"
-          style={{ minHeight: '600px' }}
+          style={{ flex: 1 }}
         >
           <Col className="radio-panel-container" xs={12}>
             <Row className="radio-panel">
@@ -466,7 +465,7 @@ export class Radio extends Component {
           </Col>
         </Row>
         <Row
-          className={`order-row order-row-3 justify-content-center align-items-center align-items-top ${
+          className={`order-row order-row-3 justify-content-center align-items-top ${
             this.state.djOnAir ||
             !this.props.currentDj?.djName ||
             !this.props.currentStation?.name
@@ -474,7 +473,6 @@ export class Radio extends Component {
               : ''
           } `}
         >
-          {/* <Col style={{ flex: 1 }}></Col> */}
           <Col xs="auto">
             <GoTools
               className="controlButton"
@@ -535,7 +533,6 @@ export class Radio extends Component {
               onChange={(e) => this.masterVolumeHandler(e)}
             />
           </Col>
-          {/* <Col style={{ flex: 1 }}></Col> */}
         </Row>
         {/* {(this.state.djOnAir = true)} */}
         {this.state.djOnAir && (

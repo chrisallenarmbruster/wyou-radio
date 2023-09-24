@@ -11,24 +11,12 @@ const Player = (props) => {
   const image2Ref = useRef(null)
 
   useEffect(() => {
-    const updateImageHeight = () => {
-      if (image1Ref.current && image2Ref.current) {
-        const height1 = image1Ref.current.clientHeight
-        image2Ref.current.style.height = `${height1}px`
-        image2Ref.current.style.minHeight = `${height1}px`
-      }
+    // When component mounts, set the height of the second image to be the same as the first image
+    if (image1Ref.current && image2Ref.current) {
+      const height1 = image1Ref.current.clientHeight
+      image2Ref.current.style.maxHeight = `${height1}px`
     }
-
-    updateImageHeight()
-
-    // Add a resize event listener to the window object to update the height when the window is resized
-    window.addEventListener('resize', updateImageHeight)
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', updateImageHeight)
-    }
-  }, []) // Empty dependency array means this useEffect runs once after initial render and before unmount
+  }, []) // Empty dependency array means this effect runs once on mount
 
   return (
     <Col>
@@ -48,53 +36,49 @@ const Player = (props) => {
           md={6}
           className="px-5 d-flex align-items-center justify-content-end"
         >
-          <Row>
-            <Col style={{ width: 'auto' }}></Col>
-            <Col ref={image2Ref}>
-              <div
+          <div style={{ textAlign: 'center' }}>
+            <div>
+              <Image
+                ref={image1Ref} // Attach ref to first image
+                src={props.dj.details?.image}
                 style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
+                  // maxHeight: '500px',
+                  maxWidth: '100%',
+                  width: '100%',
+                  objectFit: 'contain',
                 }}
-              >
-                <Image
-                  ref={image1Ref}
-                  src={props.dj.details?.image}
-                  style={{
-                    maxWidth: '90%',
-                    objectFit: 'contain',
-                  }}
-                />
-                <div style={{ maxWidth: '90%', textAlign: 'center' }}>
-                  <h4 className="h5 mt-2 mb-0">DJ {props.dj?.djName}</h4>
-                  <p>{props.station?.name}</p>
-                </div>
-              </div>
-            </Col>
-          </Row>
+              />
+            </div>
+            <div>
+              <h4 className="h5 mt-2 mb-0">DJ {props.dj?.djName}</h4>
+            </div>
+            <div>
+              <p>{props.station?.name}</p>
+            </div>
+          </div>
         </Col>
         <Col sm={12} md={6} className="px-5 d-flex align-items-center">
-          <div
-            style={{
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Image
-              ref={image2Ref}
-              src={props.track?.image}
-              style={{
-                maxWidth: '100%',
-                objectFit: 'contain',
-              }}
-            />
-            <h4 className="h5 mt-2 mb-0">{props.track?.name}</h4>
-            <p>
-              {props.track?.artists.map((artist) => artist.name).join(', ')}
-            </p>
+          <div style={{ textAlign: 'center' }}>
+            <div>
+              <Image
+                ref={image2Ref}
+                src={props.track?.image}
+                style={{
+                  // maxHeight: '500px',
+                  maxWidth: '100%',
+                  width: '100%',
+                  objectFit: 'contain',
+                }}
+              />
+            </div>
+            <div>
+              <h4 className="h5 mt-2 mb-0">{props.track?.name}</h4>
+            </div>
+            <div>
+              <p>
+                {props.track?.artists.map((artist) => artist.name).join(', ')}
+              </p>
+            </div>
           </div>
         </Col>
       </Row>
