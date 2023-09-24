@@ -15,12 +15,14 @@ export class App extends Component {
         <Col
           style={{
             maxWidth: '100%',
+            maxHeight: '90vh',
             display: 'flex',
             flexDirection: 'column',
+            justifyContent: 'center',
           }}
         >
           <Row>
-            <NavBar />
+            <NavBar style={{marginTop: "5px"}} />
           </Row>
           <Row>
             {code || this.props.user?.details?.accessToken ? (

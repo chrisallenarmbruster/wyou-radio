@@ -11,12 +11,24 @@ const Player = (props) => {
   const image2Ref = useRef(null)
 
   useEffect(() => {
-    // When component mounts, set the height of the second image to be the same as the first image
-    if (image1Ref.current && image2Ref.current) {
-      const height1 = image1Ref.current.clientHeight
-      image2Ref.current.style.maxHeight = `${height1}px`
+    const updateImageHeight = () => {
+      if (image1Ref.current && image2Ref.current) {
+        const height1 = image1Ref.current.clientHeight
+        image2Ref.current.style.height = `${height1}px`
+        image2Ref.current.style.minHeight = `${height1}px`
+      }
     }
-  }, []) // Empty dependency array means this effect runs once on mount
+
+    updateImageHeight()
+
+    // Add a resize event listener to the window object to update the height when the window is resized
+    window.addEventListener('resize', updateImageHeight)
+
+    // Cleanup: remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', updateImageHeight)
+    }
+  }, [])
 
   return (
     <Col>
@@ -29,7 +41,7 @@ const Player = (props) => {
           overflow: 'hidden',
           objectFit: 'contain',
           justifyContent: 'center',
-          flex:1,
+          flex: 1,
         }}
       >
         <Col
