@@ -10,7 +10,7 @@ const NavBar = (props) => {
   const navigate = useNavigate()
 
   return (
-    <Navbar bg="dark" variant="dark" >
+    <Navbar bg="dark" variant="dark" style={{marginTop:"5px !important"}} >
       <Navbar.Brand className="ms-3">WYOU Radio</Navbar.Brand>
 
       {props.user && (

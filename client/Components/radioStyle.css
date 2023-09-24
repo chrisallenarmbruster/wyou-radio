@@ -6,7 +6,6 @@
   height: 16em;
 }
 
-
 .link {
   margin-right: 25px;
 }
@@ -25,6 +24,8 @@
 /* Default order for mobile views */
 .order-row-1 {
   order: 2;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .order-row-2 {
   order: 3;
@@ -41,6 +42,10 @@
   order: 5;
 }
 
+.player-container {
+  min-height: 600px;
+}
+
 /* Change order for larger screens */
 @media (min-width: 767px) {
   .volumn-slider {
@@ -53,6 +58,9 @@
   .volumn-slider::-webkit-slider-runnable-track {
     height: 5px;
   }
+  .player-container {
+    min-height: 600px;
+  }
 
   .order-row-1 {
     order: 1;
@@ -63,16 +71,18 @@
   .order-row-3 {
     order: 3;
     position: fixed;
-    top: 80%;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    margin-top: 20px;
-    transform: translateX(-50%);
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 20px;
   }
   .order-row-4 {
     order: 4;
     position: fixed;
+    margin-top: 5px;
+    margin-bottom: 5px;
     top: 75%;
     left: 50%;
     transform: translateX(-50%);

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
@@ -7,6 +7,29 @@ import Row from 'react-bootstrap/Row'
 import Image from 'react-bootstrap/Image'
 
 const Player = (props) => {
+  const image1Ref = useRef(null)
+  const image2Ref = useRef(null)
+
+  useEffect(() => {
+    const updateImageHeight = () => {
+      if (image1Ref.current && image2Ref.current) {
+        const height1 = image1Ref.current.clientHeight
+        image2Ref.current.style.height = `${height1}px`
+        image2Ref.current.style.minHeight = `${height1}px`
+      }
+    }
+
+    updateImageHeight()
+
+    // Add a resize event listener to the window object to update the height when the window is resized
+    window.addEventListener('resize', updateImageHeight)
+
+    // Cleanup: remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', updateImageHeight)
+    }
+  }, [])
+
   return (
     <Col>
       <Row className="text-light title">
@@ -18,7 +41,7 @@ const Player = (props) => {
           overflow: 'hidden',
           objectFit: 'contain',
           justifyContent: 'center',
-          flex:1,
+          flex: 1,
         }}
       >
         <Col
@@ -29,6 +52,7 @@ const Player = (props) => {
           <div style={{ textAlign: 'center' }}>
             <div>
               <Image
+                ref={image1Ref} // Attach ref to first image
                 src={props.dj.details?.image}
                 style={{
                   // maxHeight: '500px',
@@ -50,6 +74,7 @@ const Player = (props) => {
           <div style={{ textAlign: 'center' }}>
             <div>
               <Image
+                ref={image2Ref}
                 src={props.track?.image}
                 style={{
                   // maxHeight: '500px',

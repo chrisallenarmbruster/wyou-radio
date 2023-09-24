@@ -10,17 +10,19 @@ export class App extends Component {
     const code = new URLSearchParams(window.location.search).get('code')
     return (
       <Container
-        style={{ display: 'flex', maxWidth: '95vw', maxHeight: '95vw' }}
+        style={{ display: 'flex', maxWidth: '95vw', maxHeight: '95vh' }}
       >
         <Col
           style={{
             maxWidth: '100%',
+            maxHeight: '90vh',
             display: 'flex',
             flexDirection: 'column',
+            justifyContent: 'center',
           }}
         >
           <Row>
-            <NavBar />
+            <NavBar style={{marginTop: "5px"}} />
           </Row>
           <Row>
             {code || this.props.user?.details?.accessToken ? (
