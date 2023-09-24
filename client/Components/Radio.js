@@ -427,10 +427,7 @@ export class Radio extends Component {
             </Link>
           </Col>
         </Row>
-        <Row
-          className="order-row order-row-2 justify-content-center"
-          style={{ flex: 1 }}
-        >
+        <Row className="order-row order-row-2 justify-content-center">
           <Col className="radio-panel-container" xs={12}>
             <Row className="radio-panel">
               <Routes>
@@ -472,6 +469,7 @@ export class Radio extends Component {
               ? 'd-none'
               : ''
           } `}
+          style={{ height: '20px' }}
         >
           <Col xs="auto">
             <GoTools
@@ -540,7 +538,7 @@ export class Radio extends Component {
             className="order-row order-row-4 justify-content-center align-items-center blink"
             style={{ paddingTop: '10px' }}
           >
-            <Col xs="auto">
+            <Col >
               <img src="/live.png" alt="Live" style={{ maxWidth: '100px' }} />
             </Col>
           </Row>

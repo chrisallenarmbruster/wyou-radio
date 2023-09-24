@@ -10,11 +10,11 @@ export class App extends Component {
     const code = new URLSearchParams(window.location.search).get('code')
     return (
       <Container
-        style={{ display: 'flex', maxWidth: '95vw', maxHeight: '95vh' }}
+        style={{ display: 'flex', maxWidth: '95vw', maxHeight: '95vw' }}
       >
         <Col
           style={{
-            maxWidth: '75%',
+            maxWidth: '100%',
             display: 'flex',
             flexDirection: 'column',
           }}
