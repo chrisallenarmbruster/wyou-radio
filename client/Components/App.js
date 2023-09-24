@@ -17,7 +17,6 @@ export class App extends Component {
             maxWidth: '75%',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center'
           }}
         >
           <Row>
