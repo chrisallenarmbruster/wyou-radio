@@ -61,13 +61,11 @@
   }
   .order-row-3 {
     order: 3;
-    position: absolute;
-    bottom: 0;
+    position: fixed;
+    top: 80%;
     left: 50%;
-    transform: translateX(-100%);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    height: 20px;
+    transform: translateX(-50%);
+    margin-top: 20px;
   }
   .order-row-4 {
     order: 4;

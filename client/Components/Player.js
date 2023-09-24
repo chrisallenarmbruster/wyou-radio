@@ -31,55 +31,45 @@ const Player = (props) => {
           justifyContent: 'center',
         }}
       >
-        <Col
-          sm={12}
-          md={6}
-          className="px-5 d-flex align-items-center justify-content-end"
-        >
-          <div style={{ textAlign: 'center' }}>
-            <div>
-              <Image
-                ref={image1Ref} // Attach ref to first image
-                src={props.dj.details?.image}
-                style={{
-                  // maxHeight: '500px',
-                  maxWidth: '100%',
-                  width: '100%',
-                  objectFit: 'contain',
-                }}
-              />
-            </div>
-            <div>
-              <h4 className="h5 mt-2 mb-0">DJ {props.dj?.djName}</h4>
-            </div>
-            <div>
-              <p>{props.station?.name}</p>
-            </div>
-          </div>
+        <Col sm={12} md={6} className="px-5">
+          <Row>
+            <Image
+              src={props.dj.details?.image}
+              style={{
+                maxHeight: '500px',
+                maxWidth: '100%',
+                width: '100%',
+                objectFit: 'contain',
+              }}
+            />
+          </Row>
+          <Row style={{ textAlign: 'center' }}>
+            <h4 className="h5 mt-2 mb-0">DJ {props.dj?.djName}</h4>
+          </Row>
+          <Row style={{ textAlign: 'center' }}>
+            <p>{props.station?.name}</p>
+          </Row>
         </Col>
-        <Col sm={12} md={6} className="px-5 d-flex align-items-center">
-          <div style={{ textAlign: 'center' }}>
-            <div>
-              <Image
-                ref={image2Ref}
-                src={props.track?.image}
-                style={{
-                  // maxHeight: '500px',
-                  maxWidth: '100%',
-                  width: '100%',
-                  objectFit: 'contain',
-                }}
-              />
-            </div>
-            <div>
-              <h4 className="h5 mt-2 mb-0">{props.track?.name}</h4>
-            </div>
-            <div>
-              <p>
-                {props.track?.artists.map((artist) => artist.name).join(', ')}
-              </p>
-            </div>
-          </div>
+        <Col sm={12} md={6} className="px-5">
+          <Row>
+            <Image
+              src={props.track?.image}
+              style={{
+                maxHeight: '500px',
+                maxWidth: '100%',
+                width: '100%',
+                objectFit: 'contain',
+              }}
+            />
+          </Row>
+          <Row style={{ textAlign: 'center' }}>
+            <h4 className="h5 mt-2 mb-0">{props.track?.name}</h4>
+          </Row>
+          <Row style={{ textAlign: 'center' }}>
+            <p>
+              {props.track?.artists.map((artist) => artist.name).join(', ')}
+            </p>
+          </Row>
         </Col>
       </Row>
     </Col>
