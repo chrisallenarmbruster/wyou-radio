@@ -21,10 +21,8 @@ const Player = (props) => {
 
     updateImageHeight()
 
-    // Add a resize event listener to the window object to update the height when the window is resized
     window.addEventListener('resize', updateImageHeight)
 
-    // Cleanup: remove the event listener when the component is unmounted
     return () => {
       window.removeEventListener('resize', updateImageHeight)
     }
