@@ -534,7 +534,7 @@ export class Radio extends Component {
             />
           </Col>
         </Row>
-        {(this.state.djOnAir = true)}
+        {/* {(this.state.djOnAir = true)} */}
         {this.state.djOnAir && (
           <Row
             className="order-row order-row-4 justify-content-center align-items-center blink"
