@@ -88,24 +88,20 @@ async function constructPromptListWithCounts(details) {
     type1: {
       prompt: `${djStyle} ${songInto} ${getRandomElement(
         djTopics
-      )}\n\n INSTRUCTIONS:\n${djCoreInstructions} ${signaturePhrases}\n\nCONTEXT:\nDJ Name: ${djName}\n${djChannel} ${getRandomElement(
-        personalization
-      )}`,
+      )}\n\n INSTRUCTIONS:\n${djCoreInstructions} ${signaturePhrases}\n\nCONTEXT:\nDJ Name: ${djName}\n${djChannel}`,
       frequency: 1,
     },
     type2: {
       prompt: `${djStyle} ${songInto}\n\n INSTRUCTIONS:\n${djCoreInstructions}\n9. ${getRandomElement(
         djTopics
-      )} ${getRandomElement(
-        personalization
       )}\n\nCONTEXT:\nDJ Name: ${djName}\nDJ Background: ${context}`,
-      frequency: 1,
+      frequency: 2,
     },
     type3: {
       prompt: `${djStyle} ${songInto}\n\n INSTRUCTIONS:\n${djCoreInstructions}\n10. ${getRandomElement(
         personalization
       )}`,
-      frequency: 1,
+      frequency: 5,
     },
   }
 }
