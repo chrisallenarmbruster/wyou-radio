@@ -14,11 +14,13 @@ const { createContent } = require("../createContent");
 async function showRunner(
   userEmail,
   jamSessionId,
-  display_name,
+  user,
   djId,
   station,
   chain
 ) {
+
+  const { display_name, lat, long } = user.profile
   let content = {};
   let { show, nextTrackURI, tempSongName, tempBandName } =
     await addPlaylistToRundown(userEmail, jamSessionId);
@@ -36,7 +38,7 @@ async function showRunner(
       nextElement.bandName,
       show.date,
       show.timeSlot,
-      display_name,
+      user,
       djId,
       station,
       chain
@@ -61,7 +63,7 @@ async function showRunner(
 
     await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2);
 
-    let weatherReport = await currentWeather();
+    let weatherReport = await currentWeather(lat, long);
     content = await createContent(
       null,
       null,
@@ -69,13 +71,13 @@ async function showRunner(
       null,
       null,
       null,
-      display_name,
+      user,
       djId,
       station,
       chain,
       `Summarize this weather, be brief. Weather: ${weatherReport}. End the weather report by announcing this song by ${songAfterWeather.bandName} called ${songAfterWeather.songName}. Be very brief.`,
       null
-    );
+    )
 
     let audioURI = await convertFileToDataURI(content.fileName, "mp3");
 
