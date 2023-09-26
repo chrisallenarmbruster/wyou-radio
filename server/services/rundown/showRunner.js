@@ -1,35 +1,28 @@
 const {
   addPlaylistToRundown,
-} = require("./rundownUtlities/addPlaylistToRundown");
+} = require('./rundownUtlities/addPlaylistToRundown')
 const {
   getCurrentRundownIndex,
   updateCurrentRundownIndex,
-} = require("./rundownUtlities/rundownIndex");
-const { saveToDb, reset } = require("../rundown/rundownUtlities/dbUtilities");
-const currentWeather = require("../currentWeather");
-const historySegment = require("../historySegment");
-const { convertFileToDataURI } = require("../utl/convertMP3FileToDataURI");
-const { createContent } = require("../createContent");
+} = require('./rundownUtlities/rundownIndex')
+const { saveToDb, reset } = require('../rundown/rundownUtlities/dbUtilities')
+const currentWeather = require('../currentWeather')
+const historySegment = require('../historySegment')
+const { convertFileToDataURI } = require('../utl/convertMP3FileToDataURI')
+const { createContent } = require('../createContent')
 
-async function showRunner(
-  userEmail,
-  jamSessionId,
-  user,
-  djId,
-  station,
-  chain
-) {
-
-  const { display_name, lat, long } = user.profile
-  let content = {};
+async function showRunner(userEmail, jamSessionId, user, djId, station, chain) {
+  const { lat, long } = user.profile
+  const { display_name } = user
+  let content = {}
   let { show, nextTrackURI, tempSongName, tempBandName } =
-    await addPlaylistToRundown(userEmail, jamSessionId);
-  const currentRundownIndex = await getCurrentRundownIndex(userEmail);
+    await addPlaylistToRundown(userEmail, jamSessionId)
+  const currentRundownIndex = await getCurrentRundownIndex(userEmail)
 
-  if (show.rundown[currentRundownIndex + 1].type === "song") {
-    let nextElement = show.rundown[currentRundownIndex + 1];
+  if (show.rundown[currentRundownIndex + 1].type === 'song') {
+    let nextElement = show.rundown[currentRundownIndex + 1]
 
-    await updateCurrentRundownIndex(userEmail, currentRundownIndex + 1);
+    await updateCurrentRundownIndex(userEmail, currentRundownIndex + 1)
 
     content = await createContent(
       show.radioStation,
@@ -42,9 +35,9 @@ async function showRunner(
       djId,
       station,
       chain
-    );
+    )
 
-    let audioURI = await convertFileToDataURI(content.fileName, "mp3");
+    let audioURI = await convertFileToDataURI(content.fileName, 'mp3')
 
     //  saves the next track dj auido and transcript to the database
     await saveToDb(
@@ -55,15 +48,15 @@ async function showRunner(
       tempBandName,
       audioURI,
       content.text
-    );
+    )
 
-    return audioURI;
-  } else if (show.rundown[currentRundownIndex + 1].type === "weather") {
-    let songAfterWeather = show.rundown[currentRundownIndex + 2];
+    return audioURI
+  } else if (show.rundown[currentRundownIndex + 1].type === 'weather') {
+    let songAfterWeather = show.rundown[currentRundownIndex + 2]
 
-    await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2);
+    await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2)
 
-    let weatherReport = await currentWeather(lat, long);
+    let weatherReport = await currentWeather(lat, long)
     content = await createContent(
       null,
       null,
@@ -79,7 +72,7 @@ async function showRunner(
       null
     )
 
-    let audioURI = await convertFileToDataURI(content.fileName, "mp3");
+    let audioURI = await convertFileToDataURI(content.fileName, 'mp3')
 
     await saveToDb(
       jamSessionId,
@@ -89,19 +82,19 @@ async function showRunner(
       tempBandName,
       audioURI,
       content.text
-    );
+    )
 
-    return audioURI;
-  } else if (show.rundown[currentRundownIndex + 1].type === "history") {
-    let songAfterHistory = show.rundown[currentRundownIndex + 2];
+    return audioURI
+  } else if (show.rundown[currentRundownIndex + 1].type === 'history') {
+    let songAfterHistory = show.rundown[currentRundownIndex + 2]
 
-    await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2);
+    await updateCurrentRundownIndex(userEmail, currentRundownIndex + 2)
 
     let history = await historySegment(
       display_name,
       songAfterHistory.songName,
       songAfterHistory.bandName
-    );
+    )
 
     content = await createContent(
       null,
@@ -116,9 +109,9 @@ async function showRunner(
       chain,
       null,
       history
-    );
+    )
 
-    let audioURI = await convertFileToDataURI(content.fileName, "mp3");
+    let audioURI = await convertFileToDataURI(content.fileName, 'mp3')
 
     await saveToDb(
       jamSessionId,
@@ -128,10 +121,10 @@ async function showRunner(
       tempBandName,
       audioURI,
       content.text
-    );
+    )
 
-    return audioURI;
+    return audioURI
   }
 }
 
-module.exports = { showRunner };
+module.exports = { showRunner }
