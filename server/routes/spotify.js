@@ -66,12 +66,12 @@ router.post('/login', (req, res) => {
             console.log('Something went wrong!', err)
           }
         )
-        .then(() => {
+        .then(async () => {
           req.session.accessToken = body.access_token
           req.session.refreshToken = body.refresh_token
           req.session.expiresIn = body.expires_in
           console.log(`${req.session.email} logged in successfully!`)
-          Profile.findOrCreate({
+          await Profile.findOrCreate({
             where: { userEmail: req.session.email },
           }).then(([profile, created]) => {
             res.json({

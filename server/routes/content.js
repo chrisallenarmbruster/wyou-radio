@@ -26,11 +26,10 @@ router.post('/next-content', async (req, res) => {
     },
     include: {
       model: Profile,
-      attributes: ['zip', 'lat', 'long'],
+      attributes: ['name', 'zip', 'lat', 'long'],
     },
   })
   const userZip = user.profile.zip
-  console.log(user.profile.zip, user.profile.lat, user.profile.long)
   if (user.profile.zip && !user.profile.lat && !user.profile.long) {
     ;(async function () {
       const coordinates = await getLatLonFromZip(userZip)

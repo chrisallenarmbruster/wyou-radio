@@ -8,7 +8,10 @@ async function constructPromptListWithCounts(details) {
   let djName = djProfile.djName
   let djStyle = djProfile.details.djStyle
   let context = djProfile.details.context
-  let { user_name } = details.user.profile
+
+  console.log('user', details.user)
+  console.log('user, details.user.profile', details.user.profile)
+  let name = details.user.profile.name
   // `The following is a transcript of everything said by you, a disk jockey. The Human is prompting you on what to say and how. Respond following the provided INSTRUCTIONS. Create you answer so they are thematically consistent with the provided CONTEXT:`;
   let brevity = [
     'Be very brief. Limit your script to 2 sentences.',
@@ -21,7 +24,7 @@ async function constructPromptListWithCounts(details) {
     brevity
   )}`
   let djChannel = `The Station is called ${details.station.name}. The date is ${details.date}.`
-  let personalization = [`Address ${user_name} as your primary listener.`]
+  let personalization = [`Address ${name} as your primary listener.`]
   let signaturePhrases = `Use this phrase ${getRandomElement(
     djProfile.details.signaturePhrases
   )}`
@@ -85,12 +88,16 @@ async function constructPromptListWithCounts(details) {
     type1: {
       prompt: `${djStyle} ${songInto} ${getRandomElement(
         djTopics
-      )}\n\n INSTRUCTIONS:\n${djCoreInstructions} ${signaturePhrases}\n\nCONTEXT:\nDJ Name: ${djName}\n${djChannel}`,
+      )}\n\n INSTRUCTIONS:\n${djCoreInstructions} ${signaturePhrases}\n\nCONTEXT:\nDJ Name: ${djName}\n${djChannel} ${getRandomElement(
+        personalization
+      )}`,
       frequency: 1,
     },
     type2: {
       prompt: `${djStyle} ${songInto}\n\n INSTRUCTIONS:\n${djCoreInstructions}\n9. ${getRandomElement(
         djTopics
+      )} ${getRandomElement(
+        personalization
       )}\n\nCONTEXT:\nDJ Name: ${djName}\nDJ Background: ${context}`,
       frequency: 1,
     },
