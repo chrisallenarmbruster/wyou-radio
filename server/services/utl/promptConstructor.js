@@ -10,7 +10,7 @@ async function songPrompts(
   bandName,
   date,
   timeSlot,
-  name,
+  user,
   djId,
   station
 ) {
@@ -21,7 +21,7 @@ async function songPrompts(
     bandName,
     date,
     timeSlot,
-    name,
+    user,
     djId,
     station,
   };

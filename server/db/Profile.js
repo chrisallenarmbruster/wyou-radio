@@ -1,14 +1,16 @@
-const conn = require("./conn")
+const conn = require('./conn')
 const { STRING, INTEGER, FLOAT } = conn.Sequelize
 
-const Profile = conn.define("profile", {
+const Profile = conn.define('profile', {
   userEmail: {
     type: STRING,
     references: {
-      model: "users", // 'users' is the name of the table that Sequelize creates based on the User model
-      key: "email",
+      model: 'users',
+      key: 'email',
     },
     allowNull: false,
+    primaryKey: true,
+    unique: true,
   },
   name: {
     type: STRING,

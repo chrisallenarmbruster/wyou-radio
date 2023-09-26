@@ -11,7 +11,7 @@ async function createContent(
   bandName,
   date,
   timeSlot,
-  name,
+  user,
   djId,
   station,
   chain,
@@ -43,7 +43,7 @@ async function createContent(
         bandName,
         date,
         timeSlot,
-        name,
+        user,
         djId,
         station
       );
