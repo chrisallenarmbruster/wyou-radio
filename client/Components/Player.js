@@ -78,17 +78,20 @@ const Player = (props) => {
         </Col>
         <Col sm={12} md={6} className="px-5 d-flex align-items-center">
           <div style={{ textAlign: 'center' }}>
-            <div>
-              <Image
-                ref={image2Ref}
-                src={props.track?.image}
-                style={{
-                  // maxHeight: '500px',
-                  maxWidth: '100%',
-                  width: '100%',
-                  objectFit: 'contain',
-                }}
-              />
+            <div
+              ref={image2Ref}
+              style={{
+                // maxHeight: '500px',
+                maxWidth: '100%',
+                width: '100%',
+                objectFit: 'contain',
+                backgroundImage: `url(${props.track?.image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: '50% 50%',
+                aspectRatio: '1 / 1',
+              }}
+            >
+              {/* <Image src={props.track?.image} /> */}
             </div>
             <div>
               <h4 className="h5 mt-2 mb-0">{props.track?.name}</h4>
