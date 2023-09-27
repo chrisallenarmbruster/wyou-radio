@@ -19,11 +19,19 @@ const Player = (props) => {
       }
     }
 
-    updateImageHeight()
+    const handleImageLoad = () => {
+      updateImageHeight()
+      window.addEventListener('resize', updateImageHeight)
+    }
 
-    window.addEventListener('resize', updateImageHeight)
+    if (image1Ref.current) {
+      image1Ref.current.addEventListener('load', handleImageLoad)
+    }
 
     return () => {
+      if (image1Ref.current) {
+        image1Ref.current.removeEventListener('load', handleImageLoad)
+      }
       window.removeEventListener('resize', updateImageHeight)
     }
   }, [])
