@@ -1,21 +1,21 @@
-import React from "react"
-import Modal from "react-bootstrap/Modal"
-import { connect } from "react-redux"
-import { showProfile, hideProfile, clearUser } from "../store/userSlice"
-import { Formik, Field, ErrorMessage } from "formik"
-import Form from "react-bootstrap/Form"
-import * as Yup from "yup"
-import { updateProfile } from "../store/userSlice"
-import Button from "react-bootstrap/Button"
-import Container from "react-bootstrap"
-import { useNavigate } from "react-router-dom"
+import React from 'react'
+import Modal from 'react-bootstrap/Modal'
+import { connect } from 'react-redux'
+import { showProfile, hideProfile, clearUser } from '../store/userSlice'
+import { Formik, Field, ErrorMessage } from 'formik'
+import Form from 'react-bootstrap/Form'
+import * as Yup from 'yup'
+import { updateProfile } from '../store/userSlice'
+import Button from 'react-bootstrap/Button'
+import Container from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 
 const UserProfile = (props) => {
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("First Name is required"),
+    name: Yup.string().required('First Name is required'),
     zip: Yup.string()
-      .matches(/^[0-9]{5}$/, "Zip Code must be a 5-digit number")
-      .required("Zip Code is required"),
+      .matches(/^[0-9]{5}$/, 'Zip Code must be a 5-digit number')
+      .required('Zip Code is required'),
   })
 
   const onSubmit = (values) => {
@@ -30,6 +30,7 @@ const UserProfile = (props) => {
         backdrop="static"
         keyboard={false}
         className="bg-dark text-light "
+        centered
       >
         <div className="border border-secondary">
           <Modal.Header className="bg-primary text-light border border-primary">
@@ -37,8 +38,8 @@ const UserProfile = (props) => {
           </Modal.Header>
           <Formik
             initialValues={{
-              zip: props.profile?.zip || "",
-              name: props.profile?.name || "",
+              zip: props.profile?.zip || '',
+              name: props.profile?.name || '',
             }}
             validationSchema={validationSchema}
             onSubmit={onSubmit}
@@ -69,7 +70,7 @@ const UserProfile = (props) => {
                       type="text"
                       name="name"
                       placeholder="Enter first name"
-                      value={values.name || ""}
+                      value={values.name || ''}
                       onChange={handleChange}
                       isValid={touched.name && !errors.name}
                       isInvalid={touched.name && !!errors.name}
@@ -86,7 +87,7 @@ const UserProfile = (props) => {
                       type="text"
                       name="zip"
                       placeholder="Enter zip code"
-                      value={values.zip || ""}
+                      value={values.zip || ''}
                       onChange={handleChange}
                       isValid={touched.zip && !errors.zip}
                       isInvalid={touched.zip && !!errors.zip}
