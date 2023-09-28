@@ -34,7 +34,7 @@ const Player = (props) => {
       }
       window.removeEventListener('resize', updateImageHeight)
     }
-  }, [])
+  }, [props.track?.image])
 
   return (
     <Col>

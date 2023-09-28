@@ -1,5 +1,6 @@
 import React from 'react'
 import Container from 'react-bootstrap/Container'
+import Card from 'react-bootstrap/Card'
 
 const spotifyRedirect =
   process.env.NODE_ENV === 'production'
@@ -14,9 +15,48 @@ export default function SpotifyLogin() {
       className="d-flex justify-content-center align-items-center"
       style={{ minHeight: '75vh' }}
     >
-      <a className="btn btn-success btn-lg" href={AUTH_URL}>
-        Login With Spotify
-      </a>
+      <span>
+        <Card style={{ width: '24rem' }} bg="dark" border="warning">
+          <Card.Header className="text-warning h5">
+            Beta Notice{' '}
+            <Card.Subtitle className="my-1 text-warning">
+              Spotify Development Mode
+            </Card.Subtitle>
+          </Card.Header>
+          <Card.Body>
+            <Card.Text className="text-light">
+              <p>
+                While we await Spotify App Certification, they restrict API
+                access to registered developers. If this isn't you, the app will
+                not function properly at this time.
+              </p>{' '}
+              <p>
+                In the meantime, check out our{' '}
+                <Card.Link
+                  href="https://vimeo.com/869263029/f6f59850b1?share=copy"
+                  className="text-warning"
+                >
+                  video
+                </Card.Link>{' '}
+                for app details or{' '}
+                <Card.Link
+                  className="text-warning m-0 p-0"
+                  href="mailto:chris@armbrustermail.com,jejanov@mac.com?subject=WYOU%20Visitor"
+                >
+                  contact
+                </Card.Link>{' '}
+                us for a private demo.
+              </p>
+            </Card.Text>
+
+            <div className="text-center">
+              <a className="btn btn-success btn-lg my-3" href={AUTH_URL}>
+                Login With Spotify
+              </a>
+            </div>
+          </Card.Body>
+        </Card>
+      </span>
     </Container>
   )
 }
