@@ -25,28 +25,26 @@ export default function SpotifyLogin() {
           </Card.Header>
           <Card.Body>
             <Card.Text className="text-light">
-              <p>
-                While we await Spotify App Certification, they restrict API
-                access to registered developers. If this isn't you, the app will
-                not function properly at this time.
-              </p>{' '}
-              <p>
-                In the meantime, check out our{' '}
-                <Card.Link
-                  href="https://vimeo.com/869263029/f6f59850b1?share=copy"
-                  className="text-warning"
-                >
-                  video
-                </Card.Link>{' '}
-                for app details or{' '}
-                <Card.Link
-                  className="text-warning m-0 p-0"
-                  href="mailto:chris@armbrustermail.com,jejanov@mac.com?subject=WYOU%20Visitor"
-                >
-                  contact
-                </Card.Link>{' '}
-                us for a private demo.
-              </p>
+              While we await Spotify App Certification, they restrict API access
+              to registered developers. If this isn't you, the app will not
+              function properly at this time.
+            </Card.Text>
+            <Card.Text className="text-light">
+              In the meantime, check out our{' '}
+              <Card.Link
+                href="https://vimeo.com/869263029/f6f59850b1?share=copy"
+                className="text-warning"
+              >
+                video
+              </Card.Link>{' '}
+              for app details or{' '}
+              <Card.Link
+                className="text-warning m-0 p-0"
+                href="mailto:chris@armbrustermail.com,jejanov@mac.com?subject=WYOU%20Visitor"
+              >
+                contact
+              </Card.Link>{' '}
+              us for a private demo.
             </Card.Text>
 
             <div className="text-center">

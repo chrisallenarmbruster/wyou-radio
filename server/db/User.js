@@ -1,8 +1,8 @@
-const conn = require("./conn")
+const conn = require('./conn')
 const { STRING, BOOLEAN } = conn.Sequelize
 // const bcrypt = require("bcrypt")
 
-const User = conn.define("user", {
+const User = conn.define('user', {
   email: {
     type: STRING,
     primaryKey: true,
@@ -15,15 +15,17 @@ const User = conn.define("user", {
   product: {
     type: STRING,
     allowNull: false,
+    defaultValue: 'free',
   },
   display_name: {
     type: STRING,
     allowNull: false,
+    defaultValue: 'Spotify User',
   },
   isAdmin: {
     type: BOOLEAN,
     defaultValue: false,
   },
-});
+})
 
 module.exports = User

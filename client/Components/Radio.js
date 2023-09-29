@@ -163,7 +163,7 @@ export class Radio extends Component {
 
       let dataUri
       //uncomment following line when ready to test with backend
-      dataUri = await axios.post('/api/content/next-content', payload)
+      // dataUri = await axios.post('/api/content/next-content', payload)
 
       const metadataLoadedPromise = new Promise((resolve) => {
         this.audio.addEventListener('loadedmetadata', () => {
@@ -473,15 +473,17 @@ export class Radio extends Component {
           } `}
           style={{ height: '20px' }}
         >
-          <Col xs="auto">
-            <GoTools
-              className="controlButton"
-              onClick={this.toggleShowDevTools}
-              style={{ height: '20px' }}
-            >
-              Dev Tools
-            </GoTools>
-          </Col>
+          {this.props.isAdmin && (
+            <Col xs="auto">
+              <GoTools
+                className="controlButton"
+                onClick={this.toggleShowDevTools}
+                style={{ height: '20px' }}
+              >
+                Dev Tools
+              </GoTools>
+            </Col>
+          )}
           <Col xs="auto">
             {this.state?.pauseButton ? (
               <BsPlay
@@ -619,6 +621,7 @@ const mapStateToProps = (reduxState) => ({
   currentStation: reduxState.stations.currentStation,
   currentDj: reduxState.djs.currentDj,
   profile: reduxState.user?.profile,
+  isAdmin: reduxState.user?.details?.isAdmin,
 })
 
 const mapDispatchToProps = (dispatch) => ({
