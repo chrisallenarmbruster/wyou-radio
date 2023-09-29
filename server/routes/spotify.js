@@ -51,14 +51,13 @@ router.post('/login', (req, res) => {
       spotifyApi
         .getMe()
         .then(
-          function ({ body }) {
-            User.findOrCreate({
-              where: { email: body.email },
-              defaults: {
-                product: body.product,
-                display_name: body.display_name,
-              },
+          async function ({ body }) {
+            const [user, wasCreated] = await User.upsert({
+              email: body.email,
+              product: body.product,
+              display_name: body.display_name,
             })
+            req.session.isAdmin = user.isAdmin
             req.session.email = body.email
             req.session.displayName = body.display_name
           },
@@ -80,6 +79,7 @@ router.post('/login', (req, res) => {
               accessToken: req.session.accessToken,
               refreshToken: req.session.refreshToken,
               expiresIn: req.session.expiresIn,
+              isAdmin: req.session.isAdmin,
               profile,
             })
           })
