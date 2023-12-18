@@ -1,6 +1,5 @@
 const conn = require('./conn')
 const { STRING, BOOLEAN } = conn.Sequelize
-// const bcrypt = require("bcrypt")
 
 const User = conn.define('user', {
   email: {
