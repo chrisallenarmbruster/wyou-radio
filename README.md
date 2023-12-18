@@ -9,7 +9,7 @@ WYOU Radio is an innovative AI-driven music application that transforms Spotify 
 ## Listen to Sample Broadcast
 
 <audio controls>
-  <source src="/public/audio/samples/broadcast-demo-rusty.mp3" type="audio/mpeg">
+  <source src="public/audio/samples/broadcast-demo-rusty.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
