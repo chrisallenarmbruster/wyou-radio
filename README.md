@@ -21,7 +21,7 @@ https://github.com/chrisallenarmbruster/wyou-radio/assets/64435986/15ea431f-4081
     src="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3"
     type="audio/mpeg"
   />
-  Your browser does not support the audio element.
+  [Listen to the audio sample](https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3)
 </audio>
 
 <br>
