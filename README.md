@@ -10,11 +10,7 @@ WYOU Radio is an innovative AI-driven music application that transforms Spotify 
 
 ## Listen to Broadcast Sample
 
-https://github.com/chrisallenarmbruster/wyou-radio/assets/64435986/15ea431f-4081-48d4-aaaf-86e557b06eae
-
-<br>
-
-### [Click to Play Broadcast Demo](https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3)
+## [📻 🎵 🔊 Click to Play Broadcast Demo](https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3)
 
 <a href="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3">Click to Play Broadcast Demo</a>
 
@@ -23,6 +19,24 @@ This is a sample of a WYOU Radio broadcast. It features AI disc jockey Rusty Mad
 **Note:** _The volume may need to be adjusted in the player control._
 
 <br>
+
+Sure, here are some emojis that are often used to represent playing audio:
+
+- 🎵 Musical Note
+- 🎶 Musical Notes
+- 🎧 Headphone
+- 📻 Radio
+- 🔊 Speaker High Volume
+- ▶️ Play Button
+- ⏯️ Play or Pause Button
+
+You can use these emojis in your markdown file like this:
+
+```markdown
+🎵 [Click to Play Broadcast Demo](https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3)
+```
+
+Please note that the display of these emojis can vary depending on the platform and device used to view them.
 
 ## Key Features
 
