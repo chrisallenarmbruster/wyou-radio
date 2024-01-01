@@ -110,8 +110,9 @@ Here is a link to the project video hosted by the WYOU AI disc jockey personalit
 
 ## Engineers
 
-- [Chris Armbruster](https://github.com/chrisallenarmbruster)
-- [Joel Janov](https://github.com/https://github.com/jejanov)
+### [🧑 Chris Armbruster](https://github.com/chrisallenarmbruster)
+
+### [🧑 Joel Janov](https://github.com/https://github.com/jejanov)
 
 <br>
 
