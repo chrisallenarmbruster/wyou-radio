@@ -4,7 +4,7 @@
 
 WYOU Radio is an innovative AI-driven music application that transforms Spotify music streams into a personalized radio experience, complete with AI DJs. This full-stack app integrates advanced AI technologies to generate dynamic DJ dialogues that accompany a live Spotify stream, creating an immersive and interactive listening experience.
 
-![WYOU-Radio Composite](/public/images/screenshots/wyou-radio-composite.png)
+[![WYOU-Radio Composite](/public/images/screenshots/wyou-radio-composite.png)](https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3)
 
 <br>
 
