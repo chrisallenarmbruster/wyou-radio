@@ -10,7 +10,7 @@ WYOU Radio is an innovative AI-driven music application that transforms Spotify 
 
 ## Listen to Broadcast Sample
 
-## [Click to Play Broadcast Demo 📻 🎵 🔊](https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3)
+### [Click to Play Broadcast Demo 📻 🎵 🔊](https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3)
 
 This is a sample of a WYOU Radio broadcast. It features AI disc jockey Rusty Maddox, a WYOU Radio personality, whose unscripted narrative and voice were generated on-the-fly by this app using AI technologies to accompany and mix with a live Spotify music stream.
 
