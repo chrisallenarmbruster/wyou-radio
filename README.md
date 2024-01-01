@@ -10,19 +10,13 @@ WYOU Radio is an innovative AI-driven music application that transforms Spotify 
 
 ## Listen to Broadcast Sample
 
-**Note:** _The volume may need to be adjusted in the player control._
-
 https://github.com/chrisallenarmbruster/wyou-radio/assets/64435986/15ea431f-4081-48d4-aaaf-86e557b06eae
 
 <br>
 
-<audio controls>
-  <source
-    src="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3"
-    type="audio/mpeg"
-  />
-  <a href="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3">Click to Listen to Broadcast Demo</a>
-</audio>
+<a href="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3">Click Control Above or Here to Listen to Broadcast Demo</a>
+
+**Note:** _The volume may need to be adjusted in the player control._
 
 <br>
 
