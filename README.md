@@ -21,7 +21,7 @@ https://github.com/chrisallenarmbruster/wyou-radio/assets/64435986/15ea431f-4081
     src="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3"
     type="audio/mpeg"
   />
-  [Listen to the audio sample](https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3)
+  <a href="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3">Click to Listen to Broadcast Demo</a>
 </audio>
 
 <br>
