@@ -22,13 +22,13 @@ This is a sample of a WYOU Radio broadcast. It features AI disc jockey Rusty Mad
 
 Here are some audio samples from the WYOU AI DJs. These snippets were unscripted and dynamically generated on-the-fly by this app. They are isolated from the music stream to highlight the AI DJ's voice and narrative.
 
-##### [🔊 M-Quake](https://portfolio.rev4labs.com/audio/wyou-samples/dj--history-demo-mquake.mp3)
+##### [🔊 M-Quake](https://portfolio.rev4labs.com/audio/wyou-samples/dj--history-demo-mquake.mp3) (This Day in Music History)
 
-##### [🔊 Lady Lyric](https://portfolio.rev4labs.com/audio/wyou-samples/dj-segue-demo-ladylyric.mp3)
+##### [🔊 Lady Lyric](https://portfolio.rev4labs.com/audio/wyou-samples/dj-segue-demo-ladylyric.mp3) (Song Segue)
 
-##### [🔊 Rusty Maddox](https://portfolio.rev4labs.com/audio/wyou-samples/dj-segue-demo-rusty-joan-jett.mp3)
+##### [🔊 Rusty Maddox](https://portfolio.rev4labs.com/audio/wyou-samples/dj-segue-demo-rusty-joan-jett.mp3) (Funny Story)
 
-##### [🔊 Nigel Windsor](https://portfolio.rev4labs.com/audio/wyou-samples/dj-weather-demo-nigel.mp3)
+##### [🔊 Nigel Windsor](https://portfolio.rev4labs.com/audio/wyou-samples/dj-weather-demo-nigel.mp3) (Weather)
 
 <br>
 
