@@ -12,7 +12,7 @@ WYOU Radio is an innovative AI-driven music application that transforms Spotify 
 
 __Note:__ *The volume may need to be adjusted in the player control.*
 
-https://github.com/Rev4Labs/wyou-radio/assets/64435986/58e33673-0ed3-47aa-b825-4a0683985383
+https://github.com/chrisallenarmbruster/wyou-radio/assets/64435986/15ea431f-4081-48d4-aaaf-86e557b06eae
 
 <br>
 
