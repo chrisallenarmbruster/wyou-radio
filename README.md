@@ -10,9 +10,19 @@ WYOU Radio is an innovative AI-driven music application that transforms Spotify 
 
 ## Listen to Broadcast Sample
 
-__Note:__ *The volume may need to be adjusted in the player control.*
+**Note:** _The volume may need to be adjusted in the player control._
 
 https://github.com/chrisallenarmbruster/wyou-radio/assets/64435986/15ea431f-4081-48d4-aaaf-86e557b06eae
+
+<br>
+
+<audio controls>
+  <source
+    src="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3"
+    type="audio/mpeg"
+  />
+  Your browser does not support the audio element.
+</audio>
 
 <br>
 
@@ -27,7 +37,7 @@ https://github.com/chrisallenarmbruster/wyou-radio/assets/64435986/15ea431f-4081
 
 ## Screenshots
 
-### Select a Disc Jockey 
+### Select a Disc Jockey
 
 ![Select a DJ](/public/images/screenshots/select-dj-rusty.png)
 
@@ -44,7 +54,6 @@ https://github.com/chrisallenarmbruster/wyou-radio/assets/64435986/15ea431f-4081
 ![Now Playing](/public/images/screenshots/now-playing-mquake.png)
 
 <br>
-
 
 ## Watch the Project Video
 
@@ -84,7 +93,7 @@ Here is a link to the project video hosted by the WYOU AI disc jockey personalit
 ### Usage
 
 - Run "npm run start:prod"
-- Navigate to the app in your browser. If running locally, localhost and the port you specified in your .env file in your browser (e.g. localhost:3000).  If deployed, navigate to the URL (e.g. https://some_domain).
+- Navigate to the app in your browser. If running locally, localhost and the port you specified in your .env file in your browser (e.g. localhost:3000). If deployed, navigate to the URL (e.g. https://some_domain).
 - Login with your Spotify account.
 - Select a DJ.
 - Select music.
