@@ -4,13 +4,15 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-COPY package*.json ./
+RUN apt-get update -y && apt-get install -y nano
 
-RUN npm install
+RUN npm config set registry https://registry.npmjs.org/
 
 RUN npm install -g forever
 
-RUN apt-get -y update && apt -y install nano
+COPY package*.json ./
+
+RUN npm install --verbose || { echo 'npm install failed'; exit 1; }
 
 COPY . .
 

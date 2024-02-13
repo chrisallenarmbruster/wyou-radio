@@ -30,21 +30,39 @@ export default function SpotifyLogin() {
               function properly at this time.
             </Card.Text>
             <Card.Text className="text-light">
-              In the meantime, check out our{' '}
+              In the meantime, refer to these resources:
+              <br />
+              <span className="ms-3">🎬</span>
               <Card.Link
                 href="https://vimeo.com/869263029/f6f59850b1?share=copy"
-                className="text-warning"
+                className="text-warning ms-2"
               >
-                video
-              </Card.Link>{' '}
-              for app details or{' '}
+                Project Video with Demo
+              </Card.Link>
+              <br />
+              <span className="ms-3">🔉</span>
               <Card.Link
-                className="text-warning m-0 p-0"
-                href="mailto:chris@armbrustermail.com,jejanov@mac.com?subject=WYOU%20Visitor"
+                href="https://portfolio.rev4labs.com/audio/wyou-samples/broadcast-demo-rusty.mp3"
+                className="text-warning ms-2"
               >
-                contact
-              </Card.Link>{' '}
-              us for a private demo.
+                Broadcast Audio Demo
+              </Card.Link>
+              <br />
+              <span className="ms-3">💻</span>
+              <Card.Link
+                href="https://github.com/chrisallenarmbruster/wyou-radio"
+                className="text-warning ms-2"
+              >
+                Source Code on GitHub
+              </Card.Link>
+              <br />
+              <span className="ms-3">📅</span>
+              <Card.Link
+                className="text-warning ms-2"
+                href="mailto:chris@armbrustermail.com,jejanov@mac.com?subject=Schedule%20WYOU%20Demo"
+              >
+                Schedule Private Demo
+              </Card.Link>
             </Card.Text>
 
             <div className="text-center">

@@ -163,7 +163,7 @@ export class Radio extends Component {
 
       let dataUri
       //uncomment following line when ready to test with backend
-      // dataUri = await axios.post('/api/content/next-content', payload)
+      dataUri = await axios.post('/api/content/next-content', payload)
 
       const metadataLoadedPromise = new Promise((resolve) => {
         this.audio.addEventListener('loadedmetadata', () => {
