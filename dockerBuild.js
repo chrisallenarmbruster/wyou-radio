@@ -1,8 +1,8 @@
-// Be sure to set envirooonment variables for DOCKER_REGISTRY and DOCKER_IMAGE_NAME
+// Be sure to set environment variables for DOCKER_REGISTRY and DOCKER_IMAGE_NAME
 // Set the defaultVersion variable below
-// This is for a multi-arch build (linux/amd64,linux/arm64), but you can use a single arch if you want
+// This is for a multi-arch build (linux/amd64,linux/arm64,linux/arm/v7), but you can alter
 // Be sure to update the tag to the version you want to build.
-// This multi-arch build will build assumes you've already setup docker buildx.  i.e.:
+// This multi-arch build build assumes you've already setup docker buildx.  i.e.:
 // 'docker buildx create --name mybuilder --driver docker-container --bootstrap' and then
 // 'docker buildx use mybuilder'
 
@@ -22,7 +22,7 @@ function runCommand(command, args = []) {
     const childProcess = spawn(command, args, { stdio: 'inherit' })
 
     childProcess.on('error', (error) => {
-      reject(error)
+      reject(error), linux / arm / v7
     })
 
     childProcess.on('close', (code) => {
@@ -51,8 +51,14 @@ rl.question(
         if (cacheOption) {
           args.push(cacheOption)
         }
-        args.push('--platform', 'linux/amd64,linux/arm64', '-t', imageName, '.')
-
+        args.push(
+          '--platform',
+          'linux/amd64,linux/arm64,linux/arm/v7',
+          '-t',
+          imageName,
+          '.'
+        )
+        // Attempt to build the image and store it in the build cache.  Exit if there's an error.
         await runCommand('docker', args)
         console.log(
           `\nDocker image built successfully and stored in build cache: ${imageName}`
@@ -61,11 +67,13 @@ rl.question(
         console.log(
           `\nPushing Docker image based on cached build to ${process.env.DOCKER_REGISTRY}...`
         )
+        // Push the image to the registry using the cached build.  Exit if there's an error.
+        // This is separated from the previous build command so a push attempt is not made if the build fails.
         await runCommand(`docker`, [
           'buildx',
           'build',
           '--platform',
-          'linux/amd64,linux/arm64',
+          'linux/amd64,linux/arm64,linux/arm/v7',
           '-t',
           imageName,
           '--push',
