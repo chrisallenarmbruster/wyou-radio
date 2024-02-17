@@ -33,7 +33,7 @@ module.exports = {
   plugins: [
     new Dotenv(),
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
   ],
 }

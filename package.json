@@ -1,11 +1,11 @@
 {
-  "name": "boilerplate-startingpoint",
+  "name": "wyou-radio",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "build:dev": "npm run build -- --watch --mode=development",
+    "build:dev": "NODE_ENV=development npm run build -- --watch --mode=development",
     "build:prod": "NODE_ENV=${NODE_ENV:=production} npm run build -- --mode=production",
     "build:deploy": "NODE_ENV=${NODE_ENV:=production} npm run build:prod && node dockerBuild.js",
     "start:dev": "NODE_ENV=${NODE_ENV:=development} nodemon --delay 3000ms server/index.js --ignore dist/ --ignore client/ --ignore debug/ --ignore public/audio/ & npm run build:dev ",
@@ -17,6 +17,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "axios": "^1.5.0",
     "child_process": "^1.0.2",

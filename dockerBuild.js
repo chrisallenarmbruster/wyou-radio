@@ -45,6 +45,11 @@ rl.question(
       const cacheOption = useCache.toLowerCase() === 'n' ? '--no-cache' : ''
 
       try {
+        console.log('\nCreating webpack bundle for production...')
+
+        await runCommand('npm', ['run', 'build:prod'])
+        console.log('\nWebpack production build completed successfully.')
+
         console.log('\nBuilding Docker image...')
 
         const args = ['buildx', 'build']
