@@ -163,8 +163,7 @@ export class Radio extends Component {
 
       let dataUri
 
-      const useOpenAIAnd11Labs = process.env.USE_OPENAI_AND_11LABS === 'true'
-      if (useOpenAIAnd11Labs) {
+      if (this.props.useBackendApis) {
         dataUri = await axios.post('/api/content/next-content', payload)
       }
 
@@ -622,6 +621,7 @@ const mapStateToProps = (reduxState) => ({
   currentDj: reduxState.djs.currentDj,
   profile: reduxState.user?.profile,
   isAdmin: reduxState.user?.details?.isAdmin,
+  useBackendApis: reduxState.user.useBackendApis,
 })
 
 const mapDispatchToProps = (dispatch) => ({

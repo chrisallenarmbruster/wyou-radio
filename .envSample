@@ -15,7 +15,6 @@ LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
 LANGCHAIN_API_KEY=BlahBlahBlah
 DOCKER_REGISTRY=awesome.registry.com
 DOCKER_IMAGE_NAME=wyouradio
-USE_OPENAI_AND_11LABS=true
 
 
 

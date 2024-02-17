@@ -1,15 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit"
-import axios from "axios"
+import { createSlice } from '@reduxjs/toolkit'
+import axios from 'axios'
 
 const initialState = {
   code: null,
   details: null,
   profile: null,
   showProfile: false,
+  useBackendApis: true,
 }
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     setUser: (state, action) => {
@@ -33,6 +34,9 @@ const userSlice = createSlice({
     hideProfile: (state, action) => {
       state.showProfile = false
     },
+    toggleUseBackendApis: (state) => {
+      state.useBackendApis = !state.useBackendApis
+    },
   },
 })
 
@@ -44,11 +48,12 @@ export const {
   clearProfile,
   showProfile,
   hideProfile,
+  toggleUseBackendApis,
 } = userSlice.actions
 
 export const fetchProfile = () => async (dispatch) => {
   try {
-    const { data } = await axios.get("api/profile")
+    const { data } = await axios.get('api/profile')
     dispatch(setProfile(data))
   } catch (err) {
     console.log(err)
@@ -57,7 +62,7 @@ export const fetchProfile = () => async (dispatch) => {
 
 export const updateProfile = (profile) => async (dispatch) => {
   try {
-    const { data } = await axios.put("api/profile", profile)
+    const { data } = await axios.put('api/profile', profile)
     dispatch(setProfile(data))
     dispatch(hideProfile())
   } catch (err) {
