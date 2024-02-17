@@ -1,16 +1,20 @@
-import React, { Component } from "react"
-import Navbar from "react-bootstrap/Navbar"
-import { connect } from "react-redux"
-import { clearUser, showProfile } from "../store/userSlice"
-import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
-import NavDropdown from "react-bootstrap/NavDropdown"
+import React, { Component } from 'react'
+import Navbar from 'react-bootstrap/Navbar'
+import { connect } from 'react-redux'
+import {
+  clearUser,
+  showProfile,
+  toggleUseBackendApis,
+} from '../store/userSlice'
+import { useNavigate } from 'react-router-dom'
+import NavDropdown from 'react-bootstrap/NavDropdown'
+import Form from 'react-bootstrap/Form'
 
 const NavBar = (props) => {
   const navigate = useNavigate()
 
   return (
-    <Navbar bg="dark" variant="dark" style={{marginTop:"5px !important"}} >
+    <Navbar bg="dark" variant="dark" style={{ marginTop: '5px !important' }}>
       <Navbar.Brand className="ms-3">WYOU Radio</Navbar.Brand>
 
       {props.user && (
@@ -45,6 +49,18 @@ const NavBar = (props) => {
                   Profile
                 </NavDropdown.Item>
               </span>
+              {props.user?.isAdmin ? (
+                <>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item
+                    onClick={() => props.toggleUseBackendApis()}
+                  >
+                    {props.useBackendApis
+                      ? 'Disable Backend APIs'
+                      : 'Enable Backend APIs'}
+                  </NavDropdown.Item>
+                </>
+              ) : null}
             </NavDropdown>
           </span>
         </>
@@ -55,6 +71,7 @@ const NavBar = (props) => {
 
 const mapStateToProps = (state) => ({
   user: state.user.details,
+  useBackendApis: state.user.useBackendApis,
   currentStation: state.stations.currentStation,
   currentDj: state.djs.currentDj,
 })
@@ -62,6 +79,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   logout: () => clearUser(),
   showProfile: () => showProfile(),
+  toggleUseBackendApis: () => toggleUseBackendApis(),
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar)
