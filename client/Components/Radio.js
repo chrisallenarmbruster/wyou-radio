@@ -162,8 +162,11 @@ export class Radio extends Component {
       }
 
       let dataUri
-      //uncomment following line when ready to test with backend
-      dataUri = await axios.post('/api/content/next-content', payload)
+
+      const useOpenAIAnd11Labs = process.env.USE_OPENAI_AND_11LABS === 'true'
+      if (useOpenAIAnd11Labs) {
+        dataUri = await axios.post('/api/content/next-content', payload)
+      }
 
       const metadataLoadedPromise = new Promise((resolve) => {
         this.audio.addEventListener('loadedmetadata', () => {
@@ -171,10 +174,7 @@ export class Radio extends Component {
         })
       })
 
-      this.audio.src =
-        dataUri?.data ||
-        'audio/ElevenLabs_2023-09-01T23_59_37_Donny - very deep_gen_s50_sb75_se0_b_m2.mp3'
-      // "audio/opening-title.mp3"
+      this.audio.src = dataUri?.data || 'audio/generic_segue.mp3'
 
       await metadataLoadedPromise
 
