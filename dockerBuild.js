@@ -6,7 +6,7 @@
 // 'docker buildx create --name mybuilder --driver docker-container --bootstrap' and then
 // 'docker buildx use mybuilder'
 
-const defaultVersion = '1.0.1' // Set default version here
+const defaultVersion = '1.0.3' // Set default version here
 
 require('dotenv').config()
 const { spawn } = require('child_process')
@@ -56,13 +56,7 @@ rl.question(
         if (cacheOption) {
           args.push(cacheOption)
         }
-        args.push(
-          '--platform',
-          'linux/amd64,linux/arm64,linux/arm/v7',
-          '-t',
-          imageName,
-          '.'
-        )
+        args.push('--platform', 'linux/amd64,linux/arm64', '-t', imageName, '.')
         // Attempt to build the image and store it in the build cache.  Exit if there's an error.
         await runCommand('docker', args)
         console.log(
@@ -78,7 +72,7 @@ rl.question(
           'buildx',
           'build',
           '--platform',
-          'linux/amd64,linux/arm64,linux/arm/v7',
+          'linux/amd64,linux/arm64',
           '-t',
           imageName,
           '--push',
