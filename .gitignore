@@ -6,3 +6,11 @@ package-lock.json
 public/main.js
 public/main.js.map
 .DS_Store
+
+.env.*
+*.env
+!.env.example
+*.private.yaml
+*.swp
+*.swo
+*~

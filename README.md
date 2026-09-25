@@ -93,7 +93,7 @@ Here is a link to the project video hosted by the WYOU AI disc jockey personalit
 - Clone this repo.
 - Run "npm install".
 - Configure the Spotify API redirect URIs in your Spotify Developer Dashboard.
-- Create a .env file in the local root directory of the repo or set environment variables accordingly. See .envSample for required environment variables. You will need to specify API keys for OpenAI, LangChain, ElevenLabs and Open Weather as well as your Spotify client ID and client secret. Set your Spotify Redirect URIs and the port you want to run the server on.
+- Create a .env file in the local root directory of the repo or set environment variables accordingly. See .env.example for required environment variables. You will need to specify API keys for OpenAI, LangChain, ElevenLabs and Open Weather as well as your Spotify client ID and client secret. Set your Spotify Redirect URIs and the port you want to run the server on.
 - Create a PostgreSQL database named "wyou-radio" and set the DATABASE_URL environment variable to the PostgreSQL connection string. Edit the seed.js file in the server/db directory to include your Spotify user email. Run the seed.js file to seed the database (i.e. "node seed.js").
 
 ### Usage

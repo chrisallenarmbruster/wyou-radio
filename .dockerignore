@@ -11,3 +11,13 @@
  docker-compose.yml
  .prettierrc
  webpack.config.js
+
+.env.*
+*.env
+**/.env
+**/.env.*
+**/*.env
+*.private.yaml
+*.swp
+*.swo
+*~

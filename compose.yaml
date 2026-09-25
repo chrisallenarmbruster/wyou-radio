@@ -1,0 +1,100 @@
+# WYOU Radio, PostgreSQL and logical database backups.
+name: wyouradio
+services:
+  db:
+    image: postgres:${POSTGRES_VERSION:-16.2-bookworm}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-wyouradio}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+    - type: bind
+      source: /srv/app-data/wyouradio/postgres
+      target: /var/lib/postgresql/data
+      bind:
+        create_host_path: false
+    networks:
+    - private
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+  db-backup:
+    image: prodrigestivill/postgres-backup-local:16@sha256:a0103fbce0c48ccc7693ddbb2a2bfa733048db845354f635efef9e4566de185d
+    deploy:
+      replicas: ${BACKUP_REPLICAS:-1}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB:-wyouradio}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_EXTRA_OPTS: -Z1 --no-owner --no-privileges
+      BACKUP_SUFFIX: .sql.gz
+      BACKUP_ON_START: 'TRUE'
+      SCHEDULE: ${POSTGRES_BACKUP_SCHEDULE:-15 3 * * 0}
+      BACKUP_KEEP_MINS: ${POSTGRES_BACKUP_KEEP_MINUTES:-10080}
+      BACKUP_KEEP_DAYS: ${POSTGRES_BACKUP_KEEP_DAYS:-7}
+      BACKUP_KEEP_WEEKS: ${POSTGRES_BACKUP_KEEP_WEEKS:-4}
+      BACKUP_KEEP_MONTHS: ${POSTGRES_BACKUP_KEEP_MONTHS:-3}
+      TZ: ${POSTGRES_BACKUP_TIMEZONE:-America/Chicago}
+    volumes:
+    - type: bind
+      source: /srv/app-backups/wyouradio
+      target: /backups
+      bind:
+        create_host_path: false
+    networks:
+    - private
+  wyouradio:
+    image: ${DOCKER_REGISTRY:-registry.rev4labs.com}/${DOCKER_IMAGE_NAME:-wyouradio}:${APP_VERSION:-1.1.1}
+    deploy:
+      replicas: ${APP_REPLICAS:-1}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      QUIET: ${QUIET:-true}
+      PORT: ${PORT:-3000}
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:?Set OPENAI_API_KEY}
+      ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:?Set ELEVENLABS_API_KEY}
+      OPEN_WEATHER_API_KEY: ${OPEN_WEATHER_API_KEY:?Set OPEN_WEATHER_API_KEY}
+      LOCATION_IQ_API_KEY: ${LOCATION_IQ_API_KEY:?Set LOCATION_IQ_API_KEY}
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:?Set SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET:?Set SPOTIFY_CLIENT_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET}
+      LANGCHAIN_API_KEY: ${LANGCHAIN_API_KEY:?Set LANGCHAIN_API_KEY}
+      SPOTIFY_REDIRECT_URI_DEV: ${SPOTIFY_REDIRECT_URI_DEV:-http://localhost:3000}
+      SPOTIFY_REDIRECT_URI_PROD: ${SPOTIFY_REDIRECT_URI_PROD:-https://wyouradio.rev4labs.com}
+      LANGCHAIN_TRACING_V2: ${LANGCHAIN_TRACING_V2:-true}
+      LANGCHAIN_ENDPOINT: ${LANGCHAIN_ENDPOINT:-https://api.smith.langchain.com}
+    networks:
+      private: null
+      proxy:
+        aliases:
+        - wyouradio-web
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - require('http').get('http://127.0.0.1:3000/',r=>{r.resume();process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1))
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+networks:
+  private: null
+  proxy:
+    external: true
