@@ -29,6 +29,15 @@ services:
     deploy:
       replicas: ${BACKUP_REPLICAS:-1}
     restart: unless-stopped
+    # Wait for PostgreSQL even when Docker restarts containers without Compose.
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        until pg_isready -q -t 3 -h "$${POSTGRES_HOST}" -p "$${POSTGRES_PORT:-5432}" -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"; do
+          sleep 2
+        done
+        exec /init.sh
     depends_on:
       db:
         condition: service_healthy
