@@ -136,8 +136,9 @@ export class Radio extends Component {
       console.log('Going to retrieve next DJ audio from server.')
       this.djAudioPending = true
 
-      const trackState = (await this.player?.player?.getCurrentState())
-        .track_window
+      try {
+      const trackState = (await this.player?.player?.getCurrentState())?.track_window
+      if (!trackState?.current_track) return
 
       const payload = {}
       payload.jamSessionId = this.props.jamSession.id
@@ -167,18 +168,29 @@ export class Radio extends Component {
         dataUri = await axios.post('/api/content/next-content', payload)
       }
 
-      const metadataLoadedPromise = new Promise((resolve) => {
-        this.audio.addEventListener('loadedmetadata', () => {
-          resolve()
-        })
+      const source = this.props.useBackendApis ? dataUri?.data : '/audio/generic_segue.mp3'
+      if (typeof source !== 'string' || !source) throw new Error('No DJ audio was returned.')
+      await new Promise((resolve, reject) => {
+        const cleanup = () => {
+          clearTimeout(timer)
+          this.audio.removeEventListener('loadedmetadata', loaded)
+          this.audio.removeEventListener('error', failed)
+        }
+        const loaded = () => { cleanup(); resolve() }
+        const failed = () => { cleanup(); reject(new Error('Could not load DJ audio.')) }
+        const timer = setTimeout(failed, 30000)
+        this.audio.addEventListener('loadedmetadata', loaded)
+        this.audio.addEventListener('error', failed)
+        this.audio.src = source
       })
 
-      this.audio.src = dataUri?.data || 'audio/generic_segue.mp3'
-
-      await metadataLoadedPromise
-
       this.needNextDjAudio = false
-      this.djAudioPending = false
+      } catch (error) {
+        console.error('DJ audio unavailable:', error.response?.data?.error || error.message)
+        return
+      } finally {
+        this.djAudioPending = false
+      }
     } else {
       console.log(
         `Doesn't look like I should retrieve next audio at this time because one of these is false: needNextDjAudio: ${
@@ -202,13 +214,11 @@ export class Radio extends Component {
   }
 
   getPlayer = async (playerInstance) => {
-    console.log('Got player instance:', await playerInstance)
     this.player = { player: await playerInstance }
     await this.player?.player?.setName('WYOU Radio')
   }
 
   spotifyEventHandler = async (state) => {
-    console.log(state)
     this.setState({ pauseButton: state.isPlaying })
 
     if (state.type === 'status_update') {
@@ -410,14 +420,14 @@ export class Radio extends Component {
                 : 'invisible'
             }`}
           >
-            <Link to="djs" className="text-light link">
+            <Link to="/radio/djs" className="text-light link">
               Disc Jockey
             </Link>
-            <Link to="stations" className="text-light link">
+            <Link to="/radio/stations" className="text-light link">
               Station
             </Link>
             <Link
-              to="player"
+              to="/radio/player"
               className={`text-light link ${
                 this.props.currentDj && this.props.currentStation
                   ? ''

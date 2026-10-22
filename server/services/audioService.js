@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require("path");
 
 const CHUNK_SIZE = 1024;
-const ELEVENLABS_API_KEY = "1551af0ac5ade77c4647de014e9636b2";
-const projectRoot = path.resolve(__dirname, "../");
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+const projectRoot = path.resolve(__dirname, "../../");
 
 const headers = {
   Accept: "audio/mpeg",
@@ -15,6 +15,7 @@ const headers = {
 const saveStreamToFile = (stream, filePath) => {
   return new Promise((resolve, reject) => {
     const writer = fs.createWriteStream(filePath);
+    stream.on("error", reject);
     stream.pipe(writer);
     writer.on("finish", resolve);
     writer.on("error", reject);
@@ -26,6 +27,7 @@ function removeSpecialCharacters(str) {
 }
 
 const fetchSpeech =async (voiceID, text, fileName) => {
+  if (!ELEVENLABS_API_KEY) throw new Error("ELEVENLABS_API_KEY is missing.");
   fileName = removeSpecialCharacters(fileName);
 
   const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceID}`;
@@ -42,6 +44,7 @@ const fetchSpeech =async (voiceID, text, fileName) => {
       headers: headers,
       responseType: "stream",
     });
+    await fs.promises.mkdir(path.join(projectRoot, "public/audio"), { recursive: true });
     await saveStreamToFile(
       response.data,
       path.join(projectRoot, "public/audio", `${fileName}.mp3`)
@@ -49,7 +52,7 @@ const fetchSpeech =async (voiceID, text, fileName) => {
     console.log("File saved successfully.");
     return {fileName: path.join(projectRoot, "public/audio", `${fileName}.mp3`), text: text};
   } catch (error) {
-    console.error("Error:", error);
+    throw new Error(`Speech generation failed (${error.response?.status || error.code || "unknown"}).`);
   }
 };
 

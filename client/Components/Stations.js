@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef } from 'react'
 import { connect } from 'react-redux'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCoverflow, Pagination } from 'swiper/modules'
@@ -28,8 +28,12 @@ export function Stations(props) {
   const navigate = useNavigate()
 
   const sliderRef = useRef()
+  // Centered loop mode at the widest breakpoint needs five visible slots
+  // (Swiper rounds four up to an odd number) plus three buffered slides.
+  const canLoop = stations.length >= 8
   const handleMouseScroll = (e) => {
-    const swiper = sliderRef.current.swiper
+    const swiper = sliderRef.current?.swiper
+    if (!swiper || swiper.destroyed) return
 
     if (e.deltaX > 0 || e.deltaY > 0) {
       swiper.slideNext()
@@ -51,7 +55,11 @@ export function Stations(props) {
             objectFit: 'contain',
           }}
         >
+          {stations.length === 0 ? (
+            <div>No stations available</div>
+          ) : (
           <Swiper
+            key={canLoop ? 'loop' : 'rewind'}
             ref={sliderRef}
             className="mySwiper2"
             modules={[EffectCoverflow, Pagination]}
@@ -59,7 +67,7 @@ export function Stations(props) {
             autoHeight={true}
             grabCursor={true}
             centeredSlides={true}
-            slidesPerView={4}
+            slidesPerView={1}
             speed={600}
             coverflowEffect={{
               rotate: 20, //50
@@ -68,8 +76,8 @@ export function Stations(props) {
               modifier: 1.5, //1
               slideShadows: true,
             }}
-            loop={true}
-            loopedSlides={2}
+            loop={canLoop}
+            rewind={!canLoop}
             pagination={{
               type: 'bullets',
               clickable: true,
@@ -79,39 +87,37 @@ export function Stations(props) {
                 slidesPerView: 1,
               },
               768: {
-                slidesPerView: 3,
+                slidesPerView: Math.min(3, stations.length),
               },
               977: {
-                slidesPerView: 4,
+                slidesPerView: Math.min(4, stations.length),
               },
             }}
           >
-            {stations.length > 0 ? (
-              stations.map((station) => (
+            {stations.map((station) => (
                 <SwiperSlide key={station.id}>
-                  <img
-                    src={station.images[0].url}
+                  <button
+                    type="button"
+                    className="station-select"
+                    aria-label={`Play ${station.name}`}
                     onClick={() => {
-                      // pauseSpotify()
                       clearCurrentTrack()
                       setCurrentStation(station)
                       setJamSessionId()
                       playContext({ uri: station.uri })
                       navigate('/radio/player')
                     }}
-                    style={{
-                      float: 'left',
-                      width: '100%',
-                      // height: '100%',
-                      imageFit: 'cover',
-                    }}
-                  />
+                  >
+                    {station.images?.[0]?.url ? (
+                      <img src={station.images[0].url} alt={station.name} draggable={false} />
+                    ) : (
+                      <span>{station.name}</span>
+                    )}
+                  </button>
                 </SwiperSlide>
-              ))
-            ) : (
-              <div>No stations available</div>
-            )}
+              ))}
           </Swiper>
+          )}
         </Col>
       </Row>
     </Col>

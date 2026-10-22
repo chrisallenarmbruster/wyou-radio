@@ -99,3 +99,32 @@
     opacity: 1;
   }
 }
+
+/* Let recessed coverflow slides receive clicks through the wrapper plane. */
+.mySwiper2 .swiper-wrapper {
+  pointer-events: none;
+}
+
+.mySwiper2 .swiper-slide {
+  pointer-events: auto;
+}
+
+.mySwiper2 .station-select {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.mySwiper2 .station-select img {
+  display: block;
+  width: 100%;
+}
+
+.mySwiper2 .station-select:focus-visible {
+  outline: 3px solid #ffc107;
+  outline-offset: -3px;
+}

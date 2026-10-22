@@ -9,7 +9,7 @@ const root = createRoot(document.querySelector("#root"))
 
 root.render(
   <Provider store={store}>
-    <HashRouter>
+    <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <App />
     </HashRouter>
   </Provider>

@@ -7,7 +7,6 @@ import Form from 'react-bootstrap/Form'
 import * as Yup from 'yup'
 import { updateProfile } from '../store/userSlice'
 import Button from 'react-bootstrap/Button'
-import Container from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 
 const UserProfile = (props) => {

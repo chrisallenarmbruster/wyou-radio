@@ -11,7 +11,12 @@ let chain
 const getLatLonFromZip = require('../services/locationIQ')
 
 router.post('/next-content', async (req, res) => {
+  try {
   const { curTrack, nextTrack, jamSessionId, djId, station } = req.body
+  if (!req.session.email) return res.status(401).json({ error: 'Please sign in again.' })
+  if (!curTrack?.uri || !nextTrack?.uri || !jamSessionId || !djId) {
+    return res.status(400).json({ error: 'DJ audio requires a session, DJ, and current and next tracks.' })
+  }
   if (!flag) {
     chain = await establishChat(jamSessionId)
     flag = true
@@ -29,11 +34,11 @@ router.post('/next-content', async (req, res) => {
       attributes: ['name', 'zip', 'lat', 'long'],
     },
   })
+  if (!user?.profile) return res.status(400).json({ error: 'Please complete your profile.' })
   const userZip = user.profile.zip
   if (user.profile.zip && !user.profile.lat && !user.profile.long) {
-    ;(async function () {
       const coordinates = await getLatLonFromZip(userZip)
-      console.log(coordinates)
+      if (!coordinates) throw new Error('Could not look up profile location.')
       const [profile, created] = await Profile.upsert(
         {
           userEmail: userEmail, // ensure this is the correct email
@@ -47,7 +52,8 @@ router.post('/next-content', async (req, res) => {
           },
         }
       )
-    })()
+      user.profile.lat = coordinates.latitude
+      user.profile.long = coordinates.longitude
   }
 
   let jamSession
@@ -82,7 +88,14 @@ router.post('/next-content', async (req, res) => {
     station,
     chain
   )
+  if (typeof content !== 'string' || !content.startsWith('data:audio/')) {
+    throw new Error('DJ generation returned no audio.')
+  }
   res.json(content)
+  } catch (error) {
+    console.error('DJ content generation failed:', error.message)
+    res.status(502).json({ error: 'DJ audio generation failed. Check the server log for details.' })
+  }
 })
 
 router.post('/reset', (req, res) => {

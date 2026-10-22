@@ -85,7 +85,7 @@ const Player = (props) => {
                 maxWidth: '100%',
                 width: '100%',
                 objectFit: 'contain',
-                backgroundImage: `url(${props.track?.image})`,
+                backgroundImage: props.track?.image ? `url(${props.track.image})` : 'none',
                 backgroundSize: 'cover',
                 backgroundPosition: '50% 50%',
                 aspectRatio: '1 / 1',

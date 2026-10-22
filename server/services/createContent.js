@@ -65,7 +65,7 @@ async function createContent(
       return;
     } else return response;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
