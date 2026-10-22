@@ -15,7 +15,7 @@ RUN npm install -g forever
 COPY package*.json ./
 
 # Clean install of dependencies from package-lock.json, no audits
-RUN npm install --verbose || { echo 'npm install failed'; exit 1; }
+RUN npm ci --omit=dev --no-audit
 
 COPY . .
 

@@ -64,7 +64,7 @@ services:
     networks:
     - private
   wyouradio:
-    image: ${DOCKER_REGISTRY:-registry.rev4labs.com}/${DOCKER_IMAGE_NAME:-wyouradio}:${APP_VERSION:-1.1.1}
+    image: ${DOCKER_REGISTRY:-registry.rev4labs.com}/${DOCKER_IMAGE_NAME:-wyouradio}:${APP_VERSION:-1.1.2}
     deploy:
       replicas: ${APP_REPLICAS:-1}
     restart: unless-stopped

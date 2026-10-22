@@ -21,3 +21,8 @@
 *.swp
 *.swo
 *~
+
+.agents
+.aws
+.codex
+debug

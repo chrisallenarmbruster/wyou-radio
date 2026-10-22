@@ -96,7 +96,16 @@ Here is a link to the project video hosted by the WYOU AI disc jockey personalit
 - Create a .env file in the local root directory of the repo or set environment variables accordingly. See .env.example for required environment variables. You will need to specify API keys for OpenAI, LangChain, ElevenLabs and Open Weather as well as your Spotify client ID and client secret. Set your Spotify Redirect URIs and the port you want to run the server on.
 - Create a PostgreSQL database named "wyou-radio" and set the DATABASE_URL environment variable to the PostgreSQL connection string. Edit the seed.js file in the server/db directory to include your Spotify user email. Run the seed.js file to seed the database (i.e. "node seed.js").
 
-### Usage
+### Build and publish the Docker image
+
+- Set `DOCKER_REGISTRY` and `DOCKER_IMAGE_NAME` in `.env` and log in to that registry with Docker.
+- Use the Node version in `.nvmrc` and a Buildx builder that can build `linux/amd64` and `linux/arm64`. Optionally set `DOCKER_BUILDER` to select a builder.
+- Update the version in `package.json` and `package-lock.json`, plus the `APP_VERSION` defaults in `.env.example` and `compose.yaml`, for each release. The build script takes its image tag from `package.json`.
+- Run `npm run build:deploy` to build both architectures into the builder cache without publishing, or `npm run deploy` to build and push the versioned image. Add `-- --no-cache` for a clean build.
+- The browser bundle is built for production before the image build; set `SPOTIFY_CLIENT_ID` and `SPOTIFY_REDIRECT_URI_PROD` in `.env` first. Server credentials are supplied at runtime, not copied into the image.
+- Publishing does not deploy the app. Set `APP_VERSION` on the deployment host to the published version, pull the image, and recreate the app service separately.
+
+### Run the app
 
 - Run "npm run start:prod"
 - Navigate to the app in your browser. If running locally, localhost and the port you specified in your .env file in your browser (e.g. localhost:3000). If deployed, navigate to the URL (e.g. https://some_domain).
